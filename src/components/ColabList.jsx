@@ -47,7 +47,7 @@ export const ColabList = () => {
         let idUser = Number(users[users.length-1].id) + 1;
         const {nombre, cantidad, correo} = inputValue
     
-        setUsers([...users,      
+        setUsers([ ...users,      
             {
                 id: idUser,
                 nombre,
@@ -73,21 +73,29 @@ export const ColabList = () => {
 
         const onSearchSubmit = (event)=>{
             event.preventDefault();
-            const filterUser = users.find(user => user.nombre.toLowerCase() === searchedUser.toLowerCase());
+            if(searchedUser != []){  
+            const filterUser = users.filter(user => user.nombre.toLowerCase() === searchedUser.toLowerCase());
 
-            if(filterUser){  
-                fullList.style.display = "none"
-                filteredList.style.display = ""
-                
-                setFilteredArray([{
-                    id: filterUser.id,
-                    nombre: filterUser.nombre,
-                    cantidad: filterUser.cantidad,
-                    correo: filterUser.correo
-                }])
-            }else{               
-                alert("No existe ningún colaborador con ese nombre")
+            if(filterUser[0]){
+      
+                    fullList.style.display = "none"
+                    filteredList.style.display = ""
+                    filterUser.forEach(user =>{
+                    
+                        setFilteredArray([{
+                            id: user.id,
+                            nombre: user.nombre,
+                            cantidad: user.cantidad,
+                            correo: user.correo
+                        }])
+                    })
+            }else{
+                alert("No existe ningún usuario con ese nombre")
             }
+            }else{               
+                alert("Ingresa un nombre!")
+            }
+
         }
 
         const onRefreshSubmit = (event)=>{
@@ -96,6 +104,19 @@ export const ColabList = () => {
             filteredList.style.display = "none"
 
         }
+        
+
+        let totalMoney = 0;
+        let lastColab = 0;
+        const statsGenerator = ()=>{
+            users.forEach(user=>{
+                let monto = Number(user.cantidad) 
+                totalMoney += monto
+            })
+            let lasUserColab = Number(users[users.length-1].cantidad)
+            lastColab += lasUserColab
+        }
+        statsGenerator();
     
       return (
         <>
@@ -203,22 +224,22 @@ export const ColabList = () => {
     
                     <div className="card">
                         <div className="card-inner">
-                            <p className="text-primary">PRODUCTS</p>
+                            <p className="text-primary">COLABORADORES</p>
                             <span className="material-icons-outlined text-blue">
                                 inventory
                             </span>
                         </div>
-                        <span className="text-primary font-weight-bold">249</span>
+                        <span className="text-primary font-weight-bold">{counter}</span>
                     </div>
     
                     <div className="card">
                         <div className="card-inner">
-                            <p className="text-primary">PURCHASE ORDERS</p>
+                            <p className="text-primary">TOTAL COLABORACIONES</p>
                             <span className="material-icons-outlined text-orange">
                                 add_shopping_cart
                             </span>
                         </div>
-                        <span className="text-primary font-weight-bold">81</span>
+                        <span className="text-primary font-weight-bold">${totalMoney.toLocaleString()}</span>
                     </div>
     
                     <div className="card">
@@ -233,12 +254,12 @@ export const ColabList = () => {
     
                     <div className="card">
                         <div className="card-inner">
-                            <p className="text-primary">INVETORY ALERTS</p>
+                            <p className="text-primary">ÚLTIMA COLABORACIÓN</p>
                             <span className="material-icons-outlined text-red">
                                 notifications
                             </span>
                         </div>
-                        <span className="text-primary font-weight-bold">28</span>
+                        <span className="text-primary font-weight-bold">${lastColab.toLocaleString()}</span>
                     </div>
     
                 </div>
