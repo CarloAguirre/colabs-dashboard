@@ -2,13 +2,14 @@ import { useState } from 'react';
 import '../App.css'
 import { UsersCountChart } from './UsersCountChart';
 import { UsersInfoChart } from './UsersInfoChart';
+import { colaboradores } from '../config/colaboradores';
 
 
 
-export const ColabList = ({users, setUsers}) => {
+export const ColabList = () => {
   
-
-    
+    const [users, setUsers] = useState(colaboradores)
+  
     const [counter, setCounter] = useState(Number(users.length))
 
     const [inputValue, setInputValue] = useState("")
