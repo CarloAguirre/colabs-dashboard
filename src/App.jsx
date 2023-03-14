@@ -213,12 +213,12 @@ function App() {
 
                 <div className="charts-card">
                     <p className="chart-title">Top 5 Colaboradores</p>
-                    <div className='users-charts'><UsersInfoChart users={users} /></div>
+                    <div className='users-charts'><UsersInfoChart users={users} counter={counter} /></div>
                 </div>
 
                 <div className="charts-card">
                     <p className="chart-title">Total Colaboradores</p>
-                    <div className='users-charts'><UsersCountChart counter={counter}/></div>
+                    <div className='users-charts'><UsersCountChart counter={counter} users={users}/></div>
                 </div>
 
             </div>
