@@ -10,8 +10,8 @@ export const UsersInfoChart = ({users})=> {
 
     const allUsersArray = ()=>{
         users.forEach(user => {
-            usersName.unshift(user.nombre)
-            usersColab.unshift(user.cantidad)
+            usersName.push(user.nombre)
+            usersColab.push(user.cantidad)
         })    
     }
 

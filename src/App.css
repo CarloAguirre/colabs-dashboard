@@ -77,10 +77,6 @@ body{
   background-color: rgb(255, 255, 255, 0.2);
   cursor: pointer;
 }
-.sidebar-responsive{
-  display: inline !important;
-  position: absolute;
-}
 
 /* main  */
 .main-container{
@@ -188,6 +184,10 @@ body{
 /* inputs */
 .search-reset_inputs{
   display: flex;
+}
+.addColab-input{
+  margin-right: 5px;
+  margin-left: 2px;
 }
 
 /* dashboard visuals */

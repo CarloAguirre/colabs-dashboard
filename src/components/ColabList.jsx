@@ -73,7 +73,7 @@ export const ColabList = () => {
 
         const onSearchSubmit = (event)=>{
             event.preventDefault();
-            if(searchedUser != []){  
+            if(searchedUser !== []){  
             const filterUser = users.filter(user => user.nombre.toLowerCase() === searchedUser.toLowerCase());
 
             if(filterUser[0]){
@@ -108,15 +108,32 @@ export const ColabList = () => {
 
         let totalMoney = 0;
         let lastColab = 0;
+        const [topUser, setTopUser] = useState({
+            cantidad: 0,
+            nombre: ""
+        })
+
         const statsGenerator = ()=>{
+
+        
             users.forEach(user=>{
+                let name = user.nombre
                 let monto = Number(user.cantidad) 
                 totalMoney += monto
+                
+                if(monto > topUser.cantidad){
+                    setTopUser({
+                        cantidad: monto,
+                        nombre: name
+                    })
+                }
             })
             let lasUserColab = Number(users[users.length-1].cantidad)
             lastColab += lasUserColab
         }
         statsGenerator();
+
+
     
       return (
         <>
@@ -134,11 +151,11 @@ export const ColabList = () => {
                 <div className="header-left">          
                     <form onSubmit={onSubmitHandler}>
                         Nombre
-                        <input type="text" name='nombre' onChange={onInputChange}></input>
+                        <input type="text" name='nombre' onChange={onInputChange} className="addColab-input"></input>
                         Monto
-                        <input type="number" name='cantidad' onChange={onInputChange} className="ms-3"></input>
+                        <input type="number" name='cantidad' onChange={onInputChange} className="addColab-input" ></input>
                         mail
-                        <input type="email" name='correo' onChange={onInputChange} className="ms-3"></input>
+                        <input type="email" name='correo' onChange={onInputChange} className="addColab-input"></input>
                         <button type='submit'><span className="material-icons-outlined">                           
                         add
                         
@@ -165,7 +182,7 @@ export const ColabList = () => {
                     <div className="sidebar-brand">
                         <span className="material-icons-outlined">
                             inventory
-                        </span> Carlo's Inventory
+                        </span> Carlo's Colabs
                     </div>
                     <span className="material-icons-outlined">
                         close
@@ -182,35 +199,35 @@ export const ColabList = () => {
                         <li className="sidebar-list-item">
                             <span className="material-icons-outlined">
                                 inventory_2
-                            </span> Products
+                            </span> Inversiones
                         </li>
                     </a>
                     <a className="anchor-link">
                         <li className="sidebar-list-item">
                             <span className="material-icons-outlined">
                                 fact_check
-                            </span> Inventory
+                            </span> Colaboradores
                         </li>
                     </a>
                     <li className="sidebar-list-item">
                         <span className="material-icons-outlined">
-                            add_shopping_cart
-                        </span> Purchase Orders
+                        attach_money
+                        </span> Total Fondos
                     </li>
                     <li className="sidebar-list-item">
                         <span className="material-icons-outlined">
-                            shopping_cart
-                        </span> Sales Orders
+                        account_balance
+                        </span> Bienes y activos
                     </li>
                     <li className="sidebar-list-item">
                         <span className="material-icons-outlined">
                             bar_chart
-                        </span> Reports
+                        </span> Reportes
                     </li>
                     <li className="sidebar-list-item">
                         <span className="material-icons-outlined">
                             settings
-                        </span> Settings
+                        </span> Ajustes
                     </li>
                 </ul>
             </aside>
@@ -236,7 +253,7 @@ export const ColabList = () => {
                         <div className="card-inner">
                             <p className="text-primary">TOTAL COLABORACIONES</p>
                             <span className="material-icons-outlined text-orange">
-                                add_shopping_cart
+                            attach_money
                             </span>
                         </div>
                         <span className="text-primary font-weight-bold">${totalMoney.toLocaleString()}</span>
@@ -244,12 +261,12 @@ export const ColabList = () => {
     
                     <div className="card">
                         <div className="card-inner">
-                            <p className="text-primary">SALES ORDERS</p>
+                            <p className="text-primary">COLABORADOR TOP</p>
                             <span className="material-icons-outlined text-green">
-                                shopping_cart
+                            how_to_reg
                             </span>
                         </div>
-                        <span className="text-primary font-weight-bold">47</span>
+                        <span className="text-primary font-weight-bold">{topUser.nombre}</span>
                     </div>
     
                     <div className="card">
