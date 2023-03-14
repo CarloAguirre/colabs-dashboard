@@ -14,45 +14,53 @@ function App() {
     {
         id: "1",
         nombre: "Colaborador 1",
+        cantidad: "1000000",
         correo: "colaborador1@colaborador1.com"
         },
         {
         id: "2",
         nombre: "Colaborador 2",
+        cantidad: "2000000",
         correo: "colaborador2@colaborador2.com"
         },
         {
         id: "3",
         nombre: "Colaborador 3",
+        cantidad: "3000000",
         correo: "colaborador3@colaborador3.com"
     },
   ])
 
-  const [inpuValue, setInpuValue] = useState("")
+  const [counter, setCounter] = useState(Number(users.length))
+
+  const [inputValue, setInputValue] = useState("")
 
   
   const onInputChange = ({target})=>{
-    const newTarea = target.value
-    setInpuValue(newTarea)
+    const {name, value} = target
+    setInputValue({
+        ...inputValue,
+        [name]: value
+    })
   }
   
   
   const onSubmitHandler = (event)=>{
-    event.preventDefault()
-    let idTarea = new Date().getTime();
+    event.preventDefault() 
+
+    let idUser = Number(users[users.length-1].id) + 1;
+    const {nombre, cantidad, correo} = inputValue
 
     setUsers([...users,      
         {
-            id: idTarea,
-            nombre: inpuValue,
-            correo: "colaborador3@colaborador3.com"
+            id: idUser,
+            nombre,
+            cantidad,
+            correo
         }])
-
-    }
-
-  
-
-      
+     
+    setCounter(counter + 1)    
+    }   
 
   return (
     <>
@@ -62,19 +70,26 @@ function App() {
     <div className="grid-container">
         <header className="header">
             <div
-            className="menu-icon" onClick="openSidebar()">
+            className="menu-icon">
                 <span className="material-icons-outlined">
                     menu
                 </span>
             </div>
-            <div className="header-left"> 
-            <h5>Nuevo Colaborador</h5>            
+            <div className="header-left">          
                 <form onSubmit={onSubmitHandler}>
-                    <input type="text" name='Name' onChange={onInputChange}></input>
+                    Nombre
+                    <input type="text" name='nombre' onChange={onInputChange}></input>
+                    Monto
+                    <input type="number" name='cantidad' onChange={onInputChange} className="ms-3"></input>
+                    mail
+                    <input type="email" name='correo' onChange={onInputChange} className="ms-3"></input>
                     <button type='submit'><span className="material-icons-outlined">
-                    add_circle
+                        
+                    add
+                    
                 </span></button>
                 </form>
+
             </div>
             <div className="header-right">
                 <span className="material-icons-outlined">
@@ -97,7 +112,7 @@ function App() {
                         inventory
                     </span> Carlo's Inventory
                 </div>
-                <span className="material-icons-outlined" onClick="closeSidebar()">
+                <span className="material-icons-outlined">
                     close
                 </span>
             </div>
@@ -108,14 +123,14 @@ function App() {
                         dashboard
                     </span> Dashboard
                 </li>
-                <a href="products.html" className="anchor-link">
+                <a className="anchor-link">
                     <li className="sidebar-list-item">
                         <span className="material-icons-outlined">
                             inventory_2
                         </span> Products
                     </li>
                 </a>
-                <a href="inventory.html" className="anchor-link">
+                <a className="anchor-link">
                     <li className="sidebar-list-item">
                         <span className="material-icons-outlined">
                             fact_check
@@ -145,7 +160,7 @@ function App() {
             </ul>
         </aside>
 
-        <main className="main-container">
+        <div className="main-container">
             <div className="main-title">
                 <p className="font-weight-bold">DASHBOARD</p>
             </div>
@@ -198,28 +213,18 @@ function App() {
 
                 <div className="charts-card">
                     <p className="chart-title">Top 5 Colaboradores</p>
-                    <div className='users-charts'><UsersInfoChart /></div>
+                    <div className='users-charts'><UsersInfoChart users={users} /></div>
                 </div>
 
                 <div className="charts-card">
                     <p className="chart-title">Total Colaboradores</p>
-                    <div className='users-charts'><UsersCountChart /></div>
+                    <div className='users-charts'><UsersCountChart counter={counter}/></div>
                 </div>
 
             </div>
-{/* 
-            <ol>
-                {
-                    users.map(tarea=>{
-                    return <li key={tarea}>{tarea}</li>
-                    })
-                }
-            </ol> */}
-
 
             <div>
-
-            <table class="table">
+            <table className="table">
                     <thead>
                       <tr>
                         <th scope="col"># ID</th>
@@ -231,10 +236,11 @@ function App() {
                     <tbody>
                         {
                             users.map(user=>{  
-                            return <tr>
+                            let monto = Number(user.cantidad)
+                            return <tr key={user.id}>
                                     <th scope="row">{user.id}</th>
                                     <td>{user.nombre}</td>
-                                    <td>$890.000</td>
+                                    <td>${monto.toLocaleString()}</td>
                                     <td>{user.correo}</td>
                                 </tr>      
                             })
@@ -244,8 +250,7 @@ function App() {
 
             </div>
             
-        </main>
-
+        </div>
     </div>
 
 

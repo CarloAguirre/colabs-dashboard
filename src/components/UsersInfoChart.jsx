@@ -1,9 +1,11 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Chart from 'react-apexcharts'
 
 
 
-export const UsersInfoChart = ()=> {
+export const UsersInfoChart = ({users})=> {
+
+    console.log(users)
 
     const [chart, setChart] = useState({       
        
@@ -23,6 +25,7 @@ export const UsersInfoChart = ()=> {
         
     
     })
+    
 return (
     <Chart options={chart.options} series={chart.series} type="bar" width={500} height={320} />
 )

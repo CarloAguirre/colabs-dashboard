@@ -1,9 +1,16 @@
-import React, { useState } from "react"
+import React, { useEffect, useState } from "react"
 import Chart from 'react-apexcharts'
 
-export const UsersCountChart = () => {
-    const [chart, setChart] = useState({       
+export const UsersCountChart = ({counter}) => {
 
+    useEffect(() => {
+        setChart({
+            ...chart,
+            series: [counter]
+        })
+      }, [counter])
+
+    const [chart, setChart] = useState({       
     options: {
         plotOptions: {
             radialBar: {
@@ -73,9 +80,9 @@ export const UsersCountChart = () => {
         stroke: {
             lineCap: "round"
         },
-        labels: ["Percent"]
+        labels: ["Colaboradores"]
         },
-        series: [4],
+        series: [counter],
         optionsBar: {
         chart: {
             stacked: true,
@@ -131,6 +138,8 @@ export const UsersCountChart = () => {
         }
 
     })
+
+    
 return (
     <Chart options={chart.options} series={chart.series} type="radialBar" width={500} height={320} />
 )
