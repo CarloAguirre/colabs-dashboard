@@ -185,6 +185,11 @@ body{
   font-weight: 600;
 }
 
+/* inputs */
+.search-reset_inputs{
+  display: flex;
+}
+
 /* dashboard visuals */
 .selected-label{
   background-color: rgb(255, 255, 255, 0.2);

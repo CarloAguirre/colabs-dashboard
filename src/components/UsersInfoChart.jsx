@@ -10,8 +10,8 @@ export const UsersInfoChart = ({users})=> {
 
     const allUsersArray = ()=>{
         users.forEach(user => {
-            usersName.push(user.nombre)
-            usersColab.push(user.cantidad)
+            usersName.unshift(user.nombre)
+            usersColab.unshift(user.cantidad)
         })    
     }
 
@@ -24,7 +24,7 @@ export const UsersInfoChart = ({users})=> {
                     // id: 'apexchart-example'
                 },
                 xaxis: {
-                    categories: usersName
+                    categories:  usersName
                 }
                 },
                 series: [{
