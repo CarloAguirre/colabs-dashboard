@@ -4,134 +4,115 @@ import { UsersCountChart } from './UsersCountChart';
 import { UsersInfoChart } from './UsersInfoChart';
 
 
-export const ColabList = () => {
+
+export const ColabList = ({users, setUsers}) => {
   
-    const [users, setUsers] = useState([
+
+    
+    const [counter, setCounter] = useState(Number(users.length))
+
+    const [inputValue, setInputValue] = useState("")
+
+    
+    const onInputChange = ({target})=>{
+    const {name, value} = target
+    setInputValue({
+        ...inputValue,
+        [name]: value
+    })
+    }
+    
+    
+    const onSubmitHandler = (event)=>{
+    event.preventDefault() 
+
+    let idUser = Number(users[users.length-1].id) + 1;
+    const {nombre, cantidad, correo} = inputValue
+
+    setUsers([ ...users,      
         {
-            id: "1",
-            nombre: "Colaborador 1",
-            cantidad: "1000000",
-            correo: "colaborador1@colaborador1.com"
-            },
-            {
-            id: "2",
-            nombre: "Colaborador 2",
-            cantidad: "2000000",
-            correo: "colaborador2@colaborador2.com"
-            },
-            {
-            id: "3",
-            nombre: "Colaborador 3",
-            cantidad: "3000000",
-            correo: "colaborador3@colaborador3.com"
-        },
-      ])
-    
-      const [counter, setCounter] = useState(Number(users.length))
-    
-      const [inputValue, setInputValue] = useState("")
-    
-      
-      const onInputChange = ({target})=>{
-        const {name, value} = target
-        setInputValue({
-            ...inputValue,
-            [name]: value
-        })
-      }
-      
-      
-      const onSubmitHandler = (event)=>{
-        event.preventDefault() 
-    
-        let idUser = Number(users[users.length-1].id) + 1;
-        const {nombre, cantidad, correo} = inputValue
-    
-        setUsers([ ...users,      
-            {
-                id: idUser,
-                nombre,
-                cantidad,
-                correo
-            }])
-         
-        setCounter(counter + 1)    
-        } 
+            id: idUser,
+            nombre,
+            cantidad,
+            correo
+        }])
         
+    setCounter(counter + 1)    
+    } 
+    
 
-        const [searchedUser, setSearchedUser] = useState("")
+    const [searchedUser, setSearchedUser] = useState("")
 
-        const [FilteredArray, setFilteredArray] = useState([])
+    const [FilteredArray, setFilteredArray] = useState([])
 
-        const onSearchChange = ({target})=>{
-            const {value} = target
-            setSearchedUser(value)
-        }
+    const onSearchChange = ({target})=>{
+        const {value} = target
+        setSearchedUser(value)
+    }
 
-        const fullList = document.getElementById("full-list")
-        const filteredList = document.getElementById("filtered-list")
+    const fullList = document.getElementById("full-list")
+    const filteredList = document.getElementById("filtered-list")
 
-        const onSearchSubmit = (event)=>{
-            event.preventDefault();
-            if(searchedUser !== []){  
-            const filterUser = users.filter(user => user.nombre.toLowerCase() === searchedUser.toLowerCase());
+    const onSearchSubmit = (event)=>{
+        event.preventDefault();
+        if(searchedUser != []){  
+        const filterUser = users.filter(user => user.nombre.toLowerCase() === searchedUser.toLowerCase());
 
-            if(filterUser[0]){
-      
-                    fullList.style.display = "none"
-                    filteredList.style.display = ""
-                    filterUser.forEach(user =>{
-                    
-                        setFilteredArray([{
-                            id: user.id,
-                            nombre: user.nombre,
-                            cantidad: user.cantidad,
-                            correo: user.correo
-                        }])
-                    })
-            }else{
-                alert("No existe ningún usuario con ese nombre")
-            }
-            }else{               
-                alert("Ingresa un nombre!")
-            }
+        if(filterUser[0]){
 
-        }
-
-        const onRefreshSubmit = (event)=>{
-            event.preventDefault()
-            fullList.style.display = ""
-            filteredList.style.display = "none"
-
-        }
-        
-
-        let totalMoney = 0;
-        let lastColab = 0;
-        const [topUser, setTopUser] = useState({
-            cantidad: 0,
-            nombre: ""
-        })
-
-        const statsGenerator = ()=>{
-
-        
-            users.forEach(user=>{
-                let name = user.nombre
-                let monto = Number(user.cantidad) 
-                totalMoney += monto
-                
-                if(monto > topUser.cantidad){
-                    setTopUser({
-                        cantidad: monto,
-                        nombre: name
-                    })
-                }
+            fullList.style.display = "none"
+            filteredList.style.display = ""
+            filterUser.forEach(user =>{
+            
+                setFilteredArray([{
+                    id: user.id,
+                    nombre: user.nombre,
+                    cantidad: user.cantidad,
+                    correo: user.correo
+                }])
             })
-            let lasUserColab = Number(users[users.length-1].cantidad)
-            lastColab += lasUserColab
+        }else{
+            alert("No existe ningún usuario con ese nombre")
         }
-        statsGenerator();
+        }else{               
+            alert("Ingresa un nombre!")
+        }
+    }
+
+    const onRefreshSubmit = (event)=>{
+        event.preventDefault()
+        fullList.style.display = ""
+        filteredList.style.display = "none"
+
+    }
+        
+
+    let totalMoney = 0;
+    let lastColab = 0;
+    const [topUser, setTopUser] = useState({
+        cantidad: 0,
+        nombre: ""
+    })
+
+    const statsGenerator = ()=>{
+
+    
+        users.forEach(user=>{
+            let name = user.nombre
+            let monto = Number(user.cantidad) 
+            totalMoney += monto
+            
+            if(monto > topUser.cantidad){
+                setTopUser({
+                    cantidad: monto,
+                    nombre: name
+                })
+            }
+        })
+        let lasUserColab = Number(users[users.length-1].cantidad)
+        lastColab += lasUserColab
+    }
+    statsGenerator();
 
 
     
@@ -315,7 +296,7 @@ export const ColabList = () => {
                           <tr>
                             <th scope="col"># ID</th>
                             <th scope="col">Name</th>
-                            <th scope="col">Colaboracion</th>
+                            <th scope="col">Colaboración</th>
                             <th scope="col">Mail</th>                      
                           </tr>
                         </thead>
