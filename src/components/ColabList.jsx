@@ -26,20 +26,28 @@ export const ColabList = () => {
        
     const onSubmitHandler = (event)=>{
         event.preventDefault();
-
-        let idUser = Number(users[users.length-1].id) + 1;
         const {nombre, cantidad, correo} = inputValue;
+        console.log(inputValue)
 
-        setUsers([ ...users,      
-            {
-                id: idUser,
-                nombre,
-                cantidad,
-                correo
-            }])
-            
-        setCounter(counter + 1);    
-    } 
+        if(inputValue !=[] && nombre){
+            let idUser = Number(users[users.length-1].id) + 1;
+            if(cantidad){
+                setUsers([ ...users,      
+                    {
+                        id: idUser,
+                        nombre,
+                        cantidad,
+                        correo
+                    }])
+                    
+                    setCounter(counter + 1);    
+            }else{
+                alert("Ingresa el monto de la colaboracion!")
+            }
+        }else{
+            alert("Ingresa todos los datos del nuevo colaborador!")
+        } 
+        }
     
     // buscador de colaborador config
     const fullList = document.getElementById("full-list");
