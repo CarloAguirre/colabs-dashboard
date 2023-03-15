@@ -23,13 +23,12 @@ export const ColabList = () => {
         [name]: value
     })
     };
-    
-    
+       
     const onSubmitHandler = (event)=>{
         event.preventDefault();
 
         let idUser = Number(users[users.length-1].id) + 1;
-        const {nombre, cantidad, correo} = inputValue
+        const {nombre, cantidad, correo} = inputValue;
 
         setUsers([ ...users,      
             {
@@ -44,7 +43,7 @@ export const ColabList = () => {
     
     // buscador de colaborador config
     const fullList = document.getElementById("full-list");
-    const filteredList = document.getElementById("filtered-list")
+    const filteredList = document.getElementById("filtered-list");
     const [searchedUser, setSearchedUser] = useState("");
 
     const [FilteredArray, setFilteredArray] = useState([]);
@@ -60,6 +59,7 @@ export const ColabList = () => {
             const filterUser = users.filter(user => user.nombre.toLowerCase() === searchedUser.toLowerCase());
             if(filterUser[0]){
                 fullList.style.display="none";
+                filteredList.style.display = ""
                 filterUser.forEach(user =>{               
                     setFilteredArray([{
                         id: user.id,
