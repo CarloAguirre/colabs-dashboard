@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react"
 import Chart from 'react-apexcharts'
+import { infoChart } from "../config/infoCharts"
 
 
 
@@ -18,41 +19,11 @@ export const UsersInfoChart = ({users})=> {
     
     useEffect(() => {    
         allUsersArray()  
-        setChart({
-            options: {
-                chart: {
-                    // id: 'apexchart-example'
-                },
-                xaxis: {
-                    categories:  usersName
-                }
-                },
-                series: [{
-                name: 'series-1',
-                data: usersColab
-                }]
-            })  
+        setChart(infoChart(usersName, usersColab))  
           
     }, [users])
 
-    const [chart, setChart] = useState({       
-       
-        options: {
-        chart: {
-            // id: 'apexchart-example'
-        },
-        xaxis: {
-            categories: usersName
-        }
-        },
-        series: [{
-        name: 'series-1',
-        data: usersColab
-        }]
-
-        
-    
-    })
+    const [chart, setChart] = useState(infoChart(usersName, usersColab))
 
     
 return (
