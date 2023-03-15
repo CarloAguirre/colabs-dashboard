@@ -27,7 +27,6 @@ export const ColabList = () => {
     const onSubmitHandler = (event)=>{
         event.preventDefault();
         const {nombre, cantidad, correo} = inputValue;
-        console.log(inputValue)
 
         if(inputValue !=[] && nombre){
             let idUser = Number(users[users.length-1].id) + 1;
@@ -64,7 +63,7 @@ export const ColabList = () => {
     const onSearchSubmit = (event)=>{
         event.preventDefault();
         if(searchedUser != []){  
-            const filterUser = users.filter(user => user.nombre.toLowerCase() === searchedUser.toLowerCase());
+            const filterUser = users.filter(user => user.nombre.toLowerCase().includes(searchedUser.toLowerCase()));
             if(filterUser[0]){
                 fullList.style.display="none";
                 filteredList.style.display = ""
