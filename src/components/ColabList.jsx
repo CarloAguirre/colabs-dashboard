@@ -121,12 +121,9 @@ export const ColabList = () => {
             </div>
             <div className="header-left">          
                 <form onSubmit={onSubmitHandler}>
-                    Nombre
-                    <input type="text" name='nombre' onChange={onInputChange} className="addColab-input"></input>
-                    Monto
-                    <input type="number" name='cantidad' onChange={onInputChange} className="addColab-input" ></input>
-                    mail
-                    <input type="email" name='correo' onChange={onInputChange} className="addColab-input"></input>
+                    <input type="text" name='nombre' onChange={onInputChange} className="addColab-input" placeholder='Nombre'></input>  
+                    <input type="number" name='cantidad' onChange={onInputChange} className="addColab-input" placeholder='Monto' ></input>
+                    <input type="email" name='correo' onChange={onInputChange} className="addColab-input" placeholder='mail'></input>
                     <button type='submit'><span className="material-icons-outlined">                           
                     add  
                     </span></button>
@@ -264,9 +261,8 @@ export const ColabList = () => {
             </div>
 
             <div className='search-reset_inputs'>
-                <form action="" onSubmit={onSearchSubmit}>       
-                    Buscar
-                    <input type="text" name='buscarNombre' onChange={onSearchInput}></input>
+                <form action="" onSubmit={onSearchSubmit}>  
+                    <input type="text" name='buscarNombre' onChange={onSearchInput} placeholder='Buscar'></input>
                     <button type='submit'><span className="material-icons-outlined">                           
                         search   
                     </span></button>

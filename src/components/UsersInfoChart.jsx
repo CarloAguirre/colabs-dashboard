@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Chart from 'react-apexcharts'
+
 import { infoChart } from "../config/infoCharts"
-
-
 
 export const UsersInfoChart = ({users})=> {
 
