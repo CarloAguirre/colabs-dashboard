@@ -78,6 +78,7 @@ export const ColabList = () => {
                 setSearchedUser("");
                 }else{
                     alert("No existe ningún usuario con ese nombre");
+                    setSearchedUser("");
                 }
         }else{               
             alert("Ingresa un nombre!");
