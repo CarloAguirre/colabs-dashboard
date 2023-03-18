@@ -62,7 +62,7 @@ export const ColabList = () => {
 
     const onSearchSubmit = (event)=>{
         event.preventDefault();
-        if(searchedUser != []){  
+        if(searchedUser != []){   
             const filterUser = users.filter(user => user.nombre.toLowerCase().includes(searchedUser.toLowerCase()));
             if(filterUser[0]){
                 fullList.style.display="none";
@@ -75,6 +75,7 @@ export const ColabList = () => {
                         correo: user.correo
                     }])
                 })
+                setSearchedUser("");
                 }else{
                     alert("No existe ningún usuario con ese nombre");
                 }
@@ -269,7 +270,7 @@ export const ColabList = () => {
 
             <div className='search-reset_inputs'>
                 <form action="" onSubmit={onSearchSubmit}>  
-                    <input type="text" name='buscarNombre' onChange={onSearchInput} placeholder='Buscar'></input>
+                    <input type="text" name='buscarNombre' onChange={onSearchInput} placeholder='Buscar' value={searchedUser}></input>
                     <button type='submit'><span className="material-icons-outlined">                           
                         search   
                     </span></button>
