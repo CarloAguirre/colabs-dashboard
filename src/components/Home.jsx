@@ -1,11 +1,23 @@
+import { useEffect } from "react"
 import { useOrdenes } from "../context"
 import { UsersCountChart } from "./UsersCountChart"
 import { UsersInfoChart } from "./UsersInfoChart"
+import Cookies from 'universal-cookie'
 
 
 export const Home = () => {
+    useEffect(() => {
+        const cookies = new Cookies();
+        const token = cookies.get("token")
+        if(!token){
+            alert('No tienes acceso al dashboard de administracion, inicia sesión')
+            window.location.href = "./"
+        }
 
+    }, [])
+    
     const {counter, totalMoney, lastColab, topUser, users, searchedUser, onSearchInput, onRefreshSubmit, onSearchSubmit, FilteredArray  } = useOrdenes()
+    
   return (
     <div className="main-container">
     <div className="main-title">

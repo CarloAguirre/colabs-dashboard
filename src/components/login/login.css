@@ -1,0 +1,257 @@
+
+.form-wrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;  
+    margin: 2vh auto 20vh auto;
+    background-color: #212529;
+    border-radius: 3%;
+    max-width: 20vw;
+}
+
+.form-wrapper__tour{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;  
+    margin: 2vh auto 20vh auto;
+    background-color: #212529;
+    border-radius: 10%;
+    max-width: 90vw;
+    color: rgb(220, 223, 228);
+    font-weight: bolder;
+}
+
+@media (max-width: 1550px ){
+    .form-wrapper{
+        max-width: 30vw;
+    }
+   
+}
+
+@media (max-width: 1200px ){
+    .form-wrapper{
+        max-width: 35vw;
+    }
+   
+}
+
+@media (max-width: 1050px){
+    .form-wrapper{
+        max-width: 40vw; 
+    }
+   
+}
+
+@media (max-width: 845px){
+    .form-wrapper{
+        max-width: 50vw; 
+    }
+   
+}
+
+@media (max-width: 700px){
+    .form-wrapper{
+        max-width: 90vw; 
+    }
+   
+}
+
+@media (max-width: 930px ){
+    .form-wrapper__tour{
+        max-width: 60vw;
+    }
+   
+}
+@media (max-width: 540px ){
+    .form-wrapper__tour{
+        max-width: 80vw;
+        border-radius: 5%;
+    }
+   
+}
+
+.form-wrapper__create-account{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;  
+    margin: 20vh auto;
+    background-color: rgb(233, 237, 240);
+    border-radius: 5%;
+    max-width: 25vw;
+}
+
+
+
+
+.login-form {    
+    text-align: center;
+    padding: 1.5rem; 
+    margin-left: 2rem;
+    margin-right: 2rem;
+    border-radius: 5%;
+    color: rgb(132, 136, 143);
+    font-size: larger; 
+} 
+
+.create-account__button{
+    width: 14rem;
+}
+
+#errorMsg {
+    margin-top: -8rem;
+    
+}
+
+.body-bg{
+    background-color: #e6e8ed;
+    min-width: 100vw;
+    min-height: 100vh;
+}
+.body-bg h3{
+    padding-top: 10rem;
+    margin-bottom: -10rem;
+    font-size:xx-large;
+}
+
+.body-bg__createTour{
+    background-color: #c84614;
+    min-width: 100vw;
+    min-height: 100vh;
+}
+
+.flex-box{
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 4rem;   
+}
+
+.flex-box__galery{
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 1rem; 
+    max-width: 28vw;
+}
+
+.image-up{
+    margin-top: -11.6rem;
+}
+@media (max-width: 1497px){
+    .image-up{
+        margin-top: -8.6rem;
+    }
+}
+@media (max-width: 1212px){
+    .image-up{
+        margin-top: -6.6rem;
+    }
+}
+.image-up__more{
+    margin-top: -3.9rem;
+}
+@media (max-width: 1497px){
+    .image-up__more{
+        margin-top: -2.6rem;
+    }
+}
+@media (max-width: 1212px){
+    .image-up__more{
+        margin-top: -1.6rem;
+    }
+}
+
+@media (max-width: 930px){
+   
+    .img-responsive{      
+        width: 85vw;
+        align-items: center;
+    }
+}
+
+@media (max-width: 930px ){  
+    .galeria-pc{
+        display: none !important;
+    }
+}
+
+@media (min-width: 930px ){  
+    .galeria-responsive{
+        display: none !important;
+    }
+}
+
+
+@media (min-width: 930px){
+    
+    .less-margin{
+        margin-top: 5rem;
+        margin-top: 5rem;
+    }
+}
+
+.galeria-responsive{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.flex-box__noMargin{
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 1rem;
+    border: dotted;
+}
+
+.flex-box__atributos{
+    display: flex;
+    flex-direction: column;
+    margin: 1rem 1rem;
+    min-width: 12vw;
+    min-height: 12vh;
+}
+
+.flex-box__row{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.video__perfilGuia{
+    width: 1120px;
+    height: 630px;
+}
+
+
+@media (max-width: 1464px ){
+    .flex-box{
+        margin: 1rem 2rem;
+        
+    }
+}
+
+@media (max-width: 1100px ){
+    .flex-box{
+        margin: 1rem 1rem;
+        
+    }
+}
+@media (max-width: 930px ){
+    .flex-box{
+        flex-direction: column;
+    }
+    .flex-box__row{
+        flex-direction: column;
+    }
+}
+
+@media (max-width:930px ){
+    .create-product__hide-hr{
+        display: none;
+    }  
+}
+
+
+
+

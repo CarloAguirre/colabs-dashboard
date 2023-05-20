@@ -1,28 +1,34 @@
-
-import { SideBar } from './components/SideBar';
-import { useOrdenes, OrdenesProvider} from './context';
-import './App.css'
+import { useOrdenes, OrdenesProvider } from './context';
+import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Home } from './components/Home';
 import { Header } from './components/Header';
+import { SideBar } from './components/SideBar';
+import { Login } from './components/login';
+import { Registration } from './components/registration/Registration';
 
 function App() {
   return (
-
-  <div className="grid-container">
-    <OrdenesProvider>
-      <BrowserRouter>
-        <SideBar />
-        <Header />
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route />
-          <Route />
-        </Routes>
-      </BrowserRouter>
-    </OrdenesProvider>
-  </div>   
-
+    <div className="grid-container">
+      <OrdenesProvider>
+        <BrowserRouter>
+          <Routes>
+            <Route path="/" element={<Login />} />
+            <Route path="/registration" element={<Registration />} />
+            <Route
+              path="/dashboard"
+              element={
+                <>
+                  <SideBar />
+                  <Header />
+                  <Home />
+                </>
+              }
+            />
+          </Routes>
+        </BrowserRouter>
+      </OrdenesProvider>
+    </div>
   );
 }
 
