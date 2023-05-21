@@ -45,31 +45,34 @@ import { infoFetch } from "./helpers/infoFetch";
                 }
 
                 //Fecha
-                const fechaMatch = texto.match(/(\d{1,2})\.(\w{3})\.\.(\d{4})/);
+                const fechaMatch = texto.match(/Fecha de Emisión: (.+)/);
                 if (fechaMatch) {
-                    const dia = parseInt(fechaMatch[1], 10);
-                    const mes = fechaMatch[2];
-                    const anio = parseInt(fechaMatch[3], 10);
-                    fecha = new Date(anio, obtenerMesNumero(mes) - 1, dia).toLocaleDateString();
-                    orderArray[1]= fecha
-                }
-                function obtenerMesNumero(mesAbreviatura) {
-                    const meses = {
-                      'Ene': 1,
-                      'Feb': 2,
-                      'Mar': 3,
-                      'Abr': 4,
-                      'May': 5,
-                      'Jun': 6,
-                      'Jul': 7,
-                      'Ago': 8,
-                      'Sep': 9,
-                      'Oct': 10,
-                      'Nov': 11,
-                      'Dic': 12
-                    };
-                    return meses[mesAbreviatura];
+                  const fechaTexto = fechaMatch[1].trim();
+                  const fecha = new Date(fechaTexto);
+                  if (!isNaN(fecha)) {
+                    const fechaFormateada = fecha.toLocaleDateString();
+                    orderArray[1] = fechaFormateada;
                   }
+                }                
+                
+                function obtenerMesNumero(mesAbreviatura) {
+                  const meses = {
+                    'Ene': 1,
+                    'Feb': 2,
+                    'Mar': 3,
+                    'Abr': 4,
+                    'May': 5,
+                    'Jun': 6,
+                    'Jul': 7,
+                    'Ago': 8,
+                    'Sep': 9,
+                    'Oct': 10,
+                    'Nov': 11,
+                    'Dic': 12
+                  };
+                  return meses[mesAbreviatura];
+                }
+                
 
                 //Division
                 let segundaPalabra = null;
@@ -112,9 +115,7 @@ import { infoFetch } from "./helpers/infoFetch";
 
                 //Mail Gestor de compra
                 const regex = /(?:E-mail|Email):\s*([^\s]+)/i;
-
-                const match = texto.match(regex);
-                
+                const match = texto.match(regex);               
                 if (match) {
                   const email = match[1];
                   orderArray[6] = email

@@ -29,7 +29,7 @@ export const loginFetch = async(password, email)=>{
         cookies.set('email', data.usuario.correo, {"path": "/"});
         cookies.set('uid', data.usuario.uid, {"path": "/"});
         cookies.set('token', data.token, {"path": "/"});
-        alert(`${data.usuario.nombre} haz iniciado sesión correctamente`)
+        // alert(`${data.usuario.nombre} haz iniciado sesión correctamente`)
         window.location.href = "./dashboard"
           
       })
