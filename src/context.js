@@ -111,11 +111,14 @@ import { infoFetch } from "./helpers/infoFetch";
                   }
 
                 //Mail Gestor de compra
-                let textoDespuesDosPuntosMail = null;
-                if (texto.startsWith('E-mail:') || texto.startsWith('Email:')) {
-                  textoDespuesDosPuntosMail = texto.substring(7).trim();
-                  orderArray[6] = textoDespuesDosPuntosMail;
-                }                
+                const regex = /(?:E-mail|Email):\s*([^\s]+)/i;
+
+                const match = texto.match(regex);
+                
+                if (match) {
+                  const email = match[1];
+                  orderArray[6] = email
+                }
 
                 //SAP/material
                 orderArray[7] = Number(newOrder[indiceSAP + 12].split(' ')[1]);
@@ -132,6 +135,7 @@ import { infoFetch } from "./helpers/infoFetch";
                 
 
             })
+            console.log(orderArray)
             setNewOrderData(orderArray)
             
         }
