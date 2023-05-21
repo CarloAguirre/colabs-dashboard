@@ -8,7 +8,7 @@ export const SideBar = () => {
                 <div className="sidebar-brand">
                     <span className="material-icons-outlined">
                         inventory
-                    </span> Carlo's Colabs
+                    </span> AGI Industries
                 </div>
                 <span className="material-icons-outlined">
                     close

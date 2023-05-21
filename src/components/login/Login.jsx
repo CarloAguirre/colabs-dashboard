@@ -10,9 +10,9 @@ export const Login = () => {
     useEffect(() => {
       const cookies = new Cookies();
       const token = cookies.get("token")
-      if(token){
-          window.location.href = "./dashboard"
-      }
+      // if(token){
+      //     window.location.href = "./dashboard"
+      // }
 
   }, [])
     const [formState, setFormState] = useState({
@@ -42,7 +42,7 @@ export const Login = () => {
 
   return (
     <div className='pb-5 body-bg'>
-      <h3 className='text-center mb-5'>Area solo para administradores</h3>
+      <h3 className='text-center mb-5'>AGI Industries Chile</h3>
       <div className='form-wrapper d-flex pb-3'>
           <form 
           className='login-form'

@@ -1,4 +1,5 @@
 import { useOrdenes } from "../context"
+import { ModalPdfDrop } from "./modal/Modal"
 
 
 export const Header = () => {
@@ -11,15 +12,16 @@ export const Header = () => {
                     menu
                 </span>
             </div>
-            <div className="header-left">          
-                <form onSubmit={onSubmitHandler}>
+            <div className="header-left">     
+            <ModalPdfDrop />     
+                {/* <form onSubmit={onSubmitHandler}>
                     <input type="text" name='nombre' onChange={onInputChange} className="addColab-input" placeholder='Nombre'></input>  
                     <input type="number" name='cantidad' onChange={onInputChange} className="addColab-input" placeholder='Monto' ></input>
                     <input type="email" name='correo' onChange={onInputChange} className="addColab-input" placeholder='mail'></input>
                     <button type='submit'><span className="material-icons-outlined">                           
                     add  
                     </span></button>
-                </form>
+                </form> */}
             </div>
 
             <div className="header-right">

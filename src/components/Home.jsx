@@ -16,7 +16,7 @@ export const Home = () => {
 
     }, [])
     
-    const {counter, totalMoney, lastColab, topUser, users, searchedUser, onSearchInput, onRefreshSubmit, onSearchSubmit, FilteredArray  } = useOrdenes()
+    const {counter, totalMoney, lastColab, topUser, users} = useOrdenes()
     
   return (
     <div className="main-container">
@@ -81,60 +81,9 @@ export const Home = () => {
         </div>
     </div>
 
-    <div className='search-reset_inputs'>
-        <form action="" onSubmit={onSearchSubmit}>  
-            <input type="text" name='buscarNombre' onChange={onSearchInput} placeholder='Buscar' value={searchedUser}></input>
-            <button type='submit'><span className="material-icons-outlined">                           
-                search   
-            </span></button>
-        </form>
-        <form action="" onSubmit={onRefreshSubmit}>
-            <button type='submit'><span className="material-icons-outlined">                           
-                refresh  
-            </span></button>
-        </form>
-    </div>
+   
 
-    <div>
-    <table className="table">
-            <thead>
-                <tr>
-                <th scope="col"># ID</th>
-                <th scope="col">Name</th>
-                <th scope="col">Colaboración</th>
-                <th scope="col">Mail</th>                      
-                </tr>
-            </thead>
-            <tbody id='full-list'>
-    
-                {
-                    users.map(user=>{  
-                    let monto = Number(user.cantidad)
-                    return <tr key={user.id}>
-                            <th scope="row">{user.id}</th>
-                            <td>{user.nombre}</td>
-                            <td>${monto.toLocaleString()}</td>
-                            <td>{user.correo}</td>
-                        </tr>    
-                    })
-                }
-                
-            </tbody>
-            <tbody id='filtered-list'>
-                {
-                        FilteredArray.map(user=>{  
-                        let monto = Number(user.cantidad)
-                        return <tr key={user.id}>
-                                <th scope="row">{user.id}</th>
-                                <td>{user.nombre}</td>
-                                <td>${monto.toLocaleString()}</td>
-                                <td>{user.correo}</td>
-                            </tr>   
-                        })
-                    }
-            </tbody>
-            </table>
-    </div>           
+          
 </div>
   )
 }

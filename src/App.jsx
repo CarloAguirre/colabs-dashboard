@@ -6,6 +6,8 @@ import { Header } from './components/Header';
 import { SideBar } from './components/SideBar';
 import { Login } from './components/login';
 import { Registration } from './components/registration/Registration';
+import { OrderTable } from './components/tables/OrderTable';
+
 
 function App() {
   return (
@@ -22,6 +24,16 @@ function App() {
                   <SideBar />
                   <Header />
                   <Home />
+                </>
+              }
+            />
+            <Route
+              path="/orders"
+              element={
+                <>
+                  <SideBar />
+                  <Header />
+                  <OrderTable />
                 </>
               }
             />
