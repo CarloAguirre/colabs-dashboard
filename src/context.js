@@ -37,6 +37,9 @@ import { infoFetch } from "./helpers/infoFetch";
             const orderArray =[]
             let fecha = null;
             const indiceSAP = newOrder.indexOf('Material');
+            const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
+            const regexSAP = /\d+\s(\d+)/g;
+            let resultados = [];
 
             newOrder.map(texto=>{
                 //Numero de Orden
@@ -72,39 +75,70 @@ import { infoFetch } from "./helpers/infoFetch";
                   };
                   return meses[mesAbreviatura];
                 }
-                
+                //Contrato:
+                const regexContrato = /abierto\s(\d+)/;
+                const matchContrato = texto.match(regexContrato);
+
+                if (matchContrato) {
+                  orderArray[2] = Number(matchContrato[1]);
+                }
 
                 //Division
                 let segundaPalabra = null;
                 const palabras = texto.split(' ');
                 if (palabras.length >= 2 && palabras[0] === 'DIVISIÓN') {
+                  if(palabras[2]){
+                    segundaPalabra = `${palabras[1]} ${palabras[2]}`;
+                    orderArray[3] = segundaPalabra;
+                  }else{
                     segundaPalabra = palabras[1];
                     orderArray[3] = segundaPalabra;
+                  }
 
                     }
                 
                 //Fecha de entrega
                 let fechaEntrega = null;
-                const indiceDosPuntos = texto.indexOf(':');
-                if (indiceDosPuntos !== -1) {
-                  const textoDespuesDosPuntos = texto.substring(indiceDosPuntos + 1).trim();
-                  const partesFecha = textoDespuesDosPuntos.split('.');
-                  if (partesFecha.length === 3) {
-                    const dia = parseInt(partesFecha[0], 10);
-                    const mesAbreviatura = partesFecha[1];
-                    const anio = parseInt(partesFecha[2], 10);
-                    const meses = {
-                      Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
-                      Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
-                    };
-                    if (meses.hasOwnProperty(mesAbreviatura)) {
-                      const mes = meses[mesAbreviatura];
-                      fechaEntrega = new Date(anio, mes, dia).toLocaleDateString();
-                      orderArray[4] = fechaEntrega;
-
+                if (texto.startsWith('FECHA DE ENTREGA:')){                  
+                  const indiceDosPuntos = texto.indexOf(':');
+                  if (indiceDosPuntos !== -1) {
+                    const textoDespuesDosPuntos = texto.substring(indiceDosPuntos + 1).trim();
+                    const partesFecha = textoDespuesDosPuntos.split('.');
+                    if (partesFecha.length === 3) {
+                      const dia = parseInt(partesFecha[0], 10);
+                      const mesAbreviatura = partesFecha[1];
+                      const anio = parseInt(partesFecha[2], 10);
+                      const meses = {
+                        Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+                        Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+                      };
+                      if (meses.hasOwnProperty(mesAbreviatura)) {
+                        const mes = meses[mesAbreviatura];
+                        fechaEntrega = new Date(anio, mes, dia).toLocaleDateString();
+                        orderArray[4] = fechaEntrega;
+                        
                     }
                   }
                 }
+              }else if (texto.startsWith('FECHA ENTREGA')){ 
+                const indiceString = newOrder.indexOf('FECHA ENTREGA');
+                const fecha = newOrder[indiceString + 2]
+                const partesFecha = fecha.split('.');
+                if (partesFecha.length === 3) {
+                  const dia = parseInt(partesFecha[0], 10);
+                  const mesAbreviatura = partesFecha[1];
+                  const anio = parseInt(partesFecha[2], 10);
+                  const meses = {
+                    Jan: 0, Feb: 1, Mar: 2, Apr: 3, May: 4, Jun: 5,
+                    Jul: 6, Aug: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+                  };
+                  if (meses.hasOwnProperty(mesAbreviatura)) {
+                    const mes = meses[mesAbreviatura];
+                    fechaEntrega = new Date(anio, mes, dia).toLocaleDateString();
+                    orderArray[4] = fechaEntrega;       
+                }
+              }
+              }
 
                 //Nombre Gestor de compra
                 let textoDespuesDosPuntosNombre = null;
@@ -122,20 +156,52 @@ import { infoFetch } from "./helpers/infoFetch";
                 }
 
                 //SAP/material
-                orderArray[7] = Number(newOrder[indiceSAP + 12].split(' ')[1]);
+                // orderArray[7] = Number(newOrder[indiceSAP + 12].split(' ')[1]);
+                // const regexSAP = /\d+\s(\d+)/g;
+                // const matches = texto.match(regexSAP);
+                
+                // if (matches) {
+                //   let resultados = [];
+                //   matches.map(match => resultados.push(match.split(' ')[1]));
+                //   const numerosAgrupados = resultados.join('/');
+                //   orderArray[7] = numerosAgrupados
+                // }
 
+                if (regexSAP.test(texto)) {
+                  const matches = texto.match(regexSAP);
+                  
+                  if (matches) {
+                    const numeros = matches.map(match => match.split(' ')[1]);
+                    resultados = resultados.concat(numeros);
+                  }
+                }
+
+                
                 //Cantidad
                 orderArray[8] = Number(newOrder[indiceSAP + 15]);
 
                 //precio unitario
-                let precioString = (newOrder[indiceSAP + 19]);
-                orderArray[9] = parseFloat(precioString.replace(',', ''));
+                // if(typeof texto)
+                let precioUno = newOrder[indiceSAP + 19]
+                const onlyNumbers = /^\d+$/.test(precioUno);
+                if(onlyNumbers){
+                  let precioString = (newOrder[indiceSAP + 19]);
+                  orderArray[9] = parseFloat(precioString.replace(',', ''));
+                }else{
+                  let precioString = (newOrder[indiceValorNeto + 2]);
+                  orderArray[9] = parseFloat(precioString.replace(',', ''));
+                }
 
                 //Descripcion
                 orderArray[10] = newOrder[indiceSAP + 14];
                 
 
             })
+            //Precio parte II
+            const numerosAgrupados = resultados.join('/');
+            orderArray[7] = numerosAgrupados
+            //Cantidad
+            orderArray[8] = (Number(newOrder[indiceSAP + 15]) - resultados.length) + 1;
             console.log(orderArray)
             setNewOrderData(orderArray)
             

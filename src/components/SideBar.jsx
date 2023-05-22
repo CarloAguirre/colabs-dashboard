@@ -20,10 +20,8 @@ export const SideBar = () => {
                 </span>
             </div>
 
-            <ul className="sidebar-list">
-                
-                <NavLink  to="/dashboard" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
-                
+            <ul className="sidebar-list">           
+                <NavLink  to="/dashboard" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} > 
                     <span className="material-icons-outlined">
                         dashboard
                     </span> Dashboard
