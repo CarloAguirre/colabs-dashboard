@@ -63,16 +63,22 @@ body{
   font-weight: 700;
 }
 .sidebar-list{
+  display: flex;
+  flex-direction: column;
   padding: 0;
   margin-top: 15px;
   list-style-type: none;
 }
 .sidebar-list-item{
   padding: 20px;
+  color: inherit;
+  text-decoration: none;
 }
 .sidebar-list-item:hover{
   background-color: rgb(255, 255, 255, 0.2);
   cursor: pointer;
+  color: inherit;
+  text-decoration: none;
 }
 
 /* main  */
@@ -238,3 +244,9 @@ body{
  }
 }
 
+.active{
+background-color: #246dec;
+}
+.navLink{
+  margin: 10px;
+}

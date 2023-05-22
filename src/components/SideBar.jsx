@@ -1,9 +1,14 @@
-import React from 'react'
+
+
+import {  NavLink } from "react-router-dom";
 import '../App.css'
+import { Navbar } from "react-bootstrap";
 
 export const SideBar = () => {
   return (
     <aside id="sidebar">
+
+
             <div className="sidebar-title">
                 <div className="sidebar-brand">
                     <span className="material-icons-outlined">
@@ -16,18 +21,20 @@ export const SideBar = () => {
             </div>
 
             <ul className="sidebar-list">
-                <li className="sidebar-list-item selected-label">
+                
+                <NavLink  to="/dashboard" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
+                
                     <span className="material-icons-outlined">
                         dashboard
                     </span> Dashboard
-                </li>
-                <a className="anchor-link">
-                    <li className="sidebar-list-item">
+                </NavLink>
+                
+                <NavLink  to="/orders" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
                         <span className="material-icons-outlined">
                             inventory_2
-                        </span> Inversiones
-                    </li>
-                </a>
+                        </span> Orders
+
+                    </NavLink>
                 <a className="anchor-link">
                     <li className="sidebar-list-item">
                         <span className="material-icons-outlined">
@@ -58,4 +65,5 @@ export const SideBar = () => {
             </ul>
         </aside>
   )
+
 }
