@@ -7,6 +7,7 @@ body{
   font-family: 'Montserrat', sans-serif;
 }
 
+
 .material-icons-outlined{
   vertical-align: middle;
   line-height: 1px;
@@ -43,6 +44,7 @@ body{
 /* sidebar  */
 #sidebar{
   grid-area: sidebar;
+
   hyphens: 100vh;
   background-color: #21232d;
   color:#9799ab;
@@ -249,4 +251,11 @@ background-color: #246dec;
 }
 .navLink{
   margin: 10px;
+}
+table thead{
+  background-color: #302b63;
+  color: white;
+}
+table th, td{
+  text-align: center;
 }

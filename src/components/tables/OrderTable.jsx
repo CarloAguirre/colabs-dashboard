@@ -3,17 +3,19 @@ import Tabs from 'react-bootstrap/Tabs';
 import Form from 'react-bootstrap/Form';
 import { useOrdenes } from "../../context"
 import { useEffect, useState } from 'react';
+import './tables.css'
 
 
 export const OrderTable = () => {
 
-    const {FilteredArray, searchedUser, onSearchInput, onRefreshSubmit, onSearchSubmit, orders  } = useOrdenes()
+    const {searchedUser, onSearchInput, onRefreshSubmit, onSearchSubmit, orders  } = useOrdenes()
     
-    const [key, setKey] = useState('home')
+    const [key, setKey] = useState('all')
     const [contratosArray, setContratosArray] =useState([])
     const [tableOrders, setTableOrders] = useState(orders)
 
-    console.log(orders)
+    
+    // console.log(orders)
     console.log(tableOrders)
 
     useEffect(() => {
@@ -54,12 +56,13 @@ export const OrderTable = () => {
                 return <option value={contrato} key={contrato}>{contrato}</option>              
              })}
            </Form.Select>
-            }                   
+            }   
+    <div className="table-container">
         <table className="table table-bordered table-striped">
         <thead>
             <tr>
             <th scope="col">NUMERO</th>
-            { (ordenNumber === 45) && <th scope="col">CONTRATO</th>   }   
+            { (ordenNumber === 45 ) && <th scope="col">CONTRATO</th>   }   
             <th scope="col">DESCRIPCIÓN</th>                  
             <th scope="col">NOMBRE</th>
             <th scope="col">MAIL</th>
@@ -81,22 +84,38 @@ export const OrderTable = () => {
                         return <tr key={order.numero}>
                         <td scope="row">{order.numero}</td>  
                         { (ordenNumber === 45) && <td scope="row">{order.contrato}</td>  }   
-                        <th scope="row">{order.descripcion}</th>
-                        <td scope="row">{order.nombre}</td>
-                        <td scope="row">{order.mail}</td>
-                        <td scope="row">{order.fecha}</td>
-                        <td scope="row">{order.division}</td>
-                        <td scope="row">{order.entrega}</td>
-                        <td scope="row">{order.material}</td>
-                        <td scope="row">{order.precio}</td>
-                        <td scope="row">{order.cantidad}</td>
-                        <td scope="row">{order.precio* order.cantidad}</td>
+                        <td>{order.descripcion}</td>
+                        <td>{order.nombre}</td>
+                        <td>{order.mail}</td>
+                        <td>{order.fecha}</td>
+                        <td>{order.division}</td>
+                        <td>{order.entrega}</td>
+                        <td>{order.material}</td>
+                        <td>{order.precio}</td>
+                        <td>{order.cantidad}</td>
+                        <td>{order.precio* order.cantidad}</td>
+                    </tr>    
+                    }
+                    else if(ordenNumber === 'todos'){
+                        return <tr key={order.numero}>
+                        <td>{order.numero}</td>  
+                        <th>{order.descripcion}</th>
+                        <td>{order.nombre}</td>
+                        <td>{order.mail}</td>
+                        <td>{order.fecha}</td>
+                        <td>{order.division}</td>
+                        <td>{order.entrega}</td>
+                        <td>{order.material}</td>
+                        <td>{order.precio}</td>
+                        <td>{order.cantidad}</td>
+                        <td>{order.precio* order.cantidad}</td>
                     </tr>    
                     }
                 })
             }               
         </tbody>
         </table>
+    </div>                
         </div>
     }
   return (
@@ -116,18 +135,18 @@ export const OrderTable = () => {
         </div>
          <Tabs
             id="controlled-tab-example"
-            activeKey={key}
-            onSelect={(k) => setKey(k)}
+            // activeKey={key}
+            // onSelect={(k) => setKey(k)}
             className="my-3"
             >
-            <Tab eventKey="home" title="#44" style={{backgroundColor: 'transparent'}}>
+            <Tab eventKey="all" title="Ordenes" style={{backgroundColor: 'transparent'}} >
+                {tableModel('todos')}
+            </Tab>
+            <Tab eventKey="#44" title="#44" style={{backgroundColor: 'transparent'}}>
                 {tableModel(44)}
             </Tab>
-            <Tab eventKey="profile" title="#45" style={{backgroundColor: 'transparent'}}>
+            <Tab eventKey="#45" title="#45" style={{backgroundColor: 'transparent'}}>
                 {tableModel(45)}
-            </Tab>
-            <Tab eventKey="contact" title="Contact" disabled>
-                Tab content for Contact
             </Tab>
         </Tabs>
     

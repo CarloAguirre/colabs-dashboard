@@ -156,17 +156,6 @@ import { infoFetch } from "./helpers/infoFetch";
                 }
 
                 //SAP/material
-                // orderArray[7] = Number(newOrder[indiceSAP + 12].split(' ')[1]);
-                // const regexSAP = /\d+\s(\d+)/g;
-                // const matches = texto.match(regexSAP);
-                
-                // if (matches) {
-                //   let resultados = [];
-                //   matches.map(match => resultados.push(match.split(' ')[1]));
-                //   const numerosAgrupados = resultados.join('/');
-                //   orderArray[7] = numerosAgrupados
-                // }
-
                 if (regexSAP.test(texto)) {
                   const matches = texto.match(regexSAP);
                   
@@ -175,20 +164,19 @@ import { infoFetch } from "./helpers/infoFetch";
                     resultados = resultados.concat(numeros);
                   }
                 }
-
-                
+            
                 //Cantidad
                 orderArray[8] = Number(newOrder[indiceSAP + 15]);
 
                 //precio unitario
                 // if(typeof texto)
-                let precioUno = newOrder[indiceSAP + 19]
-                const onlyNumbers = /^\d+$/.test(precioUno);
-                if(onlyNumbers){
-                  let precioString = (newOrder[indiceSAP + 19]);
+                let precioUno = newOrder[indiceSAP + 19];
+                const onlyNumbersAndSymbols = /^[\d,.]+$/.test(precioUno);
+                if (onlyNumbersAndSymbols) {
+                  let precioString = newOrder[indiceSAP + 19];
                   orderArray[9] = parseFloat(precioString.replace(',', ''));
-                }else{
-                  let precioString = (newOrder[indiceValorNeto + 2]);
+                } else {
+                  let precioString = newOrder[indiceValorNeto + 2];
                   orderArray[9] = parseFloat(precioString.replace(',', ''));
                 }
 
@@ -197,7 +185,7 @@ import { infoFetch } from "./helpers/infoFetch";
                 
 
             })
-            //Precio parte II
+            //SAP parte II
             const numerosAgrupados = resultados.join('/');
             orderArray[7] = numerosAgrupados
             //Cantidad
