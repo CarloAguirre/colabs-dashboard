@@ -2,7 +2,7 @@ import axios from 'axios'
 import Cookies from 'universal-cookie'
 
 
-export const createProducto = async (numero, fecha, contrato = null, division, entrega, nombre, mail, material, cantidad, precio, descripcion) => {
+export const createProducto = async (numero, fecha, contrato = null, division, entrega, nombre, mail, material, cantidad, precio, descripcion, categoria) => {
     const cookies = new Cookies();
     const token = cookies.get("token");
     console.log(token);
@@ -18,7 +18,8 @@ export const createProducto = async (numero, fecha, contrato = null, division, e
       "material": material,
       "cantidad": cantidad,
       "precio": precio,
-      "descripcion": descripcion
+      "descripcion": descripcion,
+      "categoria": categoria
     });
   
     var config = {

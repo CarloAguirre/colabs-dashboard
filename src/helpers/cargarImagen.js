@@ -2,7 +2,7 @@ import FormData from 'form-data'
 import Cookies from 'universal-cookie'
 
 export const cargarImagen = async(archivo)=>{
-    console.log('hola')
+
     const { name } = archivo;
     const cookies = new Cookies();
     const id = cookies.get("id")

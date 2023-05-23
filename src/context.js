@@ -49,7 +49,7 @@ import { createProducto } from "./helpers/newOrderFetch";
 
             newOrder.map(texto=>{
                 //Numero de Orden
-                if (texto.includes('ORDEN DE COMPRA Nro:')) {
+                if (texto.includes('ORDEN DE COMPRA')) {
                     orderArray[0] = Number(texto.match(/\d+/)[0]);
                 }
 
@@ -189,6 +189,8 @@ import { createProducto } from "./helpers/newOrderFetch";
                 //Descripcion
                 orderArray[10] = newOrder[indiceSAP + 14];
                 
+                //Categoria
+                // orderArray[11] = 
 
             })
             //SAP parte II
@@ -220,9 +222,11 @@ import { createProducto } from "./helpers/newOrderFetch";
         
      const onSubmitHandler = async (event) => {
       event.preventDefault();
+
+      const categoria = event.target.name
       
       try {
-        const createOrder = await createProducto(newOrderData[0], newOrderData[1], newOrderData[2], newOrderData[3], newOrderData[4], newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10]);
+        const createOrder = await createProducto(newOrderData[0], newOrderData[1], newOrderData[2], newOrderData[3], newOrderData[4], newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria);
     
         if (createOrder) {
           await cargarImagen(archivo);

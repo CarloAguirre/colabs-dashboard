@@ -15,7 +15,7 @@ export const ModalPdfDrop =()=> {
   return (
     <>
       <Button variant="primary" onClick={handleShow}>
-        Añadir nueva Orden
+        Añadir orden Codelco
       </Button>
 
       <Modal
@@ -34,7 +34,7 @@ export const ModalPdfDrop =()=> {
           <Button variant="secondary" onClick={handleClose}>
             Cerrar
           </Button>
-          <Button variant="primary" onClick={onSubmitHandler}>Agregar</Button>
+          <Button variant="primary" onClick={onSubmitHandler} name='646d30f6df85d0a4c4958449'>Agregar</Button>
         </Modal.Footer>
       </Modal>
     </>
