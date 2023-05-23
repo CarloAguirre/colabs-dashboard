@@ -3,10 +3,20 @@ import Tabs from 'react-bootstrap/Tabs';
 import Form from 'react-bootstrap/Form';
 import { useOrdenes } from "../../context"
 import { useEffect, useState } from 'react';
+import Cookies from 'universal-cookie'
 import './tables.css'
 
 
 export const OrderTable = () => {
+    useEffect(() => {
+        const cookies = new Cookies();
+        const token = cookies.get("token")
+        if(!token){
+            alert('No tienes acceso al dashboard de administracion, inicia sesión')
+            window.location.href = "./"
+        }
+
+    }, [])
 
     const {searchedUser, onSearchInput, onRefreshSubmit, onSearchSubmit, orders  } = useOrdenes()
     
@@ -82,7 +92,7 @@ export const OrderTable = () => {
                     const regex = new RegExp(`^${ordenNumber}`);
                     if (regex.test(order.numero)) {                      
                         return <tr key={order.numero}>
-                        <td scope="row">{order.numero}</td>  
+                        <a href={order.img} target='_blank'><td scope="row">{order.numero}</td></a>  
                         { (ordenNumber === 45) && <td scope="row">{order.contrato}</td>  }   
                         <td>{order.descripcion}</td>
                         <td>{order.nombre}</td>
@@ -98,8 +108,8 @@ export const OrderTable = () => {
                     }
                     else if(ordenNumber === 'todos'){
                         return <tr key={order.numero}>
-                        <td>{order.numero}</td>  
-                        <th>{order.descripcion}</th>
+                         <a href={order.img} target='_blank'><td scope="row">{order.numero}</td></a>  
+                        <td>{order.descripcion}</td>
                         <td>{order.nombre}</td>
                         <td>{order.mail}</td>
                         <td>{order.fecha}</td>

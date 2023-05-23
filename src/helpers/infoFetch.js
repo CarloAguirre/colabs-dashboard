@@ -1,10 +1,12 @@
 import axios from 'axios'
 import { useOrdenes } from '../context';
+import Cookies from 'universal-cookie'
 
 export const infoFetch =()=>{
 
     let data = '';
     let orders = [];
+    const cookies = new Cookies();
     
     let config = {
       method: 'get',
@@ -16,7 +18,8 @@ export const infoFetch =()=>{
     
     axios.request(config)
     .then(({data}) => {
-
+        cookies.set('uid', data.usuario.uid, {"path": "/"});
+        cookies.set('token', data.token, {"path": "/"});
         const {productos} = data;
         orders.push(productos)
     })

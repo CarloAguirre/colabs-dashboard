@@ -258,4 +258,5 @@ table thead{
 }
 table th, td{
   text-align: center;
+  white-space: nowrap;
 }

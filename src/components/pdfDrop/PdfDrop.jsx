@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Document, Page, pdfjs } from 'react-pdf';
 import Dropzone from 'react-dropzone';
 import './pdfDrop.css'
@@ -8,9 +8,15 @@ import { useOrdenes } from '../../context';
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 export const PdfDrop =()=> {
+  //cargar imagen 
+  const {setArchivo, setNewOrder, archivo} = useOrdenes()
+    
+  const onInputChange = (event)=>{    
+      setArchivo(event.target.files[0]);
+  }
 
-  const {newOrder, setNewOrder} = useOrdenes()
   const [file, setFile] = useState(null);
+  // const [onDropFile, setOnDropFile] = useState('') TODO (GUARDAR EL NUMERO DEL ARCHIVO CARGADO AUN CUANDO SE MINIMINE EL MODAL)
 
   const onDrop = (acceptedFiles) => {
     const reader = new FileReader();
@@ -33,7 +39,7 @@ export const PdfDrop =()=> {
             const pageText = await getPageText(i);
             textItems.push(...pageText);
           }
-          console.log(textItems)
+          // console.log(textItems)
          setNewOrder(textItems);
         };
 
@@ -43,7 +49,12 @@ export const PdfDrop =()=> {
 
     reader.readAsArrayBuffer(acceptedFiles[0]);
     setFile(acceptedFiles[0]);
+    
   };
+  
+  useEffect(() => {
+    setArchivo(file)
+  }, [file])
 
   return (
     <div className="App">
@@ -51,8 +62,8 @@ export const PdfDrop =()=> {
       <Dropzone onDrop={onDrop}>
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()} className="dropzone">
-            <input {...getInputProps()} />
-            {file ? (
+            <input type='file' onChange={onInputChange} {...getInputProps()} />
+            {file ? (        
               <p className='text-center'>Archivo cargado: {file.name}</p>
             ) : (
               <p className='text-center'>Arrastra y suelta un archivo PDF aquí, o haz clic para seleccionar uno.</p>

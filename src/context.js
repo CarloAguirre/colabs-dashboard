@@ -1,7 +1,9 @@
 import { createContext, useState, useEffect, useContext } from "react"
 import { colaboradores } from './config/colaboradores';
+
+import { cargarImagen } from "./helpers/cargarImagen";
 import { createProducto } from "./helpers/newOrderFetch";
-import { infoFetch } from "./helpers/infoFetch";
+
 
 
 
@@ -12,6 +14,9 @@ import { infoFetch } from "./helpers/infoFetch";
      // input nuevo colaborado config
      const [users, setUsers] = useState(colaboradores);
      const [orders, setOrders] = useState([]);
+     const [archivo, setArchivo] = useState(null); //imagen de la orden ({path:..., name:...})
+
+
      
      const [newOrder, setNewOrder] = useState([])
      const [newOrderData, setNewOrderData] = useState([])
@@ -25,6 +30,7 @@ import { infoFetch } from "./helpers/infoFetch";
             const res =  await fetch(`http://localhost:8080/api/productos?limite=1000&desde=0`)
             const orders = await res.json()
             const {productos } = orders;
+            console.log(productos)
             setOrders(productos)    
         }
         fetchData();
@@ -212,10 +218,27 @@ import { infoFetch } from "./helpers/infoFetch";
      })
      };
         
-     const onSubmitHandler = (event)=>{
-         event.preventDefault();
-         createProducto(newOrderData[0], newOrderData[1], newOrderData[2], newOrderData[3], newOrderData[4], newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10] )
-         }
+     const onSubmitHandler = async (event) => {
+      event.preventDefault();
+      
+      try {
+        const createOrder = await createProducto(newOrderData[0], newOrderData[1], newOrderData[2], newOrderData[3], newOrderData[4], newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10]);
+    
+        if (createOrder) {
+          await cargarImagen(archivo);
+        } else {
+          alert('No has cargado ninguna orden');
+        }
+      } catch (error) {
+        // Manejar el error en caso de que ocurra algún problema con createProducto() o cargarImagen()
+        console.error(error);
+      }
+    };
+
+        useEffect(() => {
+          console.log(archivo)
+        }, [archivo])
+
      
      // buscador de colaborador config
      const fullList = document.getElementById("full-list");
@@ -312,7 +335,9 @@ import { infoFetch } from "./helpers/infoFetch";
         newOrder,
         setNewOrder,
         orders,
-        setOrders
+        setOrders,
+        archivo,
+        setArchivo
       }
         return (
             <OrdenesContext.Provider
