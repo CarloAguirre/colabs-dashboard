@@ -8,5 +8,11 @@
     top: 0;
     z-index: 1;
   }
+  .table-size{
+    zoom: .6;
+  }
   
-
+  .table-container td, thead {
+    /* font-weight:lighter; */
+    font-size:x-large;
+  }

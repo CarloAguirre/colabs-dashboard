@@ -67,7 +67,7 @@ export const OrderTable = () => {
              })}
            </Form.Select>
             }   
-    <div className="table-container">
+    <div className="table-container table-size">
         <table className="table table-bordered table-striped">
         <thead>
             <tr>
