@@ -14,7 +14,7 @@ body{
 }
 .grid-container{
   display: grid;
-  grid-template-columns: 280px 1fr 1fr 1fr;
+  grid-template-columns: 260px 1fr 1fr 1fr;
   grid-template-rows: 0.2fr 3fr;
   grid-template-areas: 
       "sidebar header header header"
@@ -39,6 +39,7 @@ body{
 .header-left{
   display: flex;
   flex-direction: row;
+  gap: 15px;
 }
 
 /* sidebar  */

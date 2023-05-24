@@ -14,8 +14,6 @@ export const cargarImagen = async(archivo)=>{
 
         if(!extensionesValidas.includes(extension)){
             return alert(`Los formatos de archivo permitidos son: ${extensionesValidas}`)
-        }else{
-            alert("el formato es valido!")
         }
 
     var formdata = new FormData();

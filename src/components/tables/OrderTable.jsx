@@ -145,18 +145,20 @@ export const OrderTable = () => {
         </div>
          <Tabs
             id="controlled-tab-example"
-            // activeKey={key}
-            // onSelect={(k) => setKey(k)}
             className="my-3"
+            onSelect={(k) => {
+                setKey(k);
+                setTableOrders(orders); // Restablecer la lista de órdenes al valor original al cambiar de pestaña
+              }}
             >
             <Tab eventKey="all" title="Ordenes" style={{backgroundColor: 'transparent'}} >
-                {tableModel('todos')}
+                    {tableModel('todos')}
             </Tab>
-            <Tab eventKey="#44" title="#44" style={{backgroundColor: 'transparent'}}>
-                {tableModel(44)}
+            <Tab eventKey="44" title="#44" style={{backgroundColor: 'transparent'}}>
+                    {tableModel(44)}
             </Tab>
-            <Tab eventKey="#45" title="#45" style={{backgroundColor: 'transparent'}}>
-                {tableModel(45)}
+            <Tab eventKey="45" title="#45" style={{backgroundColor: 'transparent'}}>
+                    {tableModel(45)}
             </Tab>
         </Tabs>
     

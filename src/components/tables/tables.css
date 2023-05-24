@@ -9,10 +9,10 @@
     z-index: 1;
   }
   .table-size{
-    zoom: .6;
+    zoom: .43;
   }
   
   .table-container td, thead {
-    /* font-weight:lighter; */
+    font-weight:550;
     font-size:x-large;
   }

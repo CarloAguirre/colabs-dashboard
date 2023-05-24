@@ -16,7 +16,7 @@ import { createProducto } from "./helpers/newOrderFetch";
      const [orders, setOrders] = useState([]);
      const [archivo, setArchivo] = useState(null); //imagen de la orden ({path:..., name:...})
 
-
+     const [cliente, setCliente] = useState()
      
      const [newOrder, setNewOrder] = useState([])
      const [newOrderData, setNewOrderData] = useState([])
@@ -38,16 +38,18 @@ import { createProducto } from "./helpers/newOrderFetch";
     
     
      useEffect(() => { 
-        
-        const orderData = ()=>{
-            const orderArray =[]
-            let fecha = null;
-            const indiceSAP = newOrder.indexOf('Material');
-            const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
-            const regexSAP = /\d+\s(\d+)/g;
-            let resultados = [];
-
-            newOrder.map(texto=>{
+       
+       const orderArray =[]
+       
+       if(cliente === "codelco"){
+         const orderData = ()=>{
+           let fecha = null;
+           const indiceSAP = newOrder.indexOf('Material');
+           const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
+           const regexSAP = /\d+\s(\d+)/g;
+          let resultados = [];
+         
+            newOrder.map((texto, index)=>{
                 //Numero de Orden
                 if (texto.includes('ORDEN DE COMPRA')) {
                     orderArray[0] = Number(texto.match(/\d+/)[0]);
@@ -188,9 +190,6 @@ import { createProducto } from "./helpers/newOrderFetch";
 
                 //Descripcion
                 orderArray[10] = newOrder[indiceSAP + 14];
-                
-                //Categoria
-                // orderArray[11] = 
 
             })
             //SAP parte II
@@ -198,18 +197,140 @@ import { createProducto } from "./helpers/newOrderFetch";
             orderArray[7] = numerosAgrupados
             //Cantidad
             orderArray[8] = (Number(newOrder[indiceSAP + 15]) - resultados.length) + 1;
-            console.log(orderArray)
-            setNewOrderData(orderArray)
             
-        }
-        orderData()
-        console.log(newOrderData)
-     }, [newOrder])
+          }
+          orderData()
 
-    // useEffect(() => {
-    //   console.log(newOrderData[11])
-    // }, [newOrderData])
-    
+
+        //  BHP - ESCONDIDA //
+
+        }else if(cliente === "bhp"){
+          const regexSAP = /\d+\s(\d+)/g;
+          const indiceDescripcion = newOrder.indexOf('Description');
+          const contactIndex = newOrder.indexOf('Contact Information');
+          const locationIndex = newOrder.indexOf('Location Code:');
+          let statusIndex = newOrder.indexOf('STATUS')
+
+          let resultados = [];
+          newOrder.map((texto, index)=>{
+            
+            //Numero
+            const match = texto.match(/450(\d*)/);
+            if (match) {
+              orderArray[0] = Number(match[0])
+            }
+
+            //Fecha
+            const matchFecha = texto.match(/(\d+)\s+([a-zA-Z]+)(?:,\s+)?(\d+)/) || texto.match(/\b(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})\b/);
+            if (matchFecha) {
+              const [, day, month, year] = matchFecha;
+              let fechaConvertida;
+            
+              if (month.length > 2) {
+                // Formato '8 May, 2018'
+                const date = new Date(`${month} ${day}, ${year}`);
+                const dayFormatted = ('0' + date.getDate()).slice(-2);
+                const monthFormatted = ('0' + (date.getMonth() + 1)).slice(-2);
+                const yearFormatted = date.getFullYear();
+                fechaConvertida = `${dayFormatted}/${monthFormatted}/${yearFormatted}`;
+              } else {
+                // Formato '7 Jul 2020'
+                const date = new Date(`${day} ${month} ${year}`);
+                const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
+                fechaConvertida = date.toLocaleDateString('en-GB', options).replace(/\//g, '-');
+              }
+            
+              orderArray[1] = fechaConvertida;
+            }
+
+            //telefono
+            if (texto.includes('Telephone' || 'TELEPHONE')) {
+              orderArray[2] = newOrder[index - 1]
+              //Division
+              orderArray[3] = newOrder[8]
+  
+              //Fecha de entrega
+              const word = newOrder[indiceDescripcion + 33].replace('.', '/')
+              orderArray[4] = word.replace('.', '/')
+            }else{
+              let telefono = newOrder[contactIndex + 4]
+              const telefonoMatch = telefono.match(/\+[\d\s()]+/);
+
+              if (telefonoMatch) {
+                orderArray[2] = telefonoMatch[0];              
+                orderArray[3] = newOrder[locationIndex + 3]
+                let fechaString = newOrder[indiceDescripcion + 23]
+                  const date = new Date(fechaString);
+                  const day = date.getDate();
+                  const month = date.getMonth() + 1; // Los meses en JavaScript comienzan desde 0
+                  const year = date.getFullYear();
+                  orderArray[4] = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+              }      
+            }
+
+
+            //Nombre gestor de la compra
+            if (texto.includes('Purchasing Contact' || 'PURCHASING CONTACT')) {
+              orderArray[5] = newOrder[index - 1]
+
+              //Mail gestor de la compra
+              orderArray[6] = newOrder[index + 5]
+            }else{
+              if (texto.includes("@bhp.com")) {
+                const mailPartes = texto.split(' ');
+                if (mailPartes[2]) {
+                  orderArray[6] = mailPartes[2];
+                } else {
+                  orderArray[6] = mailPartes[1];
+                }
+                orderArray[5] = newOrder[contactIndex + 2]
+              }
+          }
+
+            //SAP material
+            const regexSAP = /\b10\d{6,}\b/g;
+            if (regexSAP.test(texto)) {
+              const matches = texto.match(regexSAP);
+              if (matches) {
+                const filteredMatches = matches.filter(match => /^\d+$/.test(match));
+                resultados = resultados.concat(filteredMatches);
+              }
+            }
+            
+            //cantidad / PRECIO /DESCRIPCION
+            if(newOrder.includes('STATUS')){              
+                orderArray[8] = newOrder[statusIndex + 1]  
+                
+                const precio = newOrder[statusIndex -10 ] 
+                const regexDolares = /[\d,]+(?:\.\d+)?/;
+                const matchDolares = precio.match(regexDolares);
+                if (matchDolares) {
+                  const numeroDolares = matchDolares[0].replace(/,/g, ''); // Remover las comas si están presentes
+                  orderArray[9] = numeroDolares         
+                }    
+                orderArray[10] = newOrder[statusIndex - 1]  
+
+            }else{
+              orderArray[8] = newOrder[indiceDescripcion + 17]
+              orderArray[9] = newOrder[indiceDescripcion + 27]
+              orderArray[10] = newOrder[indiceDescripcion + 23]
+            }
+
+
+            //Descripcion:
+            
+
+
+
+
+
+          })
+          const numerosAgrupados = resultados.join('/');
+          orderArray[7] = numerosAgrupados
+        }
+        setNewOrderData(orderArray)
+        console.log(orderArray)
+     }, [newOrder])
      
      
      const onInputChange = ({target})=>{
@@ -234,7 +355,6 @@ import { createProducto } from "./helpers/newOrderFetch";
           alert('No has cargado ninguna orden');
         }
       } catch (error) {
-        // Manejar el error en caso de que ocurra algún problema con createProducto() o cargarImagen()
         console.error(error);
       }
     };
@@ -341,7 +461,9 @@ import { createProducto } from "./helpers/newOrderFetch";
         orders,
         setOrders,
         archivo,
-        setArchivo
+        setArchivo,
+        cliente, 
+        setCliente
       }
         return (
             <OrdenesContext.Provider

@@ -12,7 +12,8 @@ export const Header = () => {
                 </span>
             </div>
             <div className="header-left">     
-            <ModalPdfDrop />     
+            <ModalPdfDrop cliente = "codelco"/>   
+            <ModalPdfDrop cliente = "bhp"/>     
             </div>
 
             <div className="header-right">

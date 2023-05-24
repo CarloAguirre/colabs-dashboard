@@ -7,9 +7,9 @@ import { useOrdenes } from '../../context';
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
-export const PdfDrop =()=> {
+export const PdfDrop =({cliente})=> {
   //cargar imagen 
-  const {setArchivo, setNewOrder, archivo} = useOrdenes()
+  const {setArchivo, setNewOrder, setCliente} = useOrdenes()
     
   const onInputChange = (event)=>{    
       setArchivo(event.target.files[0]);
@@ -24,7 +24,7 @@ export const PdfDrop =()=> {
     reader.onload = () => {
       const typedArray = new Uint8Array(reader.result);
       pdfjs.getDocument(typedArray).promise.then((pdf) => {
-        const numPages = Math.min(pdf.numPages, 2); // Leer solo las dos primeras páginas
+        const numPages = Math.min(pdf.numPages, 3); // Leer solo las tres primeras páginas
 
         const getPageText = async (pageNum) => {
           const page = await pdf.getPage(pageNum);
@@ -39,7 +39,8 @@ export const PdfDrop =()=> {
             const pageText = await getPageText(i);
             textItems.push(...pageText);
           }
-          // console.log(textItems)
+          console.log(textItems)
+         setCliente(cliente)
          setNewOrder(textItems);
         };
 
