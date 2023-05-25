@@ -47,14 +47,14 @@ export const OrderTable = () => {
     }, [orders])
     
     const selectContratoForm = ({target})=>{
-        // if(target.value === 'todos'){
-        //     const filter = orders.filter(order=> order.contrato != null)
-        //     setTableOrders(filter)
+        if(target.value === 'todos'){
+            const filter = orders.filter(order=> order.contrato != null && order.categoria === "646d30f6df85d0a4c4958449" )
+            setTableOrders(filter)
             
-        // }else{
+        }else{
             const filter = orders.filter(order=> order.contrato === target.value)
             setTableOrders(filter)
-        // }       
+        }
     }
 
     const tableModel = (ordenNumber)=>{

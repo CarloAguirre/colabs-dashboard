@@ -3,6 +3,7 @@ import { colaboradores } from './config/colaboradores';
 
 import { cargarImagen } from "./helpers/cargarImagen";
 import { createProducto } from "./helpers/newOrderFetch";
+import { orderUpdate } from "./helpers/orderUpdate";
 
 
 
@@ -15,6 +16,8 @@ import { createProducto } from "./helpers/newOrderFetch";
      const [users, setUsers] = useState(colaboradores);
      const [orders, setOrders] = useState([]);
      const [archivo, setArchivo] = useState(null); //imagen de la orden ({path:..., name:...})
+
+     const [invoice, setInvoice] = useState(null)
 
      const [cliente, setCliente] = useState()
      
@@ -320,10 +323,30 @@ import { createProducto } from "./helpers/newOrderFetch";
           })
           const numerosAgrupados = resultados.join('/');
           orderArray[7] = numerosAgrupados
+
+
+
+        }else if(cliente === "invoice-codelco"){
+          const poNumberIndex = newOrder.indexOf('PO Number')
+          
+          if(poNumberIndex){
+            const paidOrderNumber = Number(newOrder[poNumberIndex + 2])
+            console.log(paidOrderNumber)
+            console.log(orders[0].numero)
+       
+            const paidOrderId = orders.find(order => order.numero === paidOrderNumber)?._id;
+              if(paidOrderId){
+                setInvoice(paidOrderId)        
+              }else{
+                console.log(`No existe la orden N°${paidOrderNumber} en la base de datos.`)
+              }
+
+          }
         }
         setNewOrderData(orderArray)
         console.log(orderArray)
      }, [newOrder])
+     
      
      
      const onInputChange = ({target})=>{
@@ -344,15 +367,29 @@ import { createProducto } from "./helpers/newOrderFetch";
       }
 
       const categoria = event.target.name
+
       
-      try {
-        const createOrder = await createProducto(newOrderData[0], newOrderData[1], newOrderData[2], newOrderData[3], newOrderData[4], newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria);
-    
-        if (createOrder) {
-          await cargarImagen(archivo);
-        } 
-      } catch (error) {
-        console.error(error);
+      // console.log(invoice)  
+      if(categoria === 'invoice-codelco'){
+        try {   
+          orderUpdate(invoice)
+          return  
+        } catch (error) {
+          console.log(error)
+        }
+        
+      }else{
+
+        
+        try {
+          const createOrder = await createProducto(newOrderData[0], newOrderData[1], newOrderData[2], newOrderData[3], newOrderData[4], newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria);
+          
+          if (createOrder) {
+            await cargarImagen(archivo);
+          } 
+        } catch (error) {
+          console.error(error);
+        }
       }
     };
 

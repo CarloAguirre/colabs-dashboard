@@ -25,7 +25,8 @@ export const ModalPdfDrop =({cliente})=> {
         keyboard={false}
       >
         <Modal.Header closeButton>
-          <Modal.Title>Agregar Nueva Orden</Modal.Title>
+          {(cliente === 'codelco' || cliente === 'bhp') && <Modal.Title>Agregar Orden</Modal.Title>}
+          {(cliente === 'invoice-codelco') && <Modal.Title>Añadir Invoice</Modal.Title> }
         </Modal.Header>
         <Modal.Body>
           <PdfDrop cliente={cliente} />
@@ -38,6 +39,8 @@ export const ModalPdfDrop =({cliente})=> {
           <Button variant="primary" onClick={onSubmitHandler} name='646d30f6df85d0a4c4958449'>Agregar</Button>}
          {(cliente === "bhp") &&
           <Button variant="primary" onClick={onSubmitHandler} name='646e2f1943ba97fc705a0276'>Agregar</Button>}
+          {(cliente === "invoice-codelco") &&
+          <Button variant="primary" onClick={onSubmitHandler} name={cliente}>Agregar</Button>}
         </Modal.Footer>
       </Modal>
     </>

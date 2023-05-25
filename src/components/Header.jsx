@@ -14,6 +14,7 @@ export const Header = () => {
             <div className="header-left">     
             <ModalPdfDrop cliente = "codelco"/>   
             <ModalPdfDrop cliente = "bhp"/>     
+            <ModalPdfDrop cliente = "invoice-codelco"/>     
             </div>
 
             <div className="header-right">
