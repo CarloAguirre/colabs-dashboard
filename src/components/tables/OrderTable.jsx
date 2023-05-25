@@ -37,7 +37,7 @@ export const OrderTable = () => {
         const contratosList =()=>{
             let array = [];
             orders.map(orden=>{
-                if(orden.contrato != null && !array.includes(orden.contrato))
+                if(orden.contrato != null && !array.includes(orden.contrato) && orden.categoria === "646d30f6df85d0a4c4958449")
                 array.push(orden.contrato)
             })
             setContratosArray(array)
@@ -47,14 +47,14 @@ export const OrderTable = () => {
     }, [orders])
     
     const selectContratoForm = ({target})=>{
-        if(target.value === 'todos'){
-            const filter = orders.filter(order=> order.contrato != null)
-            setTableOrders(filter)
+        // if(target.value === 'todos'){
+        //     const filter = orders.filter(order=> order.contrato != null)
+        //     setTableOrders(filter)
             
-        }else{
-            const filter = orders.filter(order=> order.contrato === Number(target.value))
+        // }else{
+            const filter = orders.filter(order=> order.contrato === target.value)
             setTableOrders(filter)
-        }       
+        // }       
     }
 
     const tableModel = (ordenNumber)=>{
