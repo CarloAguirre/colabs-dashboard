@@ -76,6 +76,7 @@ export const OrderTable = () => {
             <th scope="col">DESCRIPCIÓN</th>                  
             <th scope="col">NOMBRE</th>
             <th scope="col">MAIL</th>
+            { (ordenNumber === 'bhp' ) && <th scope="col">TELEFONO</th>   }   
             <th scope="col">FECHA</th>
             <th scope="col">DIVISION</th>
             <th scope="col">ENTREGA</th> 
@@ -90,7 +91,7 @@ export const OrderTable = () => {
             {
                 tableOrders.map(order=>{  
                     const regex = new RegExp(`^${ordenNumber}`);
-                    if (regex.test(order.numero)) {                      
+                    if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
                         return <tr key={order.numero}>
                         <a href={order.img} target='_blank'><td scope="row">{order.numero}</td></a>  
                         { (ordenNumber === 45) && <td scope="row">{order.contrato}</td>  }   
@@ -120,6 +121,23 @@ export const OrderTable = () => {
                         <td>{order.cantidad}</td>
                         <td>{order.precio* order.cantidad}</td>
                     </tr>    
+                    }else if(ordenNumber === 'bhp'){
+                        if(order.categoria === '646e2f1943ba97fc705a0276'){
+                            return <tr key={order.numero}>
+                         <a href={order.img} target='_blank'><td scope="row">{order.numero}</td></a>  
+                        <td>{order.descripcion}</td>
+                        <td>{order.nombre}</td>
+                        <td>{order.mail}</td>
+                        <td>{order.contrato}</td>
+                        <td>{order.fecha}</td>
+                        <td>{order.division}</td>
+                        <td>{order.entrega}</td>
+                        <td>{order.material}</td>
+                        <td>{order.precio}</td>
+                        <td>{order.cantidad}</td>
+                        <td>{order.precio* order.cantidad}</td>
+                    </tr>    
+                        }
                     }
                 })
             }               
@@ -154,11 +172,14 @@ export const OrderTable = () => {
             <Tab eventKey="all" title="Ordenes" style={{backgroundColor: 'transparent'}} >
                     {tableModel('todos')}
             </Tab>
-            <Tab eventKey="44" title="#44" style={{backgroundColor: 'transparent'}}>
+            <Tab eventKey="44" title="Codelco #44" style={{backgroundColor: 'transparent'}}>
                     {tableModel(44)}
             </Tab>
-            <Tab eventKey="45" title="#45" style={{backgroundColor: 'transparent'}}>
+            <Tab eventKey="45" title="Codelco #45" style={{backgroundColor: 'transparent'}}>
                     {tableModel(45)}
+            </Tab>
+            <Tab eventKey="bhp" title="BHP" style={{backgroundColor: 'transparent'}}>
+                    {tableModel('bhp')}
             </Tab>
         </Tabs>
     

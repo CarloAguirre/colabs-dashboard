@@ -46,7 +46,7 @@ import { createProducto } from "./helpers/newOrderFetch";
            let fecha = null;
            const indiceSAP = newOrder.indexOf('Material');
            const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
-           const regexSAP = /\d+\s(\d+)/g;
+           const regexSAP = /\b(\d+)\s+(\d{5,})\b/g;
           let resultados = [];
          
             newOrder.map((texto, index)=>{
@@ -316,14 +316,6 @@ import { createProducto } from "./helpers/newOrderFetch";
               orderArray[10] = newOrder[indiceDescripcion + 23]
             }
 
-
-            //Descripcion:
-            
-
-
-
-
-
           })
           const numerosAgrupados = resultados.join('/');
           orderArray[7] = numerosAgrupados
@@ -343,6 +335,12 @@ import { createProducto } from "./helpers/newOrderFetch";
         
      const onSubmitHandler = async (event) => {
       event.preventDefault();
+      
+      const existeProducto = orders.find(order=> order.numero === newOrderData[0])
+      if(existeProducto){
+        alert(`La Orden N°${newOrderData[0]} ya existe en la base de datos`)
+        return
+      }
 
       const categoria = event.target.name
       
@@ -351,9 +349,7 @@ import { createProducto } from "./helpers/newOrderFetch";
     
         if (createOrder) {
           await cargarImagen(archivo);
-        } else {
-          alert('No has cargado ninguna orden');
-        }
+        } 
       } catch (error) {
         console.error(error);
       }

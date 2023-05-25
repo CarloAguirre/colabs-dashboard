@@ -37,8 +37,12 @@ export const createProducto = async (numero = null, fecha = null, contrato = nul
       cookies.set('id', response.data._id, { "path": "/" });
       return true; // Devuelve true si la solicitud se completa sin errores
     } catch (error) {
-      console.error(error.response);
-      alert(error.response);
+    
+      if(error.response.data.msg){
+
+        alert(error.response.data.msg);
+        window.location.href = "./"
+      }
       return false; // Devuelve false si ocurre algún error
     }
   };

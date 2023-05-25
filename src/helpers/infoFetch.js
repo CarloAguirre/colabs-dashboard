@@ -22,6 +22,7 @@ export const infoFetch =()=>{
         cookies.set('token', data.token, {"path": "/"});
         const {productos} = data;
         orders.push(productos)
+        console.log(orders)
     })
     .catch((error) => {
         console.log(error);
