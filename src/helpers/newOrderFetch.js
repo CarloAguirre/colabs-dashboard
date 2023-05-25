@@ -31,18 +31,21 @@ export const createProducto = async (numero = null, fecha = null, contrato = nul
       },
       data: data
     };
+
+
   
     try {
       const response = await axios(config); // Agregar esta línea para obtener la respuesta de la solicitud
       cookies.set('id', response.data._id, { "path": "/" });
+  
       return true; // Devuelve true si la solicitud se completa sin errores
     } catch (error) {
-    
-      if(error.response.data.msg){
+    console.log(error)
+      // if(error.response.data.msg){
 
-        alert(error.response.data.msg);
-        window.location.href = "./"
-      }
+      //   alert(error.response.data.msg);
+      //   window.location.href = "./"
+      // }
       return false; // Devuelve false si ocurre algún error
     }
   };

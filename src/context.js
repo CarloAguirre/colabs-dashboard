@@ -205,7 +205,6 @@ import { createProducto } from "./helpers/newOrderFetch";
         //  BHP - ESCONDIDA //
 
         }else if(cliente === "bhp"){
-          const regexSAP = /\d+\s(\d+)/g;
           const indiceDescripcion = newOrder.indexOf('Description');
           const contactIndex = newOrder.indexOf('Contact Information');
           const locationIndex = newOrder.indexOf('Location Code:');
@@ -298,23 +297,25 @@ import { createProducto } from "./helpers/newOrderFetch";
             }
             
             //cantidad / PRECIO /DESCRIPCION
-            if(newOrder.includes('STATUS')){              
-                orderArray[8] = newOrder[statusIndex + 1]  
-                
-                const precio = newOrder[statusIndex -10 ] 
-                const regexDolares = /[\d,]+(?:\.\d+)?/;
-                const matchDolares = precio.match(regexDolares);
-                if (matchDolares) {
-                  const numeroDolares = matchDolares[0].replace(/,/g, ''); // Remover las comas si están presentes
-                  orderArray[9] = numeroDolares         
-                }    
-                orderArray[10] = newOrder[statusIndex - 1]  
-
-            }else{
-              orderArray[8] = newOrder[indiceDescripcion + 17]
-              orderArray[9] = newOrder[indiceDescripcion + 27]
-              orderArray[10] = newOrder[indiceDescripcion + 23]
+            const regexDolares = /[\d,]+(?:\.\d+)?/;
+            if (newOrder.includes('STATUS')) {
+              orderArray[8] = newOrder[statusIndex + 1];
+            
+              const precio = newOrder[statusIndex - 10];
+              const matchDolares = precio.match(regexDolares);
+              if (matchDolares) {
+                const amountNumeric = parseFloat(matchDolares[0].replace(',', ''));
+                orderArray[9] = amountNumeric;
+              }
+              orderArray[10] = newOrder[statusIndex - 1];
+            } else {
+              orderArray[8] = newOrder[indiceDescripcion + 17];
+              const amount = newOrder[indiceDescripcion + 27];
+              const amountNumeric = parseFloat(amount.replace(',', ''));
+              orderArray[9] = amountNumeric;
+              orderArray[10] = newOrder[indiceDescripcion + 23];
             }
+            
 
           })
           const numerosAgrupados = resultados.join('/');

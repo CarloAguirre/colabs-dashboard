@@ -13,7 +13,7 @@ export const SideBar = () => {
                 <div className="sidebar-brand">
                     <span className="material-icons-outlined">
                         inventory
-                    </span> AGI Industries
+                    </span> AGI Controls
                 </div>
                 <span className="material-icons-outlined">
                     close
