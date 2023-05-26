@@ -1,11 +1,16 @@
 import FormData from 'form-data'
 import Cookies from 'universal-cookie'
 
-export const cargarImagen = async(archivo)=>{
+export const cargarImagen = async(archivo, invoice = null)=>{
 
     const { name } = archivo;
     const cookies = new Cookies();
-    const id = cookies.get("id")
+    let id = ""
+    if(invoice){
+        id = invoice
+    }else{
+        id = cookies.get("id")
+    }
     const extensionesValidas = ['pdf', 'Pdf', 'PDF']
 
         // validar la extension del archivo
@@ -28,9 +33,12 @@ export const cargarImagen = async(archivo)=>{
     .then(response => {
         response.text()
         console.log(response)
-
-        alert('Orden añadida con exito')
-        window.location.href = "./orders"
+        if(invoice){
+        return window.location.href = "./orders"   
+        }else{
+            alert('Orden añadida con exito')
+            window.location.href = "./orders"
+        }
     })
     .catch(error => console.log( error));
                  

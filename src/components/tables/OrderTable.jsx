@@ -7,7 +7,7 @@ import Cookies from 'universal-cookie'
 import './tables.css'
 
 
-export const OrderTable = () => {
+export const OrderTable = ({status}) => {
     useEffect(() => {
         const cookies = new Cookies();
         const token = cookies.get("token")
@@ -72,6 +72,7 @@ export const OrderTable = () => {
         <thead>
             <tr>
             <th scope="col">NUMERO</th>
+            { (status === 'paids' ) && <th scope="col">INVOICE</th>   }   
             { (ordenNumber === 45 ) && <th scope="col">CONTRATO</th>   }   
             <th scope="col">DESCRIPCIÓN</th>                  
             <th scope="col">NOMBRE</th>
@@ -87,61 +88,132 @@ export const OrderTable = () => {
             </tr>
         </thead>
         <tbody id='full-list'>
-
-            {
-                tableOrders.map(order=>{  
-                    const regex = new RegExp(`^${ordenNumber}`);
-                    if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
-                        return <tr key={order.numero}>
-                        <a href={order.img} target='_blank'><td scope="row">{order.numero}</td></a>  
-                        { (ordenNumber === 45) && <td scope="row">{order.contrato}</td>  }   
-                        <td>{order.descripcion}</td>
-                        <td>{order.nombre}</td>
-                        <td>{order.mail}</td>
-                        <td>{order.fecha}</td>
-                        <td>{order.division}</td>
-                        <td>{order.entrega}</td>
-                        <td>{order.material}</td>
-                        <td>{order.precio}</td>
-                        <td>{order.cantidad}</td>
-                        <td>{order.precio* order.cantidad}</td>
-                    </tr>    
-                    }
-                    else if(ordenNumber === 'todos'){
-                        return <tr key={order.numero}>
-                         <a href={order.img} target='_blank'><td scope="row">{order.numero}</td></a>  
-                        <td>{order.descripcion}</td>
-                        <td>{order.nombre}</td>
-                        <td>{order.mail}</td>
-                        <td>{order.fecha}</td>
-                        <td>{order.division}</td>
-                        <td>{order.entrega}</td>
-                        <td>{order.material}</td>
-                        <td>{order.precio}</td>
-                        <td>{order.cantidad}</td>
-                        <td>{order.precio* order.cantidad}</td>
-                    </tr>    
-                    }else if(ordenNumber === 'bhp'){
-                        if(order.categoria === '646e2f1943ba97fc705a0276'){
-                            return <tr key={order.numero}>
-                         <a href={order.img} target='_blank'><td scope="row">{order.numero}</td></a>  
-                        <td>{order.descripcion}</td>
-                        <td>{order.nombre}</td>
-                        <td>{order.mail}</td>
-                        <td>{order.contrato}</td>
-                        <td>{order.fecha}</td>
-                        <td>{order.division}</td>
-                        <td>{order.entrega}</td>
-                        <td>{order.material}</td>
-                        <td>{order.precio}</td>
-                        <td>{order.cantidad}</td>
-                        <td>{order.precio* order.cantidad}</td>
-                    </tr>    
-                        }
-                    }
-                })
-            }               
-        </tbody>
+    {(status === 'paids') ? 
+      (tableOrders.map(order => {  
+        if (order.completada === true) {
+          const regex = new RegExp(`^${ordenNumber}`);
+          if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
+            return (
+              <tr key={order.numero}>
+                <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+                <td><a href={order.invoice} target='_blank'>VER FACTURA</a></td>
+                {(ordenNumber === 45) && <td>{order.contrato}</td>}
+                <td>{order.descripcion}</td>
+                <td>{order.nombre}</td>
+                <td>{order.mail}</td>
+                <td>{order.fecha}</td>
+                <td>{order.division}</td>
+                <td>{order.entrega}</td>
+                <td>{order.material}</td>
+                <td>{order.precio}</td>
+                <td>{order.cantidad}</td>
+                <td>{order.precio * order.cantidad}</td>
+              </tr>
+            );
+          }
+          else if (ordenNumber === 'todos') {
+            return (
+              <tr key={order.numero}>
+                <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+                <td><a href={order.invoice} target='_blank'>VER FACTURA</a></td>
+                <td>{order.descripcion}</td>
+                <td>{order.nombre}</td>
+                <td>{order.mail}</td>
+                <td>{order.fecha}</td>
+                <td>{order.division}</td>
+                <td>{order.entrega}</td>
+                <td>{order.material}</td>
+                <td>{order.precio}</td>
+                <td>{order.cantidad}</td>
+                <td>{order.precio * order.cantidad}</td>
+              </tr>
+            );
+          }
+          else if (ordenNumber === 'bhp') {
+            if (order.categoria === '646e2f1943ba97fc705a0276') {
+              return (
+                <tr key={order.numero}>
+                  <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+                  <td><a href={order.invoice} target='_blank'>VER FACTURA</a></td>
+                  <td>{order.descripcion}</td>
+                  <td>{order.nombre}</td>
+                  <td>{order.mail}</td>
+                  <td>{order.contrato}</td>
+                  <td>{order.fecha}</td>
+                  <td>{order.division}</td>
+                  <td>{order.entrega}</td>
+                  <td>{order.material}</td>
+                  <td>{order.precio}</td>
+                  <td>{order.cantidad}</td>
+                  <td>{order.precio * order.cantidad}</td>
+                </tr>
+              );
+            }
+          }
+        }
+      }))
+      :
+      (tableOrders.map(order => {  
+        if (order.completada === false) {
+        const regex = new RegExp(`^${ordenNumber}`);
+        if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
+          return (
+            <tr key={order.numero}>
+              <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+              {(ordenNumber === 45) && <td>{order.contrato}</td>}
+              <td>{order.descripcion}</td>
+              <td>{order.nombre}</td>
+              <td>{order.mail}</td>
+              <td>{order.fecha}</td>
+              <td>{order.division}</td>
+              <td>{order.entrega}</td>
+              <td>{order.material}</td>
+              <td>{order.precio}</td>
+              <td>{order.cantidad}</td>
+              <td>{order.precio * order.cantidad}</td>
+            </tr>
+          );
+        }
+        else if (ordenNumber === 'todos') {
+          return (
+            <tr key={order.numero}>
+              <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+              <td>{order.descripcion}</td>
+              <td>{order.nombre}</td>
+              <td>{order.mail}</td>
+              <td>{order.fecha}</td>
+              <td>{order.division}</td>
+              <td>{order.entrega}</td>
+              <td>{order.material}</td>
+              <td>{order.precio}</td>
+              <td>{order.cantidad}</td>
+              <td>{order.precio * order.cantidad}</td>
+            </tr>
+          );
+        }
+        else if (ordenNumber === 'bhp') {
+          if (order.categoria === '646e2f1943ba97fc705a0276') {
+            return (
+              <tr key={order.numero}>
+                <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+                <td>{order.descripcion}</td>
+                <td>{order.nombre}</td>
+                <td>{order.mail}</td>
+                <td>{order.contrato}</td>
+                <td>{order.fecha}</td>
+                <td>{order.division}</td>
+                <td>{order.entrega}</td>
+                <td>{order.material}</td>
+                <td>{order.precio}</td>
+                <td>{order.cantidad}</td>
+                <td>{order.precio * order.cantidad}</td>
+              </tr>
+            );
+          }
+        }
+      }}))
+    }
+  </tbody>
         </table>
     </div>                
         </div>

@@ -336,9 +336,9 @@ import { orderUpdate } from "./helpers/orderUpdate";
        
             const paidOrderId = orders.find(order => order.numero === paidOrderNumber)?._id;
               if(paidOrderId){
-                setInvoice(paidOrderId)        
+                setInvoice(paidOrderId)    
               }else{
-                console.log(`No existe la orden N°${paidOrderNumber} en la base de datos.`)
+                alert(`No existe la orden N°${paidOrderNumber} en la base de datos.`)
               }
 
           }
@@ -365,27 +365,25 @@ import { orderUpdate } from "./helpers/orderUpdate";
         alert(`La Orden N°${newOrderData[0]} ya existe en la base de datos`)
         return
       }
-
-      const categoria = event.target.name
-
       
-      // console.log(invoice)  
+      
+      const categoria = event.target.name
+      
       if(categoria === 'invoice-codelco'){
-        try {   
-          orderUpdate(invoice)
-          return  
+        try {        
+          await orderUpdate(invoice)
+          await cargarImagen(archivo, invoice);
+
         } catch (error) {
           console.log(error)
         }
         
-      }else{
-
-        
+      }else{ 
         try {
           const createOrder = await createProducto(newOrderData[0], newOrderData[1], newOrderData[2], newOrderData[3], newOrderData[4], newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria);
           
           if (createOrder) {
-            await cargarImagen(archivo);
+            await cargarImagen(archivo, null);
           } 
         } catch (error) {
           console.error(error);

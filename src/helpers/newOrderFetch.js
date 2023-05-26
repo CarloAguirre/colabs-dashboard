@@ -5,7 +5,7 @@ import Cookies from 'universal-cookie'
 export const createProducto = async (numero = null, fecha = null, contrato = null, division = null, entrega = null, nombre = null, mail = null, material = null, cantidad = null, precio = null, descripcion = null, categoria = null) => {
     const cookies = new Cookies();
     const token = cookies.get("token");
-    console.log(token);
+    // console.log(token);
   
     var data = JSON.stringify({
       "numero": numero,
@@ -40,12 +40,10 @@ export const createProducto = async (numero = null, fecha = null, contrato = nul
   
       return true; // Devuelve true si la solicitud se completa sin errores
     } catch (error) {
-    console.log(error)
-      // if(error.response.data.msg){
+      const {msg} = error.response.data;
 
-      //   alert(error.response.data.msg);
-      //   window.location.href = "./"
-      // }
+      alert(msg)
+      window.location.href = "./"
       return false; // Devuelve false si ocurre algún error
     }
   };

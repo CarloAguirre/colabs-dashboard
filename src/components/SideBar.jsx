@@ -24,22 +24,22 @@ export const SideBar = () => {
                 <NavLink  to="/dashboard" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} > 
                     <span className="material-icons-outlined">
                         dashboard
-                    </span> Dashboard
+                    </span> Panel
                 </NavLink>
                 
                 <NavLink  to="/orders" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
                         <span className="material-icons-outlined">
                             inventory_2
-                        </span> Orders
+                        </span> Ordenes
 
                     </NavLink>
-                <a className="anchor-link">
-                    <li className="sidebar-list-item">
+                    <NavLink  to="/paids" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
+
                         <span className="material-icons-outlined">
                             fact_check
-                        </span> Colaboradores
-                    </li>
-                </a>
+                        </span> Facturadas
+                    </NavLink>
+               
                 <li className="sidebar-list-item">
                     <span className="material-icons-outlined">
                     attach_money

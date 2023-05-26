@@ -1,7 +1,7 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
 
-export const orderUpdate = (id)=>{
+export const orderUpdate = async(id)=>{
     const cookies = new Cookies();
     const token = cookies.get("token");
 
@@ -22,12 +22,14 @@ export const orderUpdate = (id)=>{
 
     axios.request(config)
     .then((response) => {
-    console.log(JSON.stringify(response.data));
-    alert('Orden actualizada')
+        console.log(JSON.stringify(response.data.msg));
+        alert(response.data.msg)
+        return true;
     window.location.href = "./orders"
     })
     .catch((error) => {
     console.log(error);
+    return false;
     });
 
     }

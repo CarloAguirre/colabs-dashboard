@@ -37,6 +37,16 @@ function App() {
                 </>
               }
             />
+            <Route
+              path="/paids"
+              element={
+                <>
+                  <SideBar />
+                  <Header />
+                  <OrderTable status ='paids' />
+                </>
+              }
+            />
           </Routes>
         </BrowserRouter>
       </OrdenesProvider>
