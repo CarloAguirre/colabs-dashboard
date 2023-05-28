@@ -40,6 +40,12 @@ export const SideBar = () => {
                         </span> Facturadas
                     </NavLink>
                
+                    <NavLink  to="/reports" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
+                        <span className="material-icons-outlined">
+                            bar_chart
+                        </span> Reportes
+                    </NavLink>
+
                 <li className="sidebar-list-item">
                     <span className="material-icons-outlined">
                     attach_money
@@ -49,11 +55,6 @@ export const SideBar = () => {
                     <span className="material-icons-outlined">
                     account_balance
                     </span> Bienes y activos
-                </li>
-                <li className="sidebar-list-item">
-                    <span className="material-icons-outlined">
-                        bar_chart
-                    </span> Reportes
                 </li>
                 <li className="sidebar-list-item">
                     <span className="material-icons-outlined">

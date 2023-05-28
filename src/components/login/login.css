@@ -103,20 +103,33 @@
 }
 
 #errorMsg {
-    margin-top: -8rem;
+    position: absolute;
+    bottom: 100px;
+    left: 0;
+    right: 0;
+    transform: translateY(100%);
     
 }
 
 .body-bg{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     background-color: #e6e8ed;
     min-width: 100vw;
     min-height: 100vh;
 }
 .body-bg h3{
-    padding-top: 10rem;
-    margin-bottom: -10rem;
+    /* padding-top: 10rem;
+    margin-bottom: -10rem; */
     font-size:xx-large;
 }
+.form-container {
+    position: relative;
+    padding-top: 15vh;
+  }
+  
 
 .body-bg__createTour{
     background-color: #c84614;

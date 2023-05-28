@@ -35,15 +35,20 @@ export const loginFetch = async(password, email)=>{
       })
       .catch(({response}) =>{
         console.log(response)
-
-        const {data} = response.data.response
-        console.log(data)
-        // if(response.data.errors){
-        //   const{msg} = response.data.errors[0]
+        if(response.data.errors){
+          const{msg} = response.data.errors[0]
   
-          
-        // }
-
+          document.getElementById('errorMsg').innerHTML = `
+          <p>
+              ${msg}
+          </p>`
+          return;               
+        }
+        const {msg} = response.data;
+        document.getElementById('errorMsg').innerHTML = `
+        <p>
+            ${msg}
+        </p>`
 
       });      
 

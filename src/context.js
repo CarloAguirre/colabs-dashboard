@@ -16,7 +16,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
      const [users, setUsers] = useState(colaboradores);
      const [orders, setOrders] = useState([]);
      const [archivo, setArchivo] = useState(null); //imagen de la orden ({path:..., name:...})
-
+     const [tableOrders, setTableOrders] = useState(orders)
      const [invoice, setInvoice] = useState(null)
 
      const [cliente, setCliente] = useState()
@@ -226,8 +226,8 @@ import { orderUpdate } from "./helpers/orderUpdate";
             const matchFecha = texto.match(/(\d+)\s+([a-zA-Z]+)(?:,\s+)?(\d+)/) || texto.match(/\b(\d{1,2})\s+([a-zA-Z]+)\s+(\d{4})\b/);
             if (matchFecha) {
               const [, day, month, year] = matchFecha;
-              let fechaConvertida;
-            
+              let fechaConvertida; 
+
               if (month.length > 2) {
                 // Formato '8 May, 2018'
                 const date = new Date(`${month} ${day}, ${year}`);
@@ -302,8 +302,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
             //cantidad / PRECIO /DESCRIPCION
             const regexDolares = /[\d,]+(?:\.\d+)?/;
             if (newOrder.includes('STATUS')) {
-              orderArray[8] = newOrder[statusIndex + 1];
-            
+              orderArray[8] = newOrder[statusIndex + 1];           
               const precio = newOrder[statusIndex - 10];
               const matchDolares = precio.match(regexDolares);
               if (matchDolares) {
@@ -318,13 +317,9 @@ import { orderUpdate } from "./helpers/orderUpdate";
               orderArray[9] = amountNumeric;
               orderArray[10] = newOrder[indiceDescripcion + 23];
             }
-            
-
           })
           const numerosAgrupados = resultados.join('/');
           orderArray[7] = numerosAgrupados
-
-
 
         }else if(cliente === "invoice-codelco"){
           const poNumberIndex = newOrder.indexOf('PO Number')
@@ -365,19 +360,16 @@ import { orderUpdate } from "./helpers/orderUpdate";
         alert(`La Orden N°${newOrderData[0]} ya existe en la base de datos`)
         return
       }
-      
-      
+       
       const categoria = event.target.name
       
       if(categoria === 'invoice-codelco'){
         try {        
           await orderUpdate(invoice)
           await cargarImagen(archivo, invoice);
-
         } catch (error) {
           console.log(error)
-        }
-        
+        }       
       }else{ 
         try {
           const createOrder = await createProducto(newOrderData[0], newOrderData[1], newOrderData[2], newOrderData[3], newOrderData[4], newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria);
@@ -399,45 +391,37 @@ import { orderUpdate } from "./helpers/orderUpdate";
      // buscador de colaborador config
      const fullList = document.getElementById("full-list");
      const filteredList = document.getElementById("filtered-list");
-     const [searchedUser, setSearchedUser] = useState("");
- 
+     
+     const [searchedOrder, setSearchedOrder] = useState("");
      const [FilteredArray, setFilteredArray] = useState([]);
  
-     const onSearchInput = ({target})=>{
-         const {value} = target;
-         setSearchedUser(value);
-     }
- 
-     const onSearchSubmit = (event)=>{
-         event.preventDefault();
-         if(searchedUser != []){   
-             const filterUser = users.filter(user => user.nombre.toLowerCase().includes(searchedUser.toLowerCase()));
-             if(filterUser[0]){
-                 fullList.style.display="none";
-                 filteredList.style.display = ""
-                 filterUser.forEach(user =>{               
-                     setFilteredArray([{
-                         id: user.id,
-                         nombre: user.nombre,
-                         cantidad: user.cantidad,
-                         correo: user.correo
-                     }])
-                 })
-                 setSearchedUser("");
-                 }else{
-                     alert("No existe ningún usuario con ese nombre");
-                     setSearchedUser("");
-                 }
-         }else{               
-             alert("Ingresa un nombre!");
-         }
-     }
- 
+     const onSearchInput = ({ target }) => {
+      const { value } = target;
+      setSearchedOrder(value);
+    }
+    
+    useEffect(() => {
+      const filteredOrders = orders.filter(order => {
+        for (let key in order) {
+          if (order.hasOwnProperty(key)) {
+            const value = order[key];
+            const lowercaseValue = typeof value === 'string' ? value.toLowerCase() : value?.toString().toLowerCase();
+            const lowercaseSearch = searchedOrder.toLowerCase();
+    
+            if (lowercaseValue && lowercaseValue.includes(lowercaseSearch)) {
+              return true;
+            }
+          }
+        }
+        return false;
+      });
+    
+      setTableOrders(filteredOrders);
+    }, [searchedOrder, orders]);
+    
      const onRefreshSubmit = (event)=>{
          event.preventDefault()
-         fullList.style.display = ""
-         filteredList.style.display = "none"
- 
+         setTableOrders(orders)
      }
          
      // stats configs
@@ -481,12 +465,11 @@ import { orderUpdate } from "./helpers/orderUpdate";
         onSearchInput,
         onInputChange,
         onSubmitHandler,
-        onSearchSubmit,
         totalMoney,
         lastColab,
         topUser,
-        searchedUser,
-        setSearchedUser,
+        searchedOrder,
+        setSearchedOrder,
         FilteredArray,
         newOrder,
         setNewOrder,
@@ -495,7 +478,9 @@ import { orderUpdate } from "./helpers/orderUpdate";
         archivo,
         setArchivo,
         cliente, 
-        setCliente
+        setCliente,
+        tableOrders,
+        setTableOrders,
       }
         return (
             <OrdenesContext.Provider

@@ -10,6 +10,11 @@ import { OrderTable } from './components/tables/OrderTable';
 
 
 function App() {
+
+  const sidebarAndHeader = <>
+        <SideBar />
+        <Header />
+  </>
   return (
     <div className="grid-container">
       <OrdenesProvider>
@@ -21,8 +26,7 @@ function App() {
               path="/dashboard"
               element={
                 <>
-                  <SideBar />
-                  <Header />
+                  {sidebarAndHeader}
                   <Home />
                 </>
               }
@@ -31,8 +35,7 @@ function App() {
               path="/orders"
               element={
                 <>
-                  <SideBar />
-                  <Header />
+                  {sidebarAndHeader}
                   <OrderTable />
                 </>
               }
@@ -41,10 +44,18 @@ function App() {
               path="/paids"
               element={
                 <>
-                  <SideBar />
-                  <Header />
-                  <OrderTable status ='paids' />
-                </>
+                  {sidebarAndHeader}
+                  <OrderTable status ='paids' />                
+                </>              
+              }
+            />
+            <Route
+              path="/reports"
+              element={
+                <>
+                  {sidebarAndHeader}
+                  <OrderTable status ='reports' />                
+                </>              
               }
             />
           </Routes>
