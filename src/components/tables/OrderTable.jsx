@@ -21,12 +21,7 @@ export const OrderTable = ({status}) => {
   const monthHeaders = months.slice(startIndex).concat(months.slice(0, startIndex)).map((month, index) => (
     <th key={index} scope="col">{month}</th>
   ));
-
   
-  // const orderRows = orders ? orders.map((order, index) => {
-    
-  
-
     useEffect(() => {
         const cookies = new Cookies();
         const token = cookies.get("token")
@@ -240,32 +235,6 @@ export const OrderTable = ({status}) => {
               </tr>
             );
           }
-        }else if(ordenNumber === "reports"){
-          const formattedDeliveryDate = order.entrega.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
-          const deliveryDate = new Date(formattedDeliveryDate);
-          const deliveryMonth = deliveryDate.getMonth();
-          const isPastDue = deliveryDate < new Date();
-      
-          const deliveryColumn = monthHeaders.findIndex((month) => month.props.children === months[deliveryMonth]);
-      
-          const dateClassName = isPastDue ? 'text-danger' : 'text-success'; 
-      
-          return (
-            <tr key={index}>
-              <td>{order.numero}</td>
-              <td>{order.descripcion}</td>
-              <td>{order.fecha}</td>
-              <td>{order.cantidad}</td>
-              {Array(deliveryColumn).fill().map((_, index) => (
-                <td key={index}></td>
-              ))}
-              <td className={dateClassName} >{Number(order.precio) * Number(order.cantidad)}</td>
-              {Array(12 - deliveryColumn).fill().map((_, index) => (
-                <td key={index}></td>
-              ))}
-            </tr>
-          );
-  
         }
 
       }}))
@@ -301,9 +270,6 @@ export const OrderTable = ({status}) => {
             </Tab>
             <Tab eventKey="bhp" title="BHP" style={{backgroundColor: 'transparent'}}>
                     {tableModel('bhp')}
-            </Tab>
-            <Tab eventKey="reports" title="reports" style={{backgroundColor: 'transparent'}}>
-                    {tableModel('reports')}
             </Tab>
         </Tabs>
     

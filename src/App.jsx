@@ -7,6 +7,7 @@ import { SideBar } from './components/SideBar';
 import { Login } from './components/login';
 import { Registration } from './components/registration/Registration';
 import { OrderTable } from './components/tables/OrderTable';
+import { ReportsTable } from './components/tables/ReportsTable';
 
 
 function App() {
@@ -54,7 +55,8 @@ function App() {
               element={
                 <>
                   {sidebarAndHeader}
-                  <OrderTable status ='reports' />                
+                  {/* <OrderTable status ='reports' />                 */}
+                  <ReportsTable />
                 </>              
               }
             />
