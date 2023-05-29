@@ -2,16 +2,27 @@ import React, { useEffect, useState } from "react"
 import Chart from 'react-apexcharts'
 import { counterCharts } from "../config/counterCharts"
 
-export const UsersCountChart = ({counter}) => {
+export const UsersCountChart = ({orders}) => {
 
+    const [facturadas, setFacturadas] = useState(0)
+    useEffect(() => {
+        let counter = 0
+        orders.map(order=>{
+          if(order.completada === true){
+            counter += 1
+          }
+          setFacturadas(counter)
+        })
+      }, [orders])
+    
     useEffect(() => {
         setChart({
             ...chart,
-            series: [counter]
+            series: [facturadas]
         })
-      }, [counter])
+      }, [facturadas])
 
-    const [chart, setChart] = useState(counterCharts(counter))
+    const [chart, setChart] = useState(counterCharts(facturadas))
 
     
 return (

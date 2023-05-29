@@ -20,13 +20,19 @@ import { orderUpdate } from "./helpers/orderUpdate";
      const [invoice, setInvoice] = useState(null)
 
      const [cliente, setCliente] = useState()
+
+    const [contratosArray, setContratosArray] =useState([])
      
      const [newOrder, setNewOrder] = useState([])
      const [newOrderData, setNewOrderData] = useState([])
-     const [counter, setCounter] = useState(Number(users.length));
+     const [counter, setCounter] = useState(0);
  
      const [inputValue, setInputValue] = useState("");
 
+     useEffect(() => {
+       console.log(newOrder)
+     }, [newOrder])
+     
 
      useEffect(() => {
         const fetchData = async()=>{
@@ -38,6 +44,17 @@ import { orderUpdate } from "./helpers/orderUpdate";
         }
         fetchData();
     }, [])
+
+    useEffect(() => {
+      let counter = 0
+      orders.map(order=>{
+        if(order.completada === false){
+          counter += 1
+        }
+        setCounter(counter)
+      })
+    }, [orders])
+    
     
     
      useEffect(() => { 
@@ -185,10 +202,38 @@ import { orderUpdate } from "./helpers/orderUpdate";
                 const onlyNumbersAndSymbols = /^[\d,.]+$/.test(precioUno);
                 if (onlyNumbersAndSymbols) {
                   let precioString = newOrder[indiceSAP + 19];
-                  orderArray[9] = parseFloat(precioString.replace(',', ''));
+                  let precio;
+                  if (precioString.includes(".")) {
+                    // Formato 5,626.04
+                    precio = parseFloat(precioString.replace(/\./g, "").replace(",", ".")).toFixed(2);
+                  } else if (precioString.includes(",")) {
+                    // Formato 5.626,04
+                    precio = parseFloat(precioString.replace(/,/g, "")).toFixed(2);
+                  } else {
+                    // Formato sin separador de miles y decimales
+                    precio = parseFloat(precioString).toFixed(2);
+                  }
+
+                  orderArray[9] = precio;
+                  // Eliminar los puntos del número
+                  precio = precio.replace(".", "");
+
+                  orderArray[9] = precio;
                 } else {
                   let precioString = newOrder[indiceValorNeto + 2];
-                  orderArray[9] = parseFloat(precioString.replace(',', ''));
+                  let precio;
+                if (precioString.includes(".")) {
+                  // Formato 5,626.04
+                  precio = parseFloat(precioString.replace(/\./g, "").replace(",", ".")).toFixed(2);
+                } else if (precioString.includes(",")) {
+                  // Formato 5.626,04
+                  precio = parseFloat(precioString.replace(/,/g, "")).toFixed(2);
+                } else {
+                  // Formato sin separador de miles y decimales
+                  precio = parseFloat(precioString).toFixed(2);
+                }
+
+                orderArray[9] = precio;
                 }
 
                 //Descripcion
@@ -423,6 +468,27 @@ import { orderUpdate } from "./helpers/orderUpdate";
          event.preventDefault()
          setTableOrders(orders)
      }
+
+     const selectContratoForm = ({target})=>{
+      if(target.value === 'todos'){
+          const filter = orders.filter(order=> order.contrato != null && order.categoria === "646d30f6df85d0a4c4958449" )
+          setTableOrders(filter)
+          
+      }else{
+          const filter = orders.filter(order=> order.contrato === target.value)
+          setTableOrders(filter)
+      }
+  }
+
+  const selectReportsForm = ({target})=>{
+    if(target.value === 'todos'){
+        setTableOrders(orders)
+        
+    }else{
+        const filter = orders.filter(order=> order.contrato === target.value)
+        setTableOrders(filter)
+    }
+}
          
      // stats configs
      let totalMoney = 0;
@@ -481,6 +547,10 @@ import { orderUpdate } from "./helpers/orderUpdate";
         setCliente,
         tableOrders,
         setTableOrders,
+        contratosArray,
+        setContratosArray,
+        selectContratoForm,
+        selectReportsForm
       }
         return (
             <OrdenesContext.Provider

@@ -1,7 +1,9 @@
+import { Form } from "react-bootstrap";
 import { useOrdenes } from "../../context";
+import './tables.css'
 
 export const ReportsTable = () => {
-    const { orders } = useOrdenes();
+    const { selectReportsForm, contratosArray, tableOrders } = useOrdenes();
 
     const months = [
         'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -14,8 +16,17 @@ export const ReportsTable = () => {
     const monthHeaders = months.slice(startIndex).concat(months.slice(0, startIndex));
 
     return (
+        <>
+        
+        
         <div className="main-container">
         <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
+            <Form.Select aria-label="Default select example" onChange={selectReportsForm} >
+             <option value='todos'>Todas las ordenes</option>
+             {contratosArray.map(contrato=>{
+                return <option value={contrato} key={contrato}>contrato: {contrato}</option>              
+             })}
+           </Form.Select>
         <div className="table-container table-size">
             <table className="table table-bordered table-striped">
                 <thead>
@@ -30,7 +41,7 @@ export const ReportsTable = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {orders.map((order, index) => {
+                    {tableOrders.map((order, index) => {
                         if(order.completada === false){
                             const formattedDeliveryDate = order.entrega.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
                             const deliveryDate = new Date(formattedDeliveryDate);
@@ -38,7 +49,14 @@ export const ReportsTable = () => {
                             const isPastDue = deliveryDate < new Date();
                             const deliveryColumn = monthHeaders.findIndex(month => month === months[deliveryMonth]);
                             const dateClassName = isPastDue ? 'text-white bg-danger' : 'text-white bg-success';
-    
+
+                            let price = (Number(order.cantidad) * order.precio)
+                            const formattedPrice = price.toLocaleString('en-US', {
+                                style: 'currency',
+                                currency: 'USD',
+                                minimumFractionDigits: 2,
+                              });
+                              
                             return (
                                 <tr key={index}>
                                     <td><a href={order.img} target='_blank'>{order.numero}</a></td>
@@ -48,7 +66,7 @@ export const ReportsTable = () => {
                                     {Array(deliveryColumn).fill().map((_, index) => (
                                         <td key={index}></td>
                                     ))}
-                                    <td className={dateClassName}>{order.entrega}</td>
+                                    <td className={dateClassName} title={formattedPrice}>{order.entrega}</td>
                                     {Array(12 - deliveryColumn).fill().map((_, index) => (
                                         <td key={index}></td>
                                     ))}
@@ -62,5 +80,7 @@ export const ReportsTable = () => {
         </div>
     </div>
     </div>
+    </>
+
     );
 };

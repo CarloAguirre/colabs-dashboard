@@ -70,7 +70,7 @@ export const counterCharts = (counter)=>{
             stroke: {
                 lineCap: "round"
             },
-            labels: ["Colaboradores"]
+            labels: ["Facturadas"]
             },
             series: [counter],
             optionsBar: {

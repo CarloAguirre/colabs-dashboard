@@ -8,7 +8,7 @@ import './tables.css'
 
 
 export const OrderTable = ({status}) => {
-  const {searchedOrder, onSearchInput, orders, tableOrders, setTableOrders  } = useOrdenes()
+  const {searchedOrder, onSearchInput, orders, tableOrders, setTableOrders, contratosArray, setContratosArray, selectContratoForm  } = useOrdenes()
 
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -34,7 +34,6 @@ export const OrderTable = ({status}) => {
 
     
     const [key, setKey] = useState('all')
-    const [contratosArray, setContratosArray] =useState([])
     
     
     // console.log(orders)
@@ -58,16 +57,7 @@ export const OrderTable = ({status}) => {
 
     }, [orders])
     
-    const selectContratoForm = ({target})=>{
-        if(target.value === 'todos'){
-            const filter = orders.filter(order=> order.contrato != null && order.categoria === "646d30f6df85d0a4c4958449" )
-            setTableOrders(filter)
-            
-        }else{
-            const filter = orders.filter(order=> order.contrato === target.value)
-            setTableOrders(filter)
-        }
-    }
+
 
     const tableModel = (ordenNumber)=>{
         return <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
@@ -115,6 +105,17 @@ export const OrderTable = ({status}) => {
         <tbody id='full-list'>
     {(status === 'paids') ? 
       (tableOrders.map(order => {  
+        let price = (Number(order.precio))
+        const formattedPrice = price.toLocaleString('en-US', {
+            style: 'currency',
+            currency: 'USD',
+            minimumFractionDigits: 2,
+          });
+        const formattedTotal = (Number(order.precio * Number(order.cantidad))).toLocaleString('en-US', {
+          style: 'currency',
+          currency: 'USD',
+          minimumFractionDigits: 2,
+        });
         if (order.completada === true) {
           const regex = new RegExp(`^${ordenNumber}`);
           if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
@@ -130,13 +131,24 @@ export const OrderTable = ({status}) => {
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
                 <td>{order.material}</td>
-                <td>{order.precio}</td>
+                <td>{formattedPrice}</td>
                 <td>{order.cantidad}</td>
-                <td>{order.precio * order.cantidad}</td>
+                <td>{formattedTotal}</td>
               </tr>
             );
           }
           else if (ordenNumber === 'todos') {
+            let price = (Number(order.precio))
+            const formattedPrice = price.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+              });
+            const formattedTotal = (Number(order.precio * Number(order.cantidad))).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 2,
+            });  
             return (
               <tr key={order.numero}>
                 <td><a href={order.img} target='_blank'>{order.numero}</a></td>
@@ -148,13 +160,19 @@ export const OrderTable = ({status}) => {
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
                 <td>{order.material}</td>
-                <td>{order.precio}</td>
+                <td>{formattedPrice}</td>
                 <td>{order.cantidad}</td>
-                <td>{order.precio * order.cantidad}</td>
+                <td>{formattedTotal}</td>
               </tr>
             );
           }
           else if (ordenNumber === 'bhp') {
+            let price = (Number(order.precio))
+            const formattedPrice = price.toLocaleString('en-US', {
+                style: 'currency',
+                currency: 'USD',
+                minimumFractionDigits: 2,
+              });
             if (order.categoria === '646e2f1943ba97fc705a0276') {
               return (
                 <tr key={order.numero}>
@@ -168,9 +186,9 @@ export const OrderTable = ({status}) => {
                   <td>{order.division}</td>
                   <td>{order.entrega}</td>
                   <td>{order.material}</td>
-                  <td>{order.precio}</td>
+                  <td>{formattedPrice}</td>
                   <td>{order.cantidad}</td>
-                  <td>{order.precio * order.cantidad}</td>
+                  <td>{formattedTotal}</td>
                 </tr>
               );
             }
@@ -180,6 +198,17 @@ export const OrderTable = ({status}) => {
       :
       (tableOrders.map((order, index) => {  
         if (order.completada === false) {
+          let price = (Number(order.precio))
+          const formattedPrice = price.toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 2,
+            });
+            const formattedTotal = (Number(order.precio * Number(order.cantidad))).toLocaleString('en-US', {
+              style: 'currency',
+              currency: 'USD',
+              minimumFractionDigits: 2,
+            });
         const regex = new RegExp(`^${ordenNumber}`);
         if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
           return (
@@ -193,9 +222,9 @@ export const OrderTable = ({status}) => {
               <td>{order.division}</td>
               <td>{order.entrega}</td>
               <td>{order.material}</td>
-              <td>{order.precio}</td>
+              <td>{formattedPrice}</td>
               <td>{order.cantidad}</td>
-              <td>{order.precio * order.cantidad}</td>
+              <td>{formattedTotal}</td>
             </tr>
           );
         }
@@ -210,9 +239,9 @@ export const OrderTable = ({status}) => {
               <td>{order.division}</td>
               <td>{order.entrega}</td>
               <td>{order.material}</td>
-              <td>{order.precio}</td>
+              <td>{formattedPrice}</td>
               <td>{order.cantidad}</td>
-              <td>{order.precio * order.cantidad}</td>
+              <td>{formattedTotal}</td>
             </tr>
           );
         }
@@ -229,9 +258,9 @@ export const OrderTable = ({status}) => {
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
                 <td>{order.material}</td>
-                <td>{order.precio}</td>
+                <td>{formattedPrice}</td>
                 <td>{order.cantidad}</td>
-                <td>{order.precio * order.cantidad}</td>
+                <td>{formattedTotal}</td>
               </tr>
             );
           }

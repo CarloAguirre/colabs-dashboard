@@ -16,7 +16,7 @@ export const Home = () => {
 
     }, [])
     
-    const {counter, totalMoney, lastColab, topUser, users} = useOrdenes()
+    const {orders, totalMoney, lastColab, topUser, users, counter} = useOrdenes()
     
   return (
     <div className="main-container">
@@ -28,7 +28,7 @@ export const Home = () => {
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">COLABORADORES</p>
+                <p className="text-primary">ORDENES</p>
                 <span className="material-icons-outlined text-blue">
                     inventory
                 </span>
@@ -76,8 +76,8 @@ export const Home = () => {
         </div>
 
         <div className="charts-card">
-            <p className="chart-title">Total Colaboradores</p>
-            <div className='users-charts'><UsersCountChart counter={counter} users={users}/></div>
+            <p className="chart-title">Ordenes Facturadas</p>
+            <div className='users-charts'><UsersCountChart orders={orders} users={users}/></div>
         </div>
     </div>
 

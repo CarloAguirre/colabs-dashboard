@@ -10,6 +10,7 @@ import { OrderTable } from './components/tables/OrderTable';
 import { ReportsTable } from './components/tables/ReportsTable';
 
 
+
 function App() {
 
   const sidebarAndHeader = <>
