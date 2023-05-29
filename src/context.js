@@ -4,7 +4,6 @@ import { colaboradores } from './config/colaboradores';
 import { cargarImagen } from "./helpers/cargarImagen";
 import { createProducto } from "./helpers/newOrderFetch";
 import { orderUpdate } from "./helpers/orderUpdate";
-import { payOrder } from "./helpers/payOrder";
 
 
 
@@ -389,7 +388,9 @@ import { payOrder } from "./helpers/payOrder";
                 const patronFecha = /\d{2}\/\d{2}\/\d{4}/;
                 const coincidencias = newOrder[0].match(patronFecha);
                 const fecha = coincidencias[0];
-                setInvoiceDate(fecha)      
+                const fechaSplit = fecha.split('/');
+                const fechaFormatted = `${fechaSplit[1]}/${fechaSplit[0]}/${fechaSplit[2]}`;
+                setInvoiceDate(fechaFormatted)      
                 setInvoice(paidOrderId)    
               }else{
                 alert(`No existe la orden N°${paidOrderNumber} en la base de datos.`)
