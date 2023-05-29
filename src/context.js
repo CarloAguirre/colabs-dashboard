@@ -374,7 +374,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
           const numerosAgrupados = resultados.join('/');
           orderArray[7] = numerosAgrupados
 
-        }else if(cliente === "invoice-codelco"){
+        }else if(cliente === "invoice"){
           const poNumberIndex = newOrder.indexOf('PO Number')
           
           if(poNumberIndex){
@@ -425,7 +425,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
        
       const categoria = event.target.name
       
-      if(categoria === 'invoice-codelco'){
+      if(categoria === 'invoice'){
         try {        
           await orderUpdate(invoice, invoiceDate)
           await cargarImagen(archivo, invoice);

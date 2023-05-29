@@ -10,13 +10,13 @@ export const ReportsTable = () => {
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
   ];
 
-  const currentMonthIndex = new Date().getMonth(); // Índice del mes actual
-  const startIndex = currentMonthIndex - 6 >= 0 ? currentMonthIndex - 6 : 12 + (currentMonthIndex - 6); // Índice de inicio (6 meses atrás desde la fecha actual)
+  const currentMonthIndex = new Date().getMonth();
+  const startIndex = currentMonthIndex - 6 >= 0 ? currentMonthIndex - 6 : 12 + (currentMonthIndex - 6);
 
   const monthHeaders = months.slice(startIndex).concat(months.slice(0, startIndex));
 
   const calculateTotalPrice = (month) => {
-    const completedOrders = []; // Array para almacenar las órdenes completadas
+    const completedOrders = [];
 
     tableOrders.forEach((order) => {
       if (order.completada === true) {
@@ -25,7 +25,7 @@ export const ReportsTable = () => {
         const invoiceMonth = invoiceDate.getMonth();
 
         if (months[invoiceMonth] === month) {
-          completedOrders.push(order); // Almacena las órdenes completadas en el nuevo array
+          completedOrders.push(order);
         }
       }
     });
@@ -48,6 +48,13 @@ export const ReportsTable = () => {
   return (
     <>
       <div className="main-container">
+        <hr />
+        <h2 style={{background: 'rgba(0, 0, 0, .1)'}} className="text-center">Estado de Ordenes</h2>
+        <div className="info-labels mt-4">
+          <span className="text-white bg-success label">A tiempo</span>
+          <span className="text-white bg-danger label">Atrasada</span>
+          <span className="text-white bg-warning label">Facturada</span>
+        </div>
         <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
           <Form.Select aria-label="Default select example" onChange={selectReportsForm}>
             <option value='todos'>Todas las ordenes</option>
@@ -56,7 +63,7 @@ export const ReportsTable = () => {
             })}
           </Form.Select>
           <div className="table-container table-size">
-            <table className="table table-bordered table-striped">
+            <table className="table table-bordered table_report">
               <thead>
                 <tr>
                   <th scope="col">NUMERO</th>
@@ -102,7 +109,7 @@ export const ReportsTable = () => {
                   return (
                     <tr key={index}>
                       <td><a href={order.img} target='_blank'>{order.numero}</a></td>
-                      <td>{order.descripcion}</td>
+                      <td style={{ padding: '10px' }}>{order.descripcion}</td>
                       <td>{order.entrega}</td>
                       <td>{order.cantidad}</td>
                       {Array(deliveryColumn).fill().map((_, index) => (
@@ -110,10 +117,6 @@ export const ReportsTable = () => {
                       ))}
                       {(order.completada === true)? <td className={dateClassName} title={order.invoice_date}>{formattedPrice}</td>
                         : <td className={dateClassName} title={order.entrega}>{formattedPrice}</td>}
-                      
-                      {Array(12 - deliveryColumn).fill().map((_, index) => (
-                        <td key={index}></td>
-                      ))}
                     </tr>
                   );
                 })}
@@ -130,6 +133,7 @@ export const ReportsTable = () => {
             </table>
           </div>
         </div>
+        
       </div>
     </>
   );

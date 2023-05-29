@@ -15,9 +15,9 @@ export const ModalPdfDrop =({cliente})=> {
   return (
     <>
     {
-      (cliente === "invoice-codelco")?
-      <Button variant="info" onClick={handleShow}>
-        Añadir orden {cliente.toUpperCase()}
+      (cliente === "invoice")?
+      <Button variant="info" onClick={handleShow} className="btn-outline-info btn-lg">
+        Añadir {cliente.toUpperCase()}
       </Button>
       : <Button variant="primary" onClick={handleShow}>
           Añadir orden {cliente.toUpperCase()}
@@ -32,7 +32,7 @@ export const ModalPdfDrop =({cliente})=> {
       >
         <Modal.Header closeButton>
           {(cliente === 'codelco' || cliente === 'bhp') && <Modal.Title>Agregar Orden</Modal.Title>}
-          {(cliente === 'invoice-codelco') && <Modal.Title>Añadir Invoice</Modal.Title> }
+          {(cliente === 'invoice') && <Modal.Title>Añadir Invoice</Modal.Title> }
         </Modal.Header>
         <Modal.Body>
           <PdfDrop cliente={cliente} />
@@ -45,7 +45,7 @@ export const ModalPdfDrop =({cliente})=> {
           <Button variant="primary" onClick={onSubmitHandler} name='646d30f6df85d0a4c4958449'>Agregar</Button>}
          {(cliente === "bhp") &&
           <Button variant="primary" onClick={onSubmitHandler} name='646e2f1943ba97fc705a0276'>Agregar</Button>}
-          {(cliente === "invoice-codelco") &&
+          {(cliente === "invoice") &&
           <Button variant="primary" onClick={onSubmitHandler} name={cliente}>Agregar</Button>}
         </Modal.Footer>
       </Modal>

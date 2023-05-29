@@ -16,3 +16,14 @@
     font-weight:550;
     font-size:x-large;
   }
+.info-labels{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 40px;
+}
+.label{
+  padding: 5px;
+  opacity: .8;
+  border-radius: 5px;
+}
