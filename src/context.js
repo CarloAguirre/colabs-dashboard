@@ -4,6 +4,7 @@ import { colaboradores } from './config/colaboradores';
 import { cargarImagen } from "./helpers/cargarImagen";
 import { createProducto } from "./helpers/newOrderFetch";
 import { orderUpdate } from "./helpers/orderUpdate";
+import { payOrder } from "./helpers/payOrder";
 
 
 
@@ -18,6 +19,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
      const [archivo, setArchivo] = useState(null); //imagen de la orden ({path:..., name:...})
      const [tableOrders, setTableOrders] = useState(orders)
      const [invoice, setInvoice] = useState(null)
+     const [invoiceDate, setInvoiceDate] = useState()
 
      const [cliente, setCliente] = useState()
 
@@ -32,6 +34,13 @@ import { orderUpdate } from "./helpers/orderUpdate";
      useEffect(() => {
        console.log(newOrder)
      }, [newOrder])
+     
+    //  useEffect(() => {
+    //   const payOrderFetch = ()=>{
+    //     payOrder(invoice, invoiceDate)
+    //   }
+    //   payOrderFetch()
+    //  }, [invoiceDate])
      
 
      useEffect(() => {
@@ -376,13 +385,20 @@ import { orderUpdate } from "./helpers/orderUpdate";
        
             const paidOrderId = orders.find(order => order.numero === paidOrderNumber)?._id;
               if(paidOrderId){
+                //Fecha invoice
+                const patronFecha = /\d{2}\/\d{2}\/\d{4}/;
+                const coincidencias = newOrder[0].match(patronFecha);
+                const fecha = coincidencias[0];
+                setInvoiceDate(fecha)      
                 setInvoice(paidOrderId)    
               }else{
                 alert(`No existe la orden N°${paidOrderNumber} en la base de datos.`)
               }
 
           }
+
         }
+
         setNewOrderData(orderArray)
         console.log(orderArray)
      }, [newOrder])
@@ -410,7 +426,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
       
       if(categoria === 'invoice-codelco'){
         try {        
-          await orderUpdate(invoice)
+          await orderUpdate(invoice, invoiceDate)
           await cargarImagen(archivo, invoice);
         } catch (error) {
           console.log(error)
