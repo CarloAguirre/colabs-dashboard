@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Cookies from 'universal-cookie'
 import '../login/login.css'
 import { registrationFetch } from '../../helpers/registrationFetch'
+import { Title } from '../../Title'
 
 
 
@@ -35,20 +36,20 @@ export const Registration = () => {
       }
 
     return (
-      <div className='pb-5 body-bg'>
+      <div className='pb-5 body-bg form-container'>
 
-        <h3 className='text-center mb-5'>Create Account</h3>
+        <Title />
         <div className='form-wrapper '>
             <form 
             className='login-form'
             onSubmit={onSubmit}
             >
             <div className="mb-3">
-                <label className="form-label">Name</label>
+                <label className="form-label">Nombre</label>
                 <input 
                 type="text" 
                 className="form-control" 
-                placeholder='Your name' 
+                placeholder='Tu nombre' 
                 name='name'
                 value={name}
                 onChange={onInputchange}
@@ -61,28 +62,29 @@ export const Registration = () => {
                 className="form-control" 
                 id="exampleInputEmail1" 
                 aria-describedby="emailHelp"
-                placeholder='Your mail' 
+                placeholder='Tu mail' 
                 name='email'
                 value={email}
                 onChange={onInputchange}
                 />
-                <div id="emailHelp" className="form-text">Do not share this information with anyone.</div>
+                
             </div>
             <div className="mb-3">
-                <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
+                <label htmlFor="exampleInputPassword1" className="form-label">Contraseña</label>
                 <input 
                 type="password" 
                 className="form-control" 
                 id="exampleInputPassword1"
-                placeholder='Your password'
+                placeholder='Tu contraseña'
                 name='password'
                 value = {password}
                 onChange = {onInputchange}
                 
                 />
             </div>
-            <button type="submit" className="btn btn-primary create-account__button">Create Account</button>
+            <button type="submit" className="btn btn-primary create-account__button">Crear cuenta</button>
             </form>
+            <a href="/" className='pb-3 font-weight-light'>Ya tienes cuenta? Inicia sesión</a>        
         </div>
             <div id='errorMsg' className='text-center mt-3' ></div>
         </div>

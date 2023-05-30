@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react'
 import './login.css'
 import { loginFetch } from '../../helpers/loginFetch'
 import Cookies from 'universal-cookie'
+import { Title } from '../../Title'
 
 
 export const Login = () => {
@@ -42,7 +43,7 @@ export const Login = () => {
 
   return (
     <div className='pb-5 body-bg form-container'>
-      <h3 className='text-center mb-5'>AGI Industries Chile</h3>
+               <Title />
       <div className='form-wrapper'>
           <form 
           className='login-form'
@@ -59,10 +60,10 @@ export const Login = () => {
               value={email}
               onChange={onInputchange}
               />
-              <div id="emailHelp" className="form-text">No compartas esta información con nadie.</div>
+              
           </div>
           <div className="mb-3">
-              <label htmlFor="exampleInputPassword1" className="form-label">Password</label>
+              <label htmlFor="exampleInputPassword1" className="form-label">Contraseña</label>
               <input 
               type="password" 
               className="form-control" 
@@ -81,7 +82,7 @@ export const Login = () => {
           </form>
           <div>
             <a href="/registration">
-            <button className="btn btn-success mb-4">Create account</button>
+            <button className="btn btn-success mb-4">Crear cuenta</button>
             </a>
           </div>
       </div>
