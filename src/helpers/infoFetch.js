@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { useOrdenes } from '../context';
 import Cookies from 'universal-cookie'
+import { serverPath } from '../config/serverPath';
 
 export const infoFetch =()=>{
 
@@ -11,7 +12,7 @@ export const infoFetch =()=>{
     let config = {
       method: 'get',
       maxBodyLength: Infinity,
-      url: 'http://localhost:8080/api/productos?limite=1000&desde=0',
+      url: `${serverPath}api/productos?limite=1000&desde=0`,
       headers: { },
       data : data
     };

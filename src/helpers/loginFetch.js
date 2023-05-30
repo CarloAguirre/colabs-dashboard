@@ -1,9 +1,10 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
+import { serverPath } from '../config/serverPath';
 
 export const loginFetch = async(password, email)=>{
 
-    const baseUrl = `http://localhost:8080/api/auth/login`
+    const baseUrl = `${serverPath}api/auth/login`
     const cookies = new Cookies();
 
     var data = JSON.stringify({

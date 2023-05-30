@@ -509,7 +509,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
          
      // stats configs
      let totalMoney = 0;
-     let warningOrder = "";
+     let warningOrder = "Sin ordenes atrasadas";
      const [topUser, setTopUser] = useState({
        cantidad: 0,
        nombre: ""
@@ -526,7 +526,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
          const entregaDate = new Date(Number(year), Number(month) - 1, Number(day));
      
          if (
-           entregaDate > new Date() &&
+           entregaDate < new Date() &&
            order.completada === false
          ) {
            if (!oldestOrder || entregaDate < oldestOrder.entregaDate) {

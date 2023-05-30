@@ -1,11 +1,12 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
+import { serverPath } from '../config/serverPath';
 
 
 export const registrationFetch = async(name, password, email)=>{
 
     // const baseUrl = process.env.serverPath + `api/usuarios/`
-    const baseUrl = 'http://localhost:8080/api/usuarios/'
+    const baseUrl = `${serverPath}api/usuarios/`
 
     const cookies = new Cookies();
 

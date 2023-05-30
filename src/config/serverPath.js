@@ -1,0 +1,1 @@
+export const serverPath = 'https://agi-controls.herokuapp.com/'

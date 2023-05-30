@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
+import { serverPath } from '../config/serverPath';
 
 
 export const createProducto = async (numero = null, fecha = null, contrato = null, division = null, entrega = null, nombre = null, mail = null, material = null, cantidad = null, precio = null, descripcion = null, categoria = null) => {
@@ -24,7 +25,7 @@ export const createProducto = async (numero = null, fecha = null, contrato = nul
   
     var config = {
       method: 'post',
-      url: `http://localhost:8080/api/productos/`,
+      url: `${serverPath}api/productos/`,
       headers: {
         'Authorization': token,
         'Content-Type': 'application/json'

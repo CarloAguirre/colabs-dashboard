@@ -1,5 +1,6 @@
 import FormData from 'form-data'
 import Cookies from 'universal-cookie'
+import { serverPath } from '../config/serverPath';
 
 export const cargarImagen = async(archivo, invoice = null)=>{
 
@@ -29,7 +30,7 @@ export const cargarImagen = async(archivo, invoice = null)=>{
     redirect: 'follow',
    };
 
-    await fetch(`http://localhost:8080/api/uploads/productos/${id}`, requestOptions)
+    await fetch(`${serverPath}api/uploads/productos/${id}`, requestOptions)
     .then(response => {
         response.text()
         console.log(response)

@@ -1,5 +1,6 @@
 import axios from 'axios'
 import Cookies from 'universal-cookie'
+import { serverPath } from '../config/serverPath';
 
 export const orderUpdate = async(id, invoiceDate)=>{
     const cookies = new Cookies();
@@ -13,7 +14,7 @@ export const orderUpdate = async(id, invoiceDate)=>{
     let config = {
     method: 'put',
     maxBodyLength: Infinity,
-    url: `http://localhost:8080/api/productos/${id}`,
+    url: `${serverPath}api/productos/${id}`,
     headers: { 
         'Authorization': token,
         'Content-Type': 'application/json'
