@@ -46,7 +46,7 @@ export const SideBar = () => {
                             bar_chart
                         </span> Reportes
                     </NavLink>
-
+{/* 
                 <li className="sidebar-list-item">
                     <span className="material-icons-outlined">
                     attach_money
@@ -61,7 +61,7 @@ export const SideBar = () => {
                     <span className="material-icons-outlined">
                         settings
                     </span> Ajustes
-                </li>
+                </li> */}
             </ul>
         </aside>
   )

@@ -29,5 +29,6 @@
 .label{
   padding: 5px;
   border-radius: 5px;
-  font-size: small;
+  font-size: x-small;
+  font-weight: 550;
 }

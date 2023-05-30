@@ -10,7 +10,7 @@ import { OnSearch } from '../onSearch/OnSearch';
 
 
 export const OrderTable = ({status}) => {
-  const {searchedOrder, onSearchInput, orders, tableOrders, setTableOrders, contratosArray, setContratosArray, selectContratoForm  } = useOrdenes()
+  const {orders, tableOrders, setTableOrders, contratosArray, setContratosArray, selectContratoForm  } = useOrdenes()
 
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -277,7 +277,6 @@ export const OrderTable = ({status}) => {
     }
   return (
     <div className="main-container">
-      {/* <br /> */}
       {(status === "paids") ?      <div className="main-title">
                                       <p className="font-weight-bold">ORDENES FACTURADAS</p>
                                   </div>

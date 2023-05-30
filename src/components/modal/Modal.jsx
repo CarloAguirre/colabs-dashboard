@@ -19,7 +19,7 @@ export const ModalPdfDrop =({cliente})=> {
       <Button variant="info" onClick={handleShow} className="btn-outline-info btn-lg">
         Añadir {cliente.toUpperCase()}
       </Button>
-      : <Button variant="primary" onClick={handleShow}>
+      : <Button variant="primary" onClick={handleShow} className="btn-outline-primary">
           Añadir orden {cliente.toUpperCase()}
         </Button>
     }
