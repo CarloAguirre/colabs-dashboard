@@ -75,6 +75,8 @@ import { serverPath } from "./config/serverPath";
          const orderData = ()=>{
            let fecha = null;
            const indiceSAP = newOrder.indexOf('Material');
+           const indiceUnidades = newOrder.indexOf('Unidades');
+           const indiceDesc = newOrder.indexOf('Descripción del ítem:');
            const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
            const regexSAP = /\b(\d+)\s+(\d{5,})\b/g;
           let resultados = [];
@@ -204,6 +206,7 @@ import { serverPath } from "./config/serverPath";
                 }
             
                 //Cantidad
+
                 orderArray[8] = Number(newOrder[indiceSAP + 15]);
 
                 //precio unitario
@@ -241,21 +244,59 @@ import { serverPath } from "./config/serverPath";
                 
                   orderArray[9] = Number(precio);
                 }
-                
-                
-     
-
                 //Descripcion
-                orderArray[10] = newOrder[indiceSAP + 14];
+                if (indiceDesc !== -1) {
+                  const description = newOrder[indiceDesc + 2];
+                  const descriptionArray = description.split(" ");
+                
+                  if (descriptionArray.length < 2) {
+                    orderArray[10] = `${descriptionArray[0]}`;
+                  } else if (descriptionArray.length < 3) {
+                    orderArray[10] = `${descriptionArray[0]} ${descriptionArray[1]}`;
+                  } else if (descriptionArray.length < 4) {
+                    orderArray[10] = `${descriptionArray[0]} ${descriptionArray[1]} ${descriptionArray[2]} `;
+                  } else if (descriptionArray.length >= 4) {
+                    orderArray[10] = `${descriptionArray[0]} ${descriptionArray[1]} ${descriptionArray[2]} ${descriptionArray[3]} `;
+                  }
+                } else {
+                  orderArray[10] = newOrder[indiceSAP + 14];
+                }
+                
+                
 
             })
             //SAP parte II
             const numerosAgrupados = resultados.join('/');
             orderArray[7] = numerosAgrupados
+
             //Cantidad
-            orderArray[8] = (Number(newOrder[indiceSAP + 15]) - resultados.length) + 1;
+            const contadorUnidades = newOrder.reduce((contador, texto, index) => {
+              if (texto === 'Unidades') {
+                return contador + 1;
+              }
+              return contador;
+            }, 0);
             
-          }
+            if (contadorUnidades === 1) {
+              const indiceUnidades = newOrder.indexOf('Unidades');
+              orderArray[8] = newOrder[indiceUnidades - 2];
+            } else if (contadorUnidades > 1) {
+              const sumaUnidades = newOrder.reduce((suma, texto, index) => {
+                if (texto === 'Unidades') {
+                  const valorUnidades = Number(newOrder[index + 1]);
+                  if (!isNaN(valorUnidades)) {
+                    return suma + valorUnidades;
+                  }
+                }
+                return suma;
+              }, 0);
+              orderArray[8] = sumaUnidades;
+            }else{
+              orderArray[8] = (Number(newOrder[indiceSAP + 15]) - resultados.length) + 1;
+         
+            }
+              
+            }
           orderData()
 
 

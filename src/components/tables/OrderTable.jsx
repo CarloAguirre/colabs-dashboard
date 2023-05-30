@@ -113,7 +113,7 @@ export const OrderTable = ({status}) => {
             currency: 'USD',
             minimumFractionDigits: 2,
           });
-        const formattedTotal = (Number(order.precio * Number(order.cantidad))).toLocaleString('en-US', {
+        const formattedPrecioUnitario = (Number(order.precio / Number(order.cantidad))).toLocaleString('en-US', {
           style: 'currency',
           currency: 'USD',
           minimumFractionDigits: 2,
@@ -133,9 +133,9 @@ export const OrderTable = ({status}) => {
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
                 <td>{order.material}</td>
-                <td>{formattedPrice}</td>
+                <td>{formattedPrecioUnitario}</td>
                 <td>{order.cantidad}</td>
-                <td>{formattedTotal}</td>
+                <td>{formattedPrice}</td>
               </tr>
             );
           }
@@ -146,7 +146,7 @@ export const OrderTable = ({status}) => {
                 currency: 'USD',
                 minimumFractionDigits: 2,
               });
-            const formattedTotal = (Number(order.precio * Number(order.cantidad))).toLocaleString('en-US', {
+            const formattedPrecioUnitario = (Number(order.precio / Number(order.cantidad))).toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD',
               minimumFractionDigits: 2,
@@ -162,9 +162,9 @@ export const OrderTable = ({status}) => {
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
                 <td>{order.material}</td>
-                <td>{formattedPrice}</td>
+                <td>{formattedPrecioUnitario}</td>
                 <td>{order.cantidad}</td>
-                <td>{formattedTotal}</td>
+                <td>{formattedPrice}</td>
               </tr>
             );
           }
@@ -188,9 +188,9 @@ export const OrderTable = ({status}) => {
                   <td>{order.division}</td>
                   <td>{order.entrega}</td>
                   <td>{order.material}</td>
-                  <td>{formattedPrice}</td>
+                  <td>{formattedPrecioUnitario}</td>
                   <td>{order.cantidad}</td>
-                  <td>{formattedTotal}</td>
+                  <td>{formattedPrice}</td>
                 </tr>
               );
             }
@@ -206,7 +206,7 @@ export const OrderTable = ({status}) => {
               currency: 'USD',
               minimumFractionDigits: 2,
             });
-            const formattedTotal = (Number(order.precio * Number(order.cantidad))).toLocaleString('en-US', {
+            const formattedPrecioUnitario = (Number(order.precio / Number(order.cantidad))).toLocaleString('en-US', {
               style: 'currency',
               currency: 'USD',
               minimumFractionDigits: 2,
@@ -224,9 +224,9 @@ export const OrderTable = ({status}) => {
               <td>{order.division}</td>
               <td>{order.entrega}</td>
               <td>{order.material}</td>
-              <td>{formattedPrice}</td>
+              <td>{formattedPrecioUnitario}</td>
               <td>{order.cantidad}</td>
-              <td>{formattedTotal}</td>
+              <td>{formattedPrice}</td>
             </tr>
           );
         }
@@ -241,9 +241,9 @@ export const OrderTable = ({status}) => {
               <td>{order.division}</td>
               <td>{order.entrega}</td>
               <td>{order.material}</td>
-              <td>{formattedPrice}</td>
+              <td>{formattedPrecioUnitario}</td>
               <td>{order.cantidad}</td>
-              <td>{formattedTotal}</td>
+              <td>{formattedPrice}</td>
             </tr>
           );
         }
@@ -260,9 +260,9 @@ export const OrderTable = ({status}) => {
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
                 <td>{order.material}</td>
-                <td>{formattedPrice}</td>
+                <td>{formattedPrecioUnitario}</td>
                 <td>{order.cantidad}</td>
-                <td>{formattedTotal}</td>
+                <td>{formattedPrice}</td>
               </tr>
             );
           }
