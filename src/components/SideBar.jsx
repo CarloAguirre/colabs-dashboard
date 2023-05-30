@@ -11,8 +11,9 @@ export const SideBar = () => {
 
             <div className="sidebar-title">
                 <div className="sidebar-brand">
-                    <span className="material-icons-outlined">
-                        inventory
+                    <span >
+                    <img src="https://res.cloudinary.com/dtjdx9mec/image/upload/v1685407880/agi_logo_b2s18f.webp" alt="logo" />
+
                     </span> AGI Controls
                 </div>
                 <span className="material-icons-outlined">

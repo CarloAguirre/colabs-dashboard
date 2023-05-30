@@ -56,7 +56,6 @@ function App() {
               element={
                 <>
                   {sidebarAndHeader}
-                  {/* <OrderTable status ='reports' />                 */}
                   <ReportsTable />
                 </>              
               }

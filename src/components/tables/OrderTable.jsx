@@ -5,6 +5,8 @@ import { useOrdenes } from "../../context"
 import { useEffect, useState } from 'react';
 import Cookies from 'universal-cookie'
 import './tables.css'
+import'../../App.css'
+import { OnSearch } from '../onSearch/OnSearch';
 
 
 export const OrderTable = ({status}) => {
@@ -275,11 +277,15 @@ export const OrderTable = ({status}) => {
     }
   return (
     <div className="main-container">
-         <div className='search-reset_inputs'>
-            <form action="">  
-                <input type="text" name='buscarNombre' onChange={onSearchInput} placeholder='Buscar' value={searchedOrder}></input>               
-            </form>           
-        </div>
+      {/* <br /> */}
+      {(status === "paids") ?      <div className="main-title">
+                                      <p className="font-weight-bold">ORDENES FACTURADAS</p>
+                                  </div>
+      :      <div className="main-title">
+                <p className="font-weight-bold">ORDENES ABIERTAS</p>
+            </div>}
+      <hr />
+        <OnSearch />
          <Tabs
             id="controlled-tab-example"
             className="my-3"

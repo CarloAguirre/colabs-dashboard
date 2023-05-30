@@ -2,6 +2,8 @@ import { addMonths } from 'date-fns';
 import { Form } from "react-bootstrap";
 import { useOrdenes } from "../../context";
 import './tables.css';
+import'../../App.css'
+import { OnSearch } from '../onSearch/OnSearch';
 
 export const ReportsTable = () => {
   const { selectReportsForm, contratosArray, tableOrders } = useOrdenes();
@@ -50,8 +52,11 @@ export const ReportsTable = () => {
   return (
     <>
       <div className="main-container">
+        <div className="main-title">
+                <p className="font-weight-bold">ESTADO DE ORDENES</p>
+          </div>
         <hr />
-        <h2 style={{background: 'rgba(0, 0, 0, .1)'}} className="text-center">Estado de Ordenes</h2>
+        <OnSearch />
         <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
           <Form.Select aria-label="Default select example" onChange={selectReportsForm}>
             <option value='todos'>Todas las ordenes</option>
@@ -65,8 +70,8 @@ export const ReportsTable = () => {
                 <tr>
                   <th scope="col">NUMERO</th>
                   <th scope="col">DESCRIPCIÓN</th>
-                  <th scope="col">ENTREGA</th>
-                  <th scope="col">CANTIDAD</th>
+                  {/* <th scope="col">ENTREGA</th>
+                  <th scope="col">CANTIDAD</th> */}
                   {monthHeaders.map((month, index) => (
                     <th key={index} scope="col">{month}</th>
                   ))}
@@ -108,8 +113,8 @@ export const ReportsTable = () => {
                     <tr key={index}>
                       <td><a href={order.img} target='_blank'>{order.numero}</a></td>
                       <td style={{ padding: '10px' }}>{order.descripcion}</td>
-                      <td>{order.entrega}</td>
-                      <td>{order.cantidad}</td>
+                      {/* <td>{order.entrega}</td>
+                      <td>{order.cantidad}</td> */}
                       {Array(deliveryColumn).fill().map((_, index) => (
                         <td key={index}></td>
                       ))}
@@ -121,8 +126,6 @@ export const ReportsTable = () => {
                 <tr style={{ background: 'yellow', color: 'black' }} >
                   <td>TOTAL</td>
                   <td></td>
-                  <td></td>
-                  <td></td>
                   {monthHeaders.map((month, index) => (
                     <td key={index}>{calculateTotalPrice(month)}</td>
                   ))}
@@ -132,9 +135,9 @@ export const ReportsTable = () => {
           </div>
         </div>
         <div className="info-labels mt-4">
-          <span className="text-white bg-success label">A tiempo</span>
-          <span className="text-white bg-danger label">Atrasada</span>
-          <span className="text-white bg-warning label">Facturada</span>
+          <span className="text-white label" style={{backgroundColor: '#4eb466'}}>A tiempo</span>
+          <span className="text-white label" style={{backgroundColor: '#de5866'}} >Atrasada</span>
+          <span className="text-white label" style={{backgroundColor: '#f9c835'}}>Facturada</span>
         </div>
       </div>
     </>
