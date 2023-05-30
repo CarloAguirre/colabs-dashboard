@@ -16,6 +16,14 @@
     font-weight:550;
     font-size:x-large;
   }
+  .table-container td{
+    cursor: pointer;
+  }
+  .table-container td:hover{
+    transform: scale(1.05);
+    transition: 0.5s;
+  }
+
 .info-labels{
   display: flex;
   align-items: center;
@@ -26,4 +34,5 @@
   padding: 5px;
   opacity: .8;
   border-radius: 5px;
+  font-size: small;
 }

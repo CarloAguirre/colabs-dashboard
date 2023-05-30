@@ -1,10 +1,12 @@
+import { addMonths } from 'date-fns';
 import { Form } from "react-bootstrap";
 import { useOrdenes } from "../../context";
 import './tables.css';
 
 export const ReportsTable = () => {
   const { selectReportsForm, contratosArray, tableOrders } = useOrdenes();
-
+  const currentDate = new Date();
+  
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
@@ -50,11 +52,6 @@ export const ReportsTable = () => {
       <div className="main-container">
         <hr />
         <h2 style={{background: 'rgba(0, 0, 0, .1)'}} className="text-center">Estado de Ordenes</h2>
-        <div className="info-labels mt-4">
-          <span className="text-white bg-success label">A tiempo</span>
-          <span className="text-white bg-danger label">Atrasada</span>
-          <span className="text-white bg-warning label">Facturada</span>
-        </div>
         <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
           <Form.Select aria-label="Default select example" onChange={selectReportsForm}>
             <option value='todos'>Todas las ordenes</option>
@@ -76,6 +73,7 @@ export const ReportsTable = () => {
                 </tr>
               </thead>
               <tbody>
+                
                 {tableOrders.map((order, index) => {
                   let formattedDeliveryDate = "";
 
@@ -133,7 +131,11 @@ export const ReportsTable = () => {
             </table>
           </div>
         </div>
-        
+        <div className="info-labels mt-4">
+          <span className="text-white bg-success label">A tiempo</span>
+          <span className="text-white bg-danger label">Atrasada</span>
+          <span className="text-white bg-warning label">Facturada</span>
+        </div>
       </div>
     </>
   );

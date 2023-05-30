@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
+    "date-fns": "^2.30.0",
     "dotenv": "^16.0.3",
     "numeral": "^2.0.6",
     "pdfjs-dist": "^3.6.172",
