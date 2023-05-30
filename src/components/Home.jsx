@@ -3,6 +3,8 @@ import { useOrdenes } from "../context"
 import { UsersCountChart } from "./UsersCountChart"
 import { UsersInfoChart } from "./UsersInfoChart"
 import Cookies from 'universal-cookie'
+import { OrdersRanking } from "./OrdersRanking"
+
 
 
 export const Home = () => {
@@ -16,7 +18,7 @@ export const Home = () => {
 
     }, [])
     
-    const {orders, totalMoney, lastColab, topUser, users, counter} = useOrdenes()
+    const {orders, totalMoney, warningOrder, topUser, users, counter} = useOrdenes()
     
   return (
     <div className="main-container">
@@ -28,7 +30,7 @@ export const Home = () => {
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">ORDENES</p>
+                <p className="text-primary">ORDENES EN CURSO</p>
                 <span className="material-icons-outlined text-blue">
                     inventory
                 </span>
@@ -38,7 +40,7 @@ export const Home = () => {
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">TOTAL COLABORACIONES</p>
+                <p className="text-primary">PROYECCIÓN DE INGRESOS</p>
                 <span className="material-icons-outlined text-orange">
                 attach_money
                 </span>
@@ -48,22 +50,22 @@ export const Home = () => {
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">COLABORADOR TOP</p>
+                <p className="text-primary">ORDEN TOP</p>
                 <span className="material-icons-outlined text-green">
                 how_to_reg
                 </span>
             </div>
-            <span className="text-primary font-weight-bold">{topUser.nombre}</span>
+            <span className="text-primary font-weight-bold">#{topUser.nombre}</span>
         </div>
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">ÚLTIMA COLABORACIÓN</p>
+                <p className="text-primary">ORDEN ATRASADA</p>
                 <span className="material-icons-outlined text-red">
                     notifications
                 </span>
             </div>
-            <span className="text-primary font-weight-bold">${lastColab.toLocaleString()}</span>
+            <span className="text-primary font-weight-bold">#{warningOrder}</span>
         </div>
 
     </div>
@@ -71,14 +73,18 @@ export const Home = () => {
     <div className="charts">
 
         <div className="charts-card">
-            <p className="chart-title">Colaboraciones</p>
-            <div className='users-charts'><UsersInfoChart  users={users} counter={counter} /></div>
+            <p className="chart-title">Proximas Entregas</p>
+            <div className='users-charts'><OrdersRanking/></div>
+        </div>
+        <div className="charts-card">
+            <p className="chart-title">Ultimas 10 ventas</p>
+            <div className='users-charts'><UsersInfoChart /></div>
         </div>
 
-        <div className="charts-card">
+        {/* <div className="charts-card">
             <p className="chart-title">Ordenes Facturadas</p>
             <div className='users-charts'><UsersCountChart orders={orders} users={users}/></div>
-        </div>
+        </div> */}
     </div>
 
    

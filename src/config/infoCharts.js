@@ -1,5 +1,5 @@
 
-export const infoChart = (usersName, usersColab)=>{
+export const infoChart = (usersName, orderPrice)=>{
     return {
         options: {
             chart: {
@@ -10,8 +10,8 @@ export const infoChart = (usersName, usersColab)=>{
             }
             },
             series: [{
-            name: 'series-1',
-            data: usersColab
+            name: 'Monto',
+            data: orderPrice
             }]
         }
 }

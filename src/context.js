@@ -13,7 +13,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
  export const OrdenesProvider = ({ children }) =>{
 
      // input nuevo colaborado config
-     const [users, setUsers] = useState(colaboradores);
+    //  const [users, setUsers] = useState(colaboradores);
      const [orders, setOrders] = useState([]);
      const [archivo, setArchivo] = useState(null); //imagen de la orden ({path:..., name:...})
      const [tableOrders, setTableOrders] = useState(orders)
@@ -509,36 +509,54 @@ import { orderUpdate } from "./helpers/orderUpdate";
          
      // stats configs
      let totalMoney = 0;
-     let lastColab = 0;
+     let warningOrder = "";
      const [topUser, setTopUser] = useState({
-         cantidad: 0,
-         nombre: ""
-     })
- 
-     const statsGenerator = ()=>{  
-         users.forEach(user=>{
-             let name = user.nombre
-             let monto = Number(user.cantidad) 
-             totalMoney += monto
-             
-             if(monto > topUser.cantidad){
-                 setTopUser({
-                     cantidad: monto,
-                     nombre: name
-                 })
-             }
-         })
-         let lasUserColab = Number(users[users.length-1].cantidad)
-         lastColab += lasUserColab
-     }
+       cantidad: 0,
+       nombre: ""
+     });
+     
+     const statsGenerator = () => {
+       let oldestOrder = null; // Variable para almacenar la orden más antigua
+     
+       orders.forEach(order => {
+         let monto = Number(order.precio);
+         totalMoney += monto;
+     
+         const [day, month, year] = order.entrega.split("/");
+         const entregaDate = new Date(Number(year), Number(month) - 1, Number(day));
+     
+         if (
+           entregaDate > new Date() &&
+           order.completada === false
+         ) {
+           if (!oldestOrder || entregaDate < oldestOrder.entregaDate) {
+             oldestOrder = {
+               entregaDate,
+               numero: order.numero
+             };
+           }
+         }
+     
+         if (monto > topUser.cantidad) {
+           setTopUser({
+             cantidad: order.precio,
+             nombre: order.numero
+           });
+         }
+       });
+     
+       if (oldestOrder) {
+         warningOrder = oldestOrder.numero;
+       }
+     };
+     
      statsGenerator();
+     
 
 
  
   
     const globalState = {
-        users,
-        setUsers,
         counter,
         setCounter,
         inputValue,
@@ -549,7 +567,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
         onInputChange,
         onSubmitHandler,
         totalMoney,
-        lastColab,
+        warningOrder,
         topUser,
         searchedOrder,
         setSearchedOrder,
