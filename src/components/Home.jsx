@@ -4,6 +4,7 @@ import { UsersCountChart } from "./UsersCountChart"
 import { UsersInfoChart } from "./UsersInfoChart"
 import Cookies from 'universal-cookie'
 import { OrdersRanking } from "./OrdersRanking"
+import './tables/tables.css'
 
 
 

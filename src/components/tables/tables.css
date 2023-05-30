@@ -11,6 +11,11 @@
   .table-size{
     zoom: .43;
   }
+  /* @media (min-width: 1484px){
+     .table-size{
+      zoom: .43;
+     }
+  } */
   
   .table-container td, thead {
     font-weight:550;

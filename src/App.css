@@ -91,6 +91,11 @@ body{
  padding: 20px 20px;
   
 }
+@media (max-width: 1484px ){
+  .main-container{
+    zoom: .70
+  }
+}
 .main-title{
   display: flex;
   justify-content: space-between;

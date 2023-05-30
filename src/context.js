@@ -4,6 +4,7 @@ import { colaboradores } from './config/colaboradores';
 import { cargarImagen } from "./helpers/cargarImagen";
 import { createProducto } from "./helpers/newOrderFetch";
 import { orderUpdate } from "./helpers/orderUpdate";
+import { serverPath } from "./config/serverPath";
 
 
 
@@ -44,7 +45,7 @@ import { orderUpdate } from "./helpers/orderUpdate";
 
      useEffect(() => {
         const fetchData = async()=>{
-            const res =  await fetch(`http://localhost:8080/api/productos?limite=1000&desde=0`)
+            const res =  await fetch(`${serverPath}api/productos?limite=1000&desde=0`)
             const orders = await res.json()
             const {productos } = orders;
             console.log(productos)
@@ -68,7 +69,8 @@ import { orderUpdate } from "./helpers/orderUpdate";
      useEffect(() => { 
        
        const orderArray =[]
-       
+       let mayorNumero = 0;
+      let indiceMayorNumero = -1;
        if(cliente === "codelco"){
          const orderData = ()=>{
            let fecha = null;
@@ -206,43 +208,42 @@ import { orderUpdate } from "./helpers/orderUpdate";
 
                 //precio unitario
                 // if(typeof texto)
-                let precioUno = newOrder[indiceSAP + 19];
-                const onlyNumbersAndSymbols = /^[\d,.]+$/.test(precioUno);
-                if (onlyNumbersAndSymbols) {
-                  let precioString = newOrder[indiceSAP + 19];
+                const divisaRegex = /^\d{1,3}([.,]\d{3})*([.,]\d{2})?$/; // Expresión regular para el formato de divisa
+
+                const numero = parseFloat(texto.replace(/[,.]/g, '').replace(',', '.'));
+                
+                if (divisaRegex.test(texto) && numero > mayorNumero) {
+                  mayorNumero = numero;
+                  indiceMayorNumero = index;
+                }
+                
+                if (indiceMayorNumero !== -1) {
+                  const precioString = newOrder[indiceMayorNumero];
                   let precio;
-                  if (precioString.includes(".")) {
+                
+                  if (divisaRegex.test(precioString)) {
+                    // Formato 5.626,04 o Formato 5,626.04
+                    if (precioString.indexOf(".") < precioString.indexOf(",")) {
+                      precio = parseFloat(precioString.replace(/[,.]/g, '').replace(',', '.')) / 100;
+                    } else {
+                      precio = parseFloat(precioString.replace(/[,.]/g, '') / 100);
+                    }
+                  } else if (precioString.includes(".")) {
                     // Formato 5,626.04
-                    precio = parseFloat(precioString.replace(/\./g, "").replace(",", ".")).toFixed(2);
+                    precio = parseFloat(precioString.replace(/[,.]/g, '').replace(',', '.')) / 100;
                   } else if (precioString.includes(",")) {
                     // Formato 5.626,04
-                    precio = parseFloat(precioString.replace(/,/g, "")).toFixed(2);
+                    precio = parseFloat(precioString.replace(/[,.]/g, '') / 100);
                   } else {
                     // Formato sin separador de miles y decimales
-                    precio = parseFloat(precioString).toFixed(2);
+                    precio = parseFloat(precioString) / 100;
                   }
-
-                  orderArray[9] = precio;
-                  // Eliminar los puntos del número
-                  precio = precio.replace(".", "");
-
-                  orderArray[9] = precio;
-                } else {
-                  let precioString = newOrder[indiceValorNeto + 2];
-                  let precio;
-                if (precioString.includes(".")) {
-                  // Formato 5,626.04
-                  precio = parseFloat(precioString.replace(/\./g, "").replace(",", ".")).toFixed(2);
-                } else if (precioString.includes(",")) {
-                  // Formato 5.626,04
-                  precio = parseFloat(precioString.replace(/,/g, "")).toFixed(2);
-                } else {
-                  // Formato sin separador de miles y decimales
-                  precio = parseFloat(precioString).toFixed(2);
+                
+                  orderArray[9] = Number(precio);
                 }
-
-                orderArray[9] = precio;
-                }
+                
+                
+     
 
                 //Descripcion
                 orderArray[10] = newOrder[indiceSAP + 14];
