@@ -6,6 +6,8 @@ import { createProducto } from "./helpers/newOrderFetch";
 import { orderUpdate } from "./helpers/orderUpdate";
 import { serverPath } from "./config/serverPath";
 import { format, parse } from 'date-fns';
+import es from 'date-fns/locale/es';
+
 
 
 
@@ -79,6 +81,7 @@ import { format, parse } from 'date-fns';
            const indiceDesc = newOrder.indexOf('Descripción del ítem:');
            const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
            const regexSAP = /(?:^|\D)(\d{7})(?!\d|\w|\D)/g;
+          
 
 
           let resultados = [];
@@ -95,7 +98,7 @@ import { format, parse } from 'date-fns';
                   const fechaTexto = fechaMatch[1].trim();
                   const fecha = new Date(fechaTexto);
                   if (!isNaN(fecha)) {
-                    const fechaFormateada = fecha.toLocaleDateString();
+                    const fechaFormateada = format(fecha, 'dd/MM/yyyy');
                     orderArray[1] = fechaFormateada;
                   }
                 }                
@@ -139,48 +142,50 @@ import { format, parse } from 'date-fns';
 
                     }
                 
-                //Fecha de entrega
-                let fechaEntrega = null;
-                if (texto.startsWith('FECHA DE ENTREGA:')){                  
-                  const indiceDosPuntos = texto.indexOf(':');
-                  if (indiceDosPuntos !== -1) {
-                    const textoDespuesDosPuntos = texto.substring(indiceDosPuntos + 1).trim();
-                    const partesFecha = textoDespuesDosPuntos.split('.');
-                    if (partesFecha.length === 3) {
-                      const dia = parseInt(partesFecha[0], 10);
-                      const mesAbreviatura = partesFecha[1];
-                      const anio = parseInt(partesFecha[2], 10);
-                      const meses = {
-                        Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
-                        Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
-                      };
-                      if (meses.hasOwnProperty(mesAbreviatura)) {
-                        const mes = meses[mesAbreviatura];
-                        fechaEntrega = new Date(anio, mes, dia).toLocaleDateString();
-                        orderArray[4] = fechaEntrega;
-                        
-                    }
-                  }
-                }
-              }else if (texto.startsWith('FECHA ENTREGA')){ 
-                const indiceString = newOrder.indexOf('FECHA ENTREGA');
-                const fecha = newOrder[indiceString + 2]
-                const partesFecha = fecha.split('.');
-                if (partesFecha.length === 3) {
-                  const dia = parseInt(partesFecha[0], 10);
-                  const mesAbreviatura = partesFecha[1];
-                  const anio = parseInt(partesFecha[2], 10);
-                  const meses = {
-                    Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
-                    Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
-                  };
-                  if (meses.hasOwnProperty(mesAbreviatura)) {
-                    const mes = meses[mesAbreviatura];
-                    fechaEntrega = new Date(anio, mes, dia).toLocaleDateString();
-                    orderArray[4] = fechaEntrega;       
-                }
-              }
-              }
+               // Entrega
+
+
+let fechaEntrega = null;
+if (texto.startsWith('FECHA DE ENTREGA:')) {
+  const indiceDosPuntos = texto.indexOf(':');
+  if (indiceDosPuntos !== -1) {
+    const textoDespuesDosPuntos = texto.substring(indiceDosPuntos + 1).trim();
+    const partesFecha = textoDespuesDosPuntos.split('.');
+    if (partesFecha.length === 3) {
+      const dia = parseInt(partesFecha[0], 10);
+      const mesAbreviatura = partesFecha[1];
+      const anio = parseInt(partesFecha[2], 10);
+      const meses = {
+        Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
+        Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+      };
+      if (meses.hasOwnProperty(mesAbreviatura)) {
+        const mes = meses[mesAbreviatura];
+        fechaEntrega = format(new Date(anio, mes, dia), 'dd/MM/yyyy');
+        orderArray[4] = fechaEntrega;
+      }
+    }
+  }
+} else if (texto.startsWith('FECHA ENTREGA')) {
+  const indiceString = newOrder.indexOf('FECHA ENTREGA');
+  const fecha = newOrder[indiceString + 2];
+  const partesFecha = fecha.split('.');
+  if (partesFecha.length === 3) {
+    const dia = parseInt(partesFecha[0], 10);
+    const mesAbreviatura = partesFecha[1];
+    const anio = parseInt(partesFecha[2], 10);
+    const meses = {
+      Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
+      Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+    };
+    if (meses.hasOwnProperty(mesAbreviatura)) {
+      const mes = meses[mesAbreviatura];
+      fechaEntrega = format(new Date(anio, mes, dia), 'dd/MM/yyyy');
+      orderArray[4] = fechaEntrega;
+    }
+  }
+}
+
 
                 //Nombre Gestor de compra
                 let textoDespuesDosPuntosNombre = null;
@@ -198,7 +203,8 @@ import { format, parse } from 'date-fns';
                 }
 
                 //SAP/material
-                if (regexSAP.test(texto)) {
+                if(texto.split( " " ).length < 3){
+                    
                   const matches = texto.match(regexSAP);
                 
                   if (matches) {
@@ -208,6 +214,7 @@ import { format, parse } from 'date-fns';
                     });
                   }
                 }
+              // }
                 //precio unitario
                 // if(typeof texto)
                 const divisaRegex = /^\d{1,3}([.,]\d{3})*([.,]\d{2})?$/; // Expresión regular para el formato de divisa
@@ -466,11 +473,11 @@ import { format, parse } from 'date-fns';
       
       if(categoria === 'invoice'){
         try {   
-          const invoiceString = parse(invoice, 'dd/MM/yyyy', new Date());
-          const invoiceDateString = parse(invoiceDate, 'dd/MM/yyyy', new Date());
+          const invoiceString = parse(invoice, 'dd/MM/yyyy', new Date(), { locale: es });
+          const invoiceDateString = parse(invoiceDate, 'dd/MM/yyyy', new Date(), { locale: es });
           
-          const formattedInvoice = format(invoiceString, 'yyyy-MM-dd');
-          const formattedInvoiceDate = format(invoiceDateString, 'yyyy-MM-dd');
+          const formattedInvoice = format(invoiceString, 'dd/MM/yyyy');
+          const formattedInvoiceDate = format(invoiceDateString, 'dd/MM/yyyy');
           await orderUpdate(formattedInvoice, formattedInvoiceDate)
           await cargarImagen(archivo, invoice);
         } catch (error) {
@@ -478,11 +485,11 @@ import { format, parse } from 'date-fns';
         }       
       }else{ 
         try {
-          const dateString = parse(newOrderData[1], 'dd/MM/yyyy', new Date());
-          const deliveryDateString = parse(newOrderData[4], 'dd/MM/yyyy', new Date());
+          const dateString = parse(newOrderData[1], 'dd/MM/yyyy', new Date(), { locale: es });
+          const deliveryDateString = parse(newOrderData[4], 'dd/MM/yyyy', new Date(), { locale: es });
 
-          const formattedDate = format(dateString, 'yyyy-MM-dd');
-          const formattedDelivery = format(deliveryDateString, 'yyyy-MM-dd');
+          const formattedDate = format(dateString, 'dd/MM/yyyy');
+          const formattedDelivery = format(deliveryDateString, 'dd/MM/yyyy');
           const createOrder = await createProducto(newOrderData[0], formattedDate, newOrderData[2], newOrderData[3], formattedDelivery, newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria);
           
           if (createOrder) {
