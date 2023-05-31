@@ -78,8 +78,7 @@ import { serverPath } from "./config/serverPath";
            const indiceUnidades = newOrder.indexOf('Unidades');
            const indiceDesc = newOrder.indexOf('Descripción del ítem:');
            const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
-           const regexSAP = /\b\d{7}\b/g;
-
+           const regexSAP = /(?:^|\D)(\d{7})(?!\d|\w|\D)/g;
 
 
           let resultados = [];
@@ -294,12 +293,9 @@ import { serverPath } from "./config/serverPath";
               orderArray[8] = sumaUnidades;
             } else {
               orderArray[8] = Number(newOrder[indiceSAP + 15]) - resultados.length + 1;
-            }
-
-              
+            }        
             }
           orderData()
-
 
         //  BHP - ESCONDIDA //
 

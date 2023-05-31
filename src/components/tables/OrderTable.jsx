@@ -133,7 +133,8 @@ export const OrderTable = ({status}) => {
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
                 <td>{order.material}</td>
-                <td>{formattedPrecioUnitario}</td>
+                {(order.material.includes("/") ? <td>{formattedPrice}</td>
+                : <td>{formattedPrecioUnitario}</td>)}
                 <td>{order.cantidad}</td>
                 <td>{formattedPrice}</td>
               </tr>
@@ -162,7 +163,8 @@ export const OrderTable = ({status}) => {
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
                 <td>{order.material}</td>
-                <td>{formattedPrecioUnitario}</td>
+                {(order.material.includes("/") ? <td>{formattedPrice}</td>
+                : <td>{formattedPrecioUnitario}</td>)}
                 <td>{order.cantidad}</td>
                 <td>{formattedPrice}</td>
               </tr>
@@ -188,7 +190,8 @@ export const OrderTable = ({status}) => {
                   <td>{order.division}</td>
                   <td>{order.entrega}</td>
                   <td>{order.material}</td>
-                  <td>{formattedPrecioUnitario}</td>
+                  {(order.material.includes("/") ? <td>{formattedPrice}</td>
+                : <td>{formattedPrecioUnitario}</td>)}
                   <td>{order.cantidad}</td>
                   <td>{formattedPrice}</td>
                 </tr>
@@ -224,7 +227,8 @@ export const OrderTable = ({status}) => {
               <td>{order.division}</td>
               <td>{order.entrega}</td>
               <td>{order.material}</td>
-              <td>{formattedPrecioUnitario}</td>
+              {(order.material.includes("/") ? <td>{formattedPrice}</td>
+                : <td>{formattedPrecioUnitario}</td>)}
               <td>{order.cantidad}</td>
               <td>{formattedPrice}</td>
             </tr>
@@ -241,7 +245,8 @@ export const OrderTable = ({status}) => {
               <td>{order.division}</td>
               <td>{order.entrega}</td>
               <td>{order.material}</td>
-              <td>{formattedPrecioUnitario}</td>
+              {(order.material.includes("/") ? <td>{formattedPrice}</td>
+                : <td>{formattedPrecioUnitario}</td>)}
               <td>{order.cantidad}</td>
               <td>{formattedPrice}</td>
             </tr>
@@ -260,7 +265,8 @@ export const OrderTable = ({status}) => {
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
                 <td>{order.material}</td>
-                <td>{formattedPrecioUnitario}</td>
+                {(order.material.includes("/") ? <td>{formattedPrice}</td>
+                : <td>{formattedPrecioUnitario}</td>)}
                 <td>{order.cantidad}</td>
                 <td>{formattedPrice}</td>
               </tr>
