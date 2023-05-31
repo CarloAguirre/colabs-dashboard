@@ -5,7 +5,7 @@ import { cargarImagen } from "./helpers/cargarImagen";
 import { createProducto } from "./helpers/newOrderFetch";
 import { orderUpdate } from "./helpers/orderUpdate";
 import { serverPath } from "./config/serverPath";
-
+import { format, parse } from 'date-fns';
 
 
 
@@ -465,15 +465,25 @@ import { serverPath } from "./config/serverPath";
       const categoria = event.target.name
       
       if(categoria === 'invoice'){
-        try {        
-          await orderUpdate(invoice, invoiceDate)
+        try {   
+          const invoiceString = parse(invoice, 'dd/MM/yyyy', new Date());
+          const invoiceDateString = parse(invoiceDate, 'dd/MM/yyyy', new Date());
+          
+          const formattedInvoice = format(invoiceString, 'yyyy-MM-dd');
+          const formattedInvoiceDate = format(invoiceDateString, 'yyyy-MM-dd');
+          await orderUpdate(formattedInvoice, formattedInvoiceDate)
           await cargarImagen(archivo, invoice);
         } catch (error) {
           console.log(error)
         }       
       }else{ 
         try {
-          const createOrder = await createProducto(newOrderData[0], newOrderData[1], newOrderData[2], newOrderData[3], newOrderData[4], newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria);
+          const dateString = parse(newOrderData[1], 'dd/MM/yyyy', new Date());
+          const deliveryDateString = parse(newOrderData[4], 'dd/MM/yyyy', new Date());
+
+          const formattedDate = format(dateString, 'yyyy-MM-dd');
+          const formattedDelivery = format(deliveryDateString, 'yyyy-MM-dd');
+          const createOrder = await createProducto(newOrderData[0], formattedDate, newOrderData[2], newOrderData[3], formattedDelivery, newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria);
           
           if (createOrder) {
             await cargarImagen(archivo, null);
