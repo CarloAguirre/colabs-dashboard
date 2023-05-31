@@ -78,7 +78,10 @@ import { serverPath } from "./config/serverPath";
            const indiceUnidades = newOrder.indexOf('Unidades');
            const indiceDesc = newOrder.indexOf('Descripción del ítem:');
            const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
-           const regexSAP = /\b(\d+)\s+(\d{5,})\b/g;
+           const regexSAP = /\b\d{7}\b/g;
+
+
+
           let resultados = [];
          
             newOrder.map((texto, index)=>{
@@ -198,10 +201,12 @@ import { serverPath } from "./config/serverPath";
                 //SAP/material
                 if (regexSAP.test(texto)) {
                   const matches = texto.match(regexSAP);
-                  
+                
                   if (matches) {
-                    const numeros = matches.map(match => match.split(' ')[1]);
-                    resultados = resultados.concat(numeros);
+                    matches.forEach(match => {
+                      const numeros = match.match(/\d{7}/g); // Obtener solo los números de 7 dígitos
+                      resultados = resultados.concat(numeros);
+                    });
                   }
                 }
             
