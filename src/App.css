@@ -91,9 +91,34 @@ body{
  padding: 20px 20px;
   
 }
-@media (max-width: 1484px ){
+@media (max-width: 1411px ){
+  .main-container{
+    zoom: .90
+  }
+}
+@media (max-width: 1296px ){
+  .main-container{
+    zoom: .80
+  }
+}
+@media (max-width: 1184px ){
   .main-container{
     zoom: .70
+  }
+}
+@media (max-width: 1068px ){
+  .main-container{
+    zoom: .60
+  }
+}
+@media (max-width: 992px ){
+  .main-container{
+    zoom: .8
+  }
+}
+@media (max-width: 992px ){
+  .main-container{
+    zoom: .7
   }
 }
 .main-title{

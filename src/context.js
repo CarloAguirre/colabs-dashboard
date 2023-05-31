@@ -89,7 +89,7 @@ import es from 'date-fns/locale/es';
             newOrder.map((texto, index)=>{
                 //Numero de Orden
                 if (texto.includes('ORDEN DE COMPRA')) {
-                    orderArray[0] = Number(texto.match(/\d+/)[0]);
+                    orderArray[0] = Number(texto.match(/\d+/g));
                 }
 
                 //Fecha
@@ -97,11 +97,11 @@ import es from 'date-fns/locale/es';
                 if (fechaMatch) {
                   const fechaTexto = fechaMatch[1].trim();
                   const fecha = new Date(fechaTexto);
-                  if (!isNaN(fecha)) {
+                  if (!isNaN(fecha)) {        
                     const fechaFormateada = format(fecha, 'dd/MM/yyyy');
                     orderArray[1] = fechaFormateada;
                   }
-                }                
+                }                    
                 
                 function obtenerMesNumero(mesAbreviatura) {
                   const meses = {
@@ -145,46 +145,46 @@ import es from 'date-fns/locale/es';
                // Entrega
 
 
-let fechaEntrega = null;
-if (texto.startsWith('FECHA DE ENTREGA:')) {
-  const indiceDosPuntos = texto.indexOf(':');
-  if (indiceDosPuntos !== -1) {
-    const textoDespuesDosPuntos = texto.substring(indiceDosPuntos + 1).trim();
-    const partesFecha = textoDespuesDosPuntos.split('.');
-    if (partesFecha.length === 3) {
-      const dia = parseInt(partesFecha[0], 10);
-      const mesAbreviatura = partesFecha[1];
-      const anio = parseInt(partesFecha[2], 10);
-      const meses = {
-        Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
-        Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
-      };
-      if (meses.hasOwnProperty(mesAbreviatura)) {
-        const mes = meses[mesAbreviatura];
-        fechaEntrega = format(new Date(anio, mes, dia), 'dd/MM/yyyy');
-        orderArray[4] = fechaEntrega;
-      }
-    }
-  }
-} else if (texto.startsWith('FECHA ENTREGA')) {
-  const indiceString = newOrder.indexOf('FECHA ENTREGA');
-  const fecha = newOrder[indiceString + 2];
-  const partesFecha = fecha.split('.');
-  if (partesFecha.length === 3) {
-    const dia = parseInt(partesFecha[0], 10);
-    const mesAbreviatura = partesFecha[1];
-    const anio = parseInt(partesFecha[2], 10);
-    const meses = {
-      Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
-      Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
-    };
-    if (meses.hasOwnProperty(mesAbreviatura)) {
-      const mes = meses[mesAbreviatura];
-      fechaEntrega = format(new Date(anio, mes, dia), 'dd/MM/yyyy');
-      orderArray[4] = fechaEntrega;
-    }
-  }
-}
+              let fechaEntrega = null;
+              if (texto.startsWith('FECHA DE ENTREGA:')) {
+              const indiceDosPuntos = texto.indexOf(':');
+              if (indiceDosPuntos !== -1) {
+                const textoDespuesDosPuntos = texto.substring(indiceDosPuntos + 1).trim();
+                const partesFecha = textoDespuesDosPuntos.split('.');
+                if (partesFecha.length === 3) {
+                  const dia = parseInt(partesFecha[0], 10);
+                  const mesAbreviatura = partesFecha[1];
+                  const anio = parseInt(partesFecha[2], 10);
+                  const meses = {
+                    Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
+                    Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+                  };
+                  if (meses.hasOwnProperty(mesAbreviatura)) {
+                    const mes = meses[mesAbreviatura];
+                    fechaEntrega = format(new Date(anio, mes, dia), 'dd/MM/yyyy');
+                    orderArray[4] = fechaEntrega;
+                  }
+                }
+              }
+              } else if (texto.startsWith('FECHA ENTREGA')) {
+              const indiceString = newOrder.indexOf('FECHA ENTREGA');
+              const fecha = newOrder[indiceString + 2];
+              const partesFecha = fecha.split('.');
+              if (partesFecha.length === 3) {
+                const dia = parseInt(partesFecha[0], 10);
+                const mesAbreviatura = partesFecha[1];
+                const anio = parseInt(partesFecha[2], 10);
+                const meses = {
+                  Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
+                  Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+                };
+                if (meses.hasOwnProperty(mesAbreviatura)) {
+                  const mes = meses[mesAbreviatura];
+                  fechaEntrega = format(new Date(anio, mes, dia), 'dd/MM/yyyy');
+                  orderArray[4] = fechaEntrega;
+                }
+              }
+              }
 
 
                 //Nombre Gestor de compra
@@ -431,17 +431,20 @@ if (texto.startsWith('FECHA DE ENTREGA:')) {
             const paidOrderId = orders.find(order => order.numero === paidOrderNumber)?._id;
               if(paidOrderId){
                 //Fecha invoice
+                let fechaFormatted = null;
                 const patronFecha = /\d{2}\/\d{2}\/\d{4}/;
                 const coincidencias = newOrder[0].match(patronFecha);
                 const fecha = coincidencias[0];
-                const fechaSplit = fecha.split('/');
-                const fechaFormatted = `${fechaSplit[1]}/${fechaSplit[0]}/${fechaSplit[2]}`;
+                if(fecha){
+                  const fechaDate = new Date(fecha)
+                    fechaFormatted = format(fechaDate, 'dd/MM/yyyy');
+                    
+                }
                 setInvoiceDate(fechaFormatted)      
-                setInvoice(paidOrderId)    
+                setInvoice(paidOrderId) 
               }else{
                 alert(`No existe la orden N°${paidOrderNumber} en la base de datos.`)
               }
-
           }
 
         }
@@ -473,12 +476,12 @@ if (texto.startsWith('FECHA DE ENTREGA:')) {
       
       if(categoria === 'invoice'){
         try {   
-          const invoiceString = parse(invoice, 'dd/MM/yyyy', new Date(), { locale: es });
+          // const invoiceString = parse(invoice, 'dd/MM/yyyy', new Date(), { locale: es });
           const invoiceDateString = parse(invoiceDate, 'dd/MM/yyyy', new Date(), { locale: es });
           
-          const formattedInvoice = format(invoiceString, 'dd/MM/yyyy');
+          // const formattedInvoice = format(invoiceString, 'dd/MM/yyyy');
           const formattedInvoiceDate = format(invoiceDateString, 'dd/MM/yyyy');
-          await orderUpdate(formattedInvoice, formattedInvoiceDate)
+          await orderUpdate(invoice, formattedInvoiceDate)
           await cargarImagen(archivo, invoice);
         } catch (error) {
           console.log(error)
