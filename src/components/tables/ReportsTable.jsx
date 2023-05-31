@@ -37,7 +37,7 @@ export const ReportsTable = () => {
     let totalPrice = 0;
 
     completedOrders.forEach((order) => {
-      totalPrice += (Number(order.precio) * Number(order.cantidad));
+      totalPrice += (Number(order.precio));
     });
 
     const formattedPrice = totalPrice.toLocaleString('en-US', {
@@ -49,12 +49,17 @@ export const ReportsTable = () => {
     return formattedPrice;
   };
 
+  const calculateDeliveryColumn = (deliveryMonth) => {
+    const deliveryIndex = (deliveryMonth + 12 - startIndex) % 12;
+    return deliveryIndex;
+  };
+
   return (
     <>
       <div className="main-container">
         <div className="main-title">
-                <p className="font-weight-bold">ESTADO DE ORDENES</p>
-          </div>
+          <p className="font-weight-bold">ESTADO DE ORDENES</p>
+        </div>
         <hr />
         <OnSearch />
         <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
@@ -70,15 +75,12 @@ export const ReportsTable = () => {
                 <tr>
                   <th scope="col">NUMERO</th>
                   <th scope="col">DESCRIPCIÓN</th>
-                  {/* <th scope="col">ENTREGA</th>
-                  <th scope="col">CANTIDAD</th> */}
                   {monthHeaders.map((month, index) => (
                     <th key={index} scope="col">{month}</th>
                   ))}
                 </tr>
               </thead>
               <tbody>
-                
                 {tableOrders.map((order, index) => {
                   let formattedDeliveryDate = "";
 
@@ -91,7 +93,8 @@ export const ReportsTable = () => {
                   const deliveryDate = new Date(formattedDeliveryDate);
                   const isPastDue = deliveryDate < new Date();
                   const deliveryMonth = deliveryDate.getMonth();
-                  const deliveryColumn = monthHeaders.findIndex(month => month === months[deliveryMonth]);
+                  const deliveryColumn = calculateDeliveryColumn(deliveryMonth);
+
                   let dateClassName = '';
 
                   if (order.completada === false) {
@@ -113,13 +116,17 @@ export const ReportsTable = () => {
                     <tr key={index}>
                       <td><a href={order.img} target='_blank'>{order.numero}</a></td>
                       <td style={{ padding: '10px' }}>{order.descripcion}</td>
-                      {/* <td>{order.entrega}</td>
-                      <td>{order.cantidad}</td> */}
-                      {Array(deliveryColumn).fill().map((_, index) => (
-                        <td key={index}></td>
-                      ))}
-                      {(order.completada === true)? <td className={dateClassName} title={order.invoice_date}>{formattedPrice}</td>
-                        : <td className={dateClassName} title={order.entrega}>{formattedPrice}</td>}
+                      {monthHeaders.map((month, index) => {
+                        if (index === deliveryColumn) {
+                          return (
+                            <td key={index} className={dateClassName} title={formattedDeliveryDate}>{formattedPrice}</td>
+                          );
+                        } else {
+                          return (
+                            <td key={index}></td>
+                          );
+                        }
+                      })}
                     </tr>
                   );
                 })}
