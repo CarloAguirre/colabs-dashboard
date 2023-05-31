@@ -209,11 +209,6 @@ import { serverPath } from "./config/serverPath";
                     });
                   }
                 }
-            
-                //Cantidad
-
-                orderArray[8] = Number(newOrder[indiceSAP + 15]);
-
                 //precio unitario
                 // if(typeof texto)
                 const divisaRegex = /^\d{1,3}([.,]\d{3})*([.,]\d{2})?$/; // Expresión regular para el formato de divisa
@@ -282,13 +277,14 @@ import { serverPath } from "./config/serverPath";
               return contador;
             }, 0);
             
+           // Cantidad
             if (contadorUnidades === 1) {
               const indiceUnidades = newOrder.indexOf('Unidades');
-              orderArray[8] = newOrder[indiceUnidades - 2];
+              orderArray[8] = Number(newOrder[indiceUnidades - 2]);
             } else if (contadorUnidades > 1) {
               const sumaUnidades = newOrder.reduce((suma, texto, index) => {
                 if (texto === 'Unidades') {
-                  const valorUnidades = Number(newOrder[index + 1]);
+                  const valorUnidades = Number(newOrder[index - 2]);
                   if (!isNaN(valorUnidades)) {
                     return suma + valorUnidades;
                   }
@@ -296,10 +292,10 @@ import { serverPath } from "./config/serverPath";
                 return suma;
               }, 0);
               orderArray[8] = sumaUnidades;
-            }else{
-              orderArray[8] = (Number(newOrder[indiceSAP + 15]) - resultados.length) + 1;
-         
+            } else {
+              orderArray[8] = Number(newOrder[indiceSAP + 15]) - resultados.length + 1;
             }
+
               
             }
           orderData()

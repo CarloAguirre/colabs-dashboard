@@ -102,7 +102,7 @@ export const ReportsTable = () => {
                     dateClassName = 'text-black';
                   }
 
-                  let price = (Number(order.cantidad) * order.precio);
+                  let price = (Number(order.precio));
                   const formattedPrice = price.toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'USD',

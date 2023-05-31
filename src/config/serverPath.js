@@ -1,2 +1,2 @@
-// export const serverPath = 'https://agi-controls.herokuapp.com/'
-export const serverPath = 'http://localhost:8080/'
+export const serverPath = 'https://agi-controls.herokuapp.com/'
+// export const serverPath = 'http://localhost:8080/'
