@@ -66,7 +66,7 @@ export const OrderTable = ({status}) => {
 
     const [orderEntrega, setOrderEntrega] = useState({});
 
-    const handleDateChange = (orderNumber, newDate) => {
+    const handleDateChange = async(orderNumber, newDate) => {
 
       const dateParts = newDate.split("/"); // Divide la cadena en partes separadas por "/"
       const day = parseInt(dateParts[0], 10); // Obtiene el día y lo convierte en un número entero
@@ -76,7 +76,13 @@ export const OrderTable = ({status}) => {
       const date = new Date(year, month, day);
 
       const fechaFormateada = format(date, 'dd/MM/yyyy');
-      orderUpdate(orderNumber, null, fechaFormateada)
+      alert(`Estas seguro que deseas cambiar la fecha a ${fechaFormateada}?`)
+      try {
+        await orderUpdate(orderNumber, null, fechaFormateada)
+        
+      } catch (error) {
+        alert('Se produjo un error, por favor comunicate con el administrador del sitio.')
+      }
 
       // console.log(fechaFormateada)
     };

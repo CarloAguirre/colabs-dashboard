@@ -2,6 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import moment from 'moment';
 import 'react-datepicker/dist/react-datepicker.css';
+import './tables/tables.css'
 
 export const DatePickerComponent = ({ orderNumber, deliveryDate, onDateChange }) => {
   const handleChange = (date) => {
@@ -16,7 +17,8 @@ export const DatePickerComponent = ({ orderNumber, deliveryDate, onDateChange })
       selected={deliveryDate ? parsedDeliveryDate : null}
       onChange={handleChange}
       dateFormat="dd/MM/yyyy"
-    //   popperPlacement="bottom-start" // Ajusta la posición del selector de fechas
+      popperPlacement="bottom-start"
+      popperClassName="custom-datepicker-popper"
     />
   );
 };

@@ -36,6 +36,7 @@ export const orderUpdate = async(id, invoiceDate, deliveryDate = null)=>{
             console.log(JSON.stringify(response.data.msg));
             alert("La fecha de entrega ha sido actualizada")
             window.location.href = "./orders"
+            return
         }
         console.log(JSON.stringify(response.data.msg));
         alert(response.data.msg)

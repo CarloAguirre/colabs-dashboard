@@ -93,33 +93,39 @@ import es from 'date-fns/locale/es';
                 }
 
                 //Fecha
-                const fechaMatch = texto.match(/Fecha de Emisión: (.+)/);
-                if (fechaMatch) {
-                  const fechaTexto = fechaMatch[1].trim();
-                  const fecha = new Date(fechaTexto);
-                  if (!isNaN(fecha)) {        
-                    const fechaFormateada = format(fecha, 'dd/MM/yyyy');
-                    orderArray[1] = fechaFormateada;
-                  }
-                }                    
+                const mesNumerico = {
+                  enero: 0, febrero: 1, marzo: 2, abril: 3, mayo: 4, junio: 5,
+                  julio: 6, agosto: 7, septiembre: 8, octubre: 9, noviembre: 10, diciembre: 11
+                };
                 
-                function obtenerMesNumero(mesAbreviatura) {
-                  const meses = {
-                    'Ene': 1,
-                    'Feb': 2,
-                    'Mar': 3,
-                    'Abr': 4,
-                    'May': 5,
-                    'Jun': 6,
-                    'Jul': 7,
-                    'Ago': 8,
-                    'Sep': 9,
-                    'Oct': 10,
-                    'Nov': 11,
-                    'Dic': 12
-                  };
-                  return meses[mesAbreviatura];
+                const fechaMatch = texto.match(/Fecha de Emisión: (\d{1,2})\.(\w+)\.(\d{4})/);
+                if (fechaMatch) {
+                  const dia = parseInt(fechaMatch[1], 10);
+                  const mesTexto = fechaMatch[2].toLowerCase();
+                  const mes = mesNumerico[mesTexto];
+                  const año = parseInt(fechaMatch[3], 10);
+                  
+                  if (!isNaN(dia) && !isNaN(mes) && !isNaN(año)) {
+                    const fecha = new Date(año, mes, dia);
+                    if (!isNaN(fecha)) {
+                      const fechaFormateada = format(fecha, 'dd/MM/yyyy');
+                      orderArray[1] = fechaFormateada;
+                    }
+                  }
+                }else{
+                  const fechaMatch = texto.match(/Fecha de Emisión: (.+)/);
+                  if (fechaMatch) {
+                    const fechaTexto = fechaMatch[1].trim();
+                    const fecha = new Date(fechaTexto);
+                    if (!isNaN(fecha)) {        
+                      const fechaFormateada = format(fecha, 'dd/MM/yyyy');
+                      orderArray[1] = fechaFormateada;
+                    }
+                  } 
                 }
+                
+                             
+
                 //Contrato:
                 const regexContrato = /abierto\s(\d+)/;
                 const matchContrato = texto.match(regexContrato);
@@ -157,7 +163,7 @@ import es from 'date-fns/locale/es';
                   const anio = parseInt(partesFecha[2], 10);
                   const meses = {
                     Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
-                    Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+                    Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dic: 11
                   };
                   if (meses.hasOwnProperty(mesAbreviatura)) {
                     const mes = meses[mesAbreviatura];
@@ -176,7 +182,7 @@ import es from 'date-fns/locale/es';
                 const anio = parseInt(partesFecha[2], 10);
                 const meses = {
                   Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
-                  Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dec: 11
+                  Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dic: 11
                 };
                 if (meses.hasOwnProperty(mesAbreviatura)) {
                   const mes = meses[mesAbreviatura];

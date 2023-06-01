@@ -23,6 +23,7 @@
   }
   .table-container td{
     cursor: pointer;
+  
   }
 
 .info-labels{
@@ -42,4 +43,10 @@
 }
 .datePicker{
 position: absolute;
+text-align: center;
+}
+.custom-datepicker-popper{
+  font-size: 34px;
+  width: 400px;
+  margin-left: 90px;
 }
