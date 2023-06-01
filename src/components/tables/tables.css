@@ -1,6 +1,6 @@
 .table-container {
     overflow: auto;
-    max-height: 850px;
+    max-height: 750px;
   }
   
   .table-container thead {
@@ -36,4 +36,10 @@
   border-radius: 5px;
   font-size: x-small;
   font-weight: 550;
+}
+.datePicker-td{
+  position: relative;
+}
+.datePicker{
+position: absolute;
 }

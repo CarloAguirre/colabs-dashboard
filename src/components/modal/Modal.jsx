@@ -15,14 +15,17 @@ export const ModalPdfDrop =({cliente})=> {
   return (
     <>
     {
-      (cliente === "invoice")?
-      <Button variant="info" onClick={handleShow} className="btn-outline-info btn-lg">
-        Añadir {cliente.toUpperCase()}
-      </Button>
-      : <Button variant="primary" onClick={handleShow} className="btn-outline-primary">
+      cliente === "invoice" ? (
+        <Button variant="outline-info" onClick={handleShow} className="btn-lg">
+          Añadir {cliente.toUpperCase()}
+        </Button>
+      ) : (
+        <Button variant="outline-primary" onClick={handleShow}>
           Añadir orden {cliente.toUpperCase()}
         </Button>
+      )
     }
+
 
       <Modal
         show={show}

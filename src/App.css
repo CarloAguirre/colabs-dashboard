@@ -2,9 +2,9 @@ body{
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  background-color: #eff0f3;
-  color: #666666;
-  font-family: 'Montserrat', sans-serif;
+  background-color: #eff0f3 !important;
+  color: #666666 !important;
+  font-family: 'Montserrat', sans-serif !important;
 }
 
 
@@ -231,7 +231,7 @@ body{
 }
 .anchor-link{
   text-decoration: none;
-  color: #9799ab;
+  color: #9799ab ;
 }
 .table-purple{
   background-color: rgb(187, 175, 223) !important;

@@ -115,7 +115,7 @@ export const ReportsTable = () => {
                   return (
                     <tr key={index}>
                       <td><a href={order.img} target='_blank'>{order.numero}</a></td>
-                      <td style={{ padding: '10px' }}>{order.descripcion}</td>
+                      <td className='text-left'>{order.descripcion}</td>
                       {monthHeaders.map((month, index) => {
                         if (index === deliveryColumn) {
                           return (

@@ -8,6 +8,10 @@ import './tables.css'
 import'../../App.css'
 import { OnSearch } from '../onSearch/OnSearch';
 
+import { DatePickerComponent } from '../DatePickerComponent';
+import { format } from 'date-fns';
+import { orderUpdate } from '../../helpers/orderUpdate';
+
 
 export const OrderTable = ({status}) => {
   const {orders, tableOrders, setTableOrders, contratosArray, setContratosArray, selectContratoForm  } = useOrdenes()
@@ -60,6 +64,22 @@ export const OrderTable = ({status}) => {
     }, [orders])
     
 
+    const [orderEntrega, setOrderEntrega] = useState({});
+
+    const handleDateChange = (orderNumber, newDate) => {
+
+      const dateParts = newDate.split("/"); // Divide la cadena en partes separadas por "/"
+      const day = parseInt(dateParts[0], 10); // Obtiene el día y lo convierte en un número entero
+      const month = parseInt(dateParts[1], 10) - 1; // Obtiene el mes (restamos 1 porque los meses en JavaScript son indexados desde 0)
+      const year = parseInt(dateParts[2], 10); // Obtiene el año
+
+      const date = new Date(year, month, day);
+
+      const fechaFormateada = format(date, 'dd/MM/yyyy');
+      orderUpdate(orderNumber, null, fechaFormateada)
+
+      // console.log(fechaFormateada)
+    };
 
     const tableModel = (ordenNumber)=>{
         return <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
@@ -106,6 +126,7 @@ export const OrderTable = ({status}) => {
 
         <tbody id='full-list'>
     {(status === 'paids') ? 
+    
       (tableOrders.map(order => {  
         let price = (Number(order.precio))
         const formattedPrice = price.toLocaleString('en-US', {
@@ -141,6 +162,7 @@ export const OrderTable = ({status}) => {
             );
           }
           else if (ordenNumber === 'todos') {
+         
             let price = (Number(order.precio))
             const formattedPrice = price.toLocaleString('en-US', {
                 style: 'currency',
@@ -225,7 +247,13 @@ export const OrderTable = ({status}) => {
               <td>{order.mail}</td> */}
               <td>{order.fecha}</td>
               <td>{order.division}</td>
-              <td>{order.entrega}</td>
+              <td className = 'datePicker-td text-center'>
+              <DatePickerComponent
+              className = 'datePicker'
+                 orderNumber={order._id}
+                  deliveryDate={order.entrega} 
+                  onDateChange={handleDateChange}
+              /></td>
               <td>{order.material}</td>
               {(order.material.includes("/") ? <td>{formattedPrice}</td>
                 : <td>{formattedPrecioUnitario}</td>)}
@@ -235,6 +263,7 @@ export const OrderTable = ({status}) => {
           );
         }
         else if (ordenNumber === 'todos') {
+
           return (
             <tr key={order.numero}>
               <td><a href={order.img} target='_blank'>{order.numero}</a></td>
@@ -243,7 +272,13 @@ export const OrderTable = ({status}) => {
               <td>{order.mail}</td> */}
               <td>{order.fecha}</td>
               <td>{order.division}</td>
-              <td>{order.entrega}</td>
+              <td className = 'datePicker-td text-center'>
+              <DatePickerComponent
+              className = 'datePicker'
+                 orderNumber={order._id}
+                  deliveryDate={order.entrega} 
+                  onDateChange={handleDateChange}
+              /></td>
               <td>{order.material}</td>
               {(order.material.includes("/") ? <td>{formattedPrice}</td>
                 : <td>{formattedPrecioUnitario}</td>)}
@@ -263,7 +298,13 @@ export const OrderTable = ({status}) => {
                 <td>{order.contrato}</td>
                 <td>{order.fecha}</td>
                 <td>{order.division}</td>
-                <td>{order.entrega}</td>
+                <td className = 'datePicker-td text-center'>
+              <DatePickerComponent
+              className = 'datePicker'
+                 orderNumber={order._id}
+                  deliveryDate={order.entrega} 
+                  onDateChange={handleDateChange}
+              /></td>
                 <td>{order.material}</td>
                 {(order.material.includes("/") ? <td>{formattedPrice}</td>
                 : <td>{formattedPrecioUnitario}</td>)}
