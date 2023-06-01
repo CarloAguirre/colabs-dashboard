@@ -11,6 +11,7 @@ import { OnSearch } from '../onSearch/OnSearch';
 import { DatePickerComponent } from '../DatePickerComponent';
 import { format } from 'date-fns';
 import { orderUpdate } from '../../helpers/orderUpdate';
+import { tokenValidatior } from '../../helpers/tokenValidator';
 
 
 export const OrderTable = ({status}) => {
@@ -29,13 +30,7 @@ export const OrderTable = ({status}) => {
   ));
   
     useEffect(() => {
-        const cookies = new Cookies();
-        const token = cookies.get("token")
-        if(!token){
-            alert('No tienes acceso al dashboard de administracion, inicia sesión')
-            window.location.href = "./"
-        }
-
+        tokenValidatior();
     }, [])
 
     

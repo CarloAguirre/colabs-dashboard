@@ -1,12 +1,19 @@
-import { addMonths } from 'date-fns';
+
 import { Form } from "react-bootstrap";
 import { useOrdenes } from "../../context";
 import './tables.css';
 import '../../App.css';
 import { OnSearch } from '../onSearch/OnSearch';
+import { useEffect } from "react";
+import { tokenValidatior } from "../../helpers/tokenValidator";
 
 export const ReportsTable = () => {
   const { selectReportsForm, contratosArray, tableOrders } = useOrdenes();
+
+    useEffect(() => {
+      tokenValidatior();
+  }, [])
+
   const currentDate = new Date();
   
   const months = [

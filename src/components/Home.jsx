@@ -2,21 +2,15 @@ import { useEffect } from "react"
 import { useOrdenes } from "../context"
 import { UsersCountChart } from "./UsersCountChart"
 import { UsersInfoChart } from "./UsersInfoChart"
-import Cookies from 'universal-cookie'
 import { OrdersRanking } from "./OrdersRanking"
 import './tables/tables.css'
+import { tokenValidatior } from "../helpers/tokenValidator"
 
 
 
 export const Home = () => {
     useEffect(() => {
-        const cookies = new Cookies();
-        const token = cookies.get("token")
-        if(!token){
-            alert('No tienes acceso al dashboard de administracion, inicia sesión')
-            window.location.href = "./"
-        }
-
+        tokenValidatior();
     }, [])
     
     const {orders, totalMoney, warningOrder, topUser, users, counter} = useOrdenes()
