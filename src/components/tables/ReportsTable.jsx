@@ -2,7 +2,7 @@ import { addMonths } from 'date-fns';
 import { Form } from "react-bootstrap";
 import { useOrdenes } from "../../context";
 import './tables.css';
-import'../../App.css'
+import '../../App.css';
 import { OnSearch } from '../onSearch/OnSearch';
 
 export const ReportsTable = () => {
@@ -37,7 +37,37 @@ export const ReportsTable = () => {
     let totalPrice = 0;
 
     completedOrders.forEach((order) => {
-      totalPrice += (Number(order.precio));
+      totalPrice += Number(order.precio);
+    });
+
+    const formattedPrice = totalPrice.toLocaleString('en-US', {
+      style: 'currency',
+      currency: 'USD',
+      minimumFractionDigits: 2,
+    });
+
+    return formattedPrice;
+  };
+
+  const calculateProjectionPrice = (month) => {
+    const projectedOrders = [];
+
+    tableOrders.forEach((order) => {
+      if (order.completada === false) {
+        const formattedDeliveryDate = order.entrega.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
+        const deliveryDate = new Date(formattedDeliveryDate);
+        const deliveryMonth = deliveryDate.getMonth();
+
+        if (months[deliveryMonth] === month) {
+          projectedOrders.push(order);
+        }
+      }
+    });
+
+    let totalPrice = 0;
+
+    projectedOrders.forEach((order) => {
+      totalPrice += Number(order.precio);
     });
 
     const formattedPrice = totalPrice.toLocaleString('en-US', {
@@ -105,7 +135,7 @@ export const ReportsTable = () => {
                     dateClassName = 'text-black';
                   }
 
-                  let price = (Number(order.precio));
+                  let price = Number(order.precio);
                   const formattedPrice = price.toLocaleString('en-US', {
                     style: 'currency',
                     currency: 'USD',
@@ -130,7 +160,14 @@ export const ReportsTable = () => {
                     </tr>
                   );
                 })}
-                <tr style={{ background: 'yellow', color: 'black' }} >
+                <tr style={{ background: 'green', color: 'white' }}>
+                  <td>PROYECCIÓNES</td>
+                  <td></td>
+                  {monthHeaders.map((month, index) => (
+                    <td key={index}>{calculateProjectionPrice(month)}</td>
+                  ))}
+                </tr>
+                <tr style={{ background: 'yellow', color: 'black' }}>
                   <td>TOTAL</td>
                   <td></td>
                   {monthHeaders.map((month, index) => (
@@ -142,9 +179,9 @@ export const ReportsTable = () => {
           </div>
         </div>
         <div className="info-labels mt-4">
-          <span className="text-white label" style={{backgroundColor: '#4eb466'}}>A tiempo</span>
-          <span className="text-white label" style={{backgroundColor: '#de5866'}} >Atrasada</span>
-          <span className="text-white label" style={{backgroundColor: '#f9c835'}}>Facturada</span>
+          <span className="text-white label" style={{ backgroundColor: '#4eb466' }}>A tiempo</span>
+          <span className="text-white label" style={{ backgroundColor: '#de5866' }}>Atrasada</span>
+          <span className="text-white label" style={{ backgroundColor: '#f9c835' }}>Facturada</span>
         </div>
       </div>
     </>
