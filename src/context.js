@@ -568,7 +568,7 @@ import es from 'date-fns/locale/es';
          
      // stats configs
      let totalMoney = 0;
-     let warningOrder = "Sin ordenes atrasadas";
+     let warningOrder = "Sin atrasos";
      const [topUser, setTopUser] = useState({
        cantidad: 0,
        nombre: ""

@@ -1,17 +1,19 @@
 
-export const infoChart = (usersName, orderPrice)=>{
+export const infoChart = (invoiceDate, orderPrice )=>{
     return {
         options: {
             chart: {
                 // id: 'apexchart-example'
             },
             xaxis: {
-                categories:  usersName
+                categories:  invoiceDate
             }
             },
             series: [{
-            name: 'Monto',
-            data: orderPrice
-            }]
+                name: 'Precio',
+                data: orderPrice
+            },
+            
+        ]
         }
 }

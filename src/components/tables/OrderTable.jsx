@@ -90,8 +90,8 @@ export const OrderTable = ({status}) => {
             { (status === 'paids' ) && <th scope="col">INVOICE</th>   }   
             { (ordenNumber === 45 ) && <th scope="col">CONTRATO</th>   }   
             <th scope="col">DESCRIPCIÓN</th>                  
-            <th scope="col">NOMBRE</th>
-            <th scope="col">MAIL</th>
+            {/* <th scope="col">NOMBRE</th>
+            <th scope="col">MAIL</th> */}
             { (ordenNumber === 'bhp' ) && <th scope="col">TELEFONO</th>   }   
             <th scope="col">FECHA</th>
             <th scope="col">DIVISION</th>
@@ -126,9 +126,9 @@ export const OrderTable = ({status}) => {
                 <td><a href={order.img} target='_blank'>{order.numero}</a></td>
                 <td><a href={order.invoice} target='_blank'>VER FACTURA</a></td>
                 {(ordenNumber === 45) && <td>{order.contrato}</td>}
-                <td>{order.descripcion}</td>
-                <td>{order.nombre}</td>
-                <td>{order.mail}</td>
+                <td className='text-left'>{order.descripcion}</td>
+                {/* <td>{order.nombre}</td>
+                <td>{order.mail}</td> */}
                 <td>{order.fecha}</td>
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
@@ -156,9 +156,9 @@ export const OrderTable = ({status}) => {
               <tr key={order.numero}>
                 <td><a href={order.img} target='_blank'>{order.numero}</a></td>
                 <td><a href={order.invoice} target='_blank'>VER FACTURA</a></td>
-                <td>{order.descripcion}</td>
-                <td>{order.nombre}</td>
-                <td>{order.mail}</td>
+                <td className='text-left'>{order.descripcion}</td>
+                {/* <td>{order.nombre}</td>
+                <td>{order.mail}</td> */}
                 <td>{order.fecha}</td>
                 <td>{order.division}</td>
                 <td>{order.entrega}</td>
@@ -182,9 +182,9 @@ export const OrderTable = ({status}) => {
                 <tr key={order.numero}>
                   <td><a href={order.img} target='_blank'>{order.numero}</a></td>
                   <td><a href={order.invoice} target='_blank'>VER FACTURA</a></td>
-                  <td>{order.descripcion}</td>
-                  <td>{order.nombre}</td>
-                  <td>{order.mail}</td>
+                  <td className='text-left'>{order.descripcion}</td>
+                  {/* <td>{order.nombre}</td>
+                  <td>{order.mail}</td> */}
                   <td>{order.contrato}</td>
                   <td>{order.fecha}</td>
                   <td>{order.division}</td>
@@ -220,9 +220,9 @@ export const OrderTable = ({status}) => {
             <tr key={order.numero}>
               <td><a href={order.img} target='_blank'>{order.numero}</a></td>
               {(ordenNumber === 45) && <td>{order.contrato}</td>}
-              <td>{order.descripcion}</td>
-              <td>{order.nombre}</td>
-              <td>{order.mail}</td>
+              <td className='text-left'>{order.descripcion}</td>
+              {/* <td>{order.nombre}</td>
+              <td>{order.mail}</td> */}
               <td>{order.fecha}</td>
               <td>{order.division}</td>
               <td>{order.entrega}</td>
@@ -238,9 +238,9 @@ export const OrderTable = ({status}) => {
           return (
             <tr key={order.numero}>
               <td><a href={order.img} target='_blank'>{order.numero}</a></td>
-              <td>{order.descripcion}</td>
-              <td>{order.nombre}</td>
-              <td>{order.mail}</td>
+              <td className='text-left'>{order.descripcion}</td>
+              {/* <td>{order.nombre}</td>
+              <td>{order.mail}</td> */}
               <td>{order.fecha}</td>
               <td>{order.division}</td>
               <td>{order.entrega}</td>
@@ -257,9 +257,9 @@ export const OrderTable = ({status}) => {
             return (
               <tr key={order.numero}>
                 <td><a href={order.img} target='_blank'>{order.numero}</a></td>
-                <td>{order.descripcion}</td>
-                <td>{order.nombre}</td>
-                <td>{order.mail}</td>
+                <td className='text-left'>{order.descripcion}</td>
+                {/* <td>{order.nombre}</td>
+                <td>{order.mail}</td> */}
                 <td>{order.contrato}</td>
                 <td>{order.fecha}</td>
                 <td>{order.division}</td>

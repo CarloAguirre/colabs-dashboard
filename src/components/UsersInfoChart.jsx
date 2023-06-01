@@ -27,6 +27,7 @@ export const UsersInfoChart = () => {
     }); // Ordenar el array invoiceDate por fecha
 
     invoiceDate = invoiceDate.slice(0, 10); // Limitar el array a 10 fechas
+    orderPrice = orderPrice.slice(0, 10); 
   };
 
   useEffect(() => {

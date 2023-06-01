@@ -10,6 +10,8 @@ export const OrdersRanking = () => {
   let invoiceDate = [];
   let orderPrice = [];
 
+  let orderNumber = []
+
   const allUsersArray = () => {
     const currentDate = new Date();
 
@@ -19,6 +21,7 @@ export const OrdersRanking = () => {
 
       if (entregaDate > currentDate) {
         invoiceDate.push(order.entrega);
+        orderNumber.push(order.numero);
         orderPrice.push(Number(order.precio));
       }
       console.log(invoiceDate)
@@ -30,7 +33,8 @@ export const OrdersRanking = () => {
       return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
     }); // Ordenar el array invoiceDate por fecha
 
-    invoiceDate = invoiceDate.slice(0, 10); // Limitar el array a 10 fechas
+    invoiceDate = invoiceDate.slice(0, 5); // Limitar el array a 10 fechas
+    orderPrice = orderPrice.slice(0, 5); 
   };
 
   useEffect(() => {
@@ -38,7 +42,7 @@ export const OrdersRanking = () => {
     setChart(infoChart(invoiceDate, orderPrice));
   }, [orders]);
 
-  const [chart, setChart] = useState(infoChart(invoiceDate, orderPrice));
+  const [chart, setChart] = useState(infoChart(invoiceDate, orderPrice ));
 
   return (
     <Chart options={chart.options} series={chart.series} type="bar" width={500} height={320} />
