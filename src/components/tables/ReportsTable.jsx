@@ -64,8 +64,11 @@ export const ReportsTable = () => {
         const formattedDeliveryDate = order.entrega.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
         const deliveryDate = new Date(formattedDeliveryDate);
         const deliveryMonth = deliveryDate.getMonth();
+  
+        const currentYear = new Date().getFullYear();
+        const minDeliveryDate = new Date(currentYear, deliveryMonth - 6);
 
-        if (months[deliveryMonth] === month) {
+        if (months[deliveryMonth] === month && deliveryDate >= minDeliveryDate) {
           projectedOrders.push(order);
         }
       }
