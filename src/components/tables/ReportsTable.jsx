@@ -174,7 +174,7 @@ export const ReportsTable = () => {
                     <td key={index}>{calculateProjectionPrice(month)}</td>
                   ))}
                 </tr>
-                <tr style={{ background: 'yellow', color: 'black' }}>
+                <tr style={{ background: 'rgb(249, 200, 53)', color: 'black' }}>
                   <td>TOTAL</td>
                   <td></td>
                   {monthHeaders.map((month, index) => (
