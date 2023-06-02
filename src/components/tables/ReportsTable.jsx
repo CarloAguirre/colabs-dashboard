@@ -1,4 +1,3 @@
-
 import { Form } from "react-bootstrap";
 import { useOrdenes } from "../../context";
 import './tables.css';
@@ -10,12 +9,12 @@ import { tokenValidatior } from "../../helpers/tokenValidator";
 export const ReportsTable = () => {
   const { selectReportsForm, contratosArray, tableOrders } = useOrdenes();
 
-    useEffect(() => {
-      tokenValidatior();
-  }, [])
+  useEffect(() => {
+    tokenValidatior();
+  }, []);
 
   const currentDate = new Date();
-  
+
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
@@ -58,7 +57,7 @@ export const ReportsTable = () => {
 
   const calculateProjectionPrice = (month) => {
     const projectedOrders = [];
-
+  
     tableOrders.forEach((order) => {
       if (order.completada === false) {
         const formattedDeliveryDate = order.entrega.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
@@ -66,33 +65,39 @@ export const ReportsTable = () => {
         const deliveryMonth = deliveryDate.getMonth();
   
         const currentYear = new Date().getFullYear();
+        const currentDate = new Date();
         const minDeliveryDate = new Date(currentYear, deliveryMonth - 6);
-
-        if (months[deliveryMonth] === month && deliveryDate >= minDeliveryDate) {
+        const maxDeliveryDate = new Date(currentYear, currentDate.getMonth() + 5, currentDate.getDate()); // Máximo 5 meses hacia el futuro
+  
+        if (months[deliveryMonth] === month && deliveryDate >= minDeliveryDate && deliveryDate <= maxDeliveryDate) {
           projectedOrders.push(order);
         }
       }
     });
-
+  
     let totalPrice = 0;
-
+  
     projectedOrders.forEach((order) => {
       totalPrice += Number(order.precio);
     });
-
+  
     const formattedPrice = totalPrice.toLocaleString('en-US', {
       style: 'currency',
       currency: 'USD',
       minimumFractionDigits: 2,
     });
-
+  
     return formattedPrice;
   };
+  
 
   const calculateDeliveryColumn = (deliveryMonth) => {
     const deliveryIndex = (deliveryMonth + 12 - startIndex) % 12;
     return deliveryIndex;
   };
+
+  const sixMonthsAhead = new Date();
+  sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 6);
 
   return (
     <>
@@ -152,23 +157,27 @@ export const ReportsTable = () => {
                     minimumFractionDigits: 2,
                   });
 
-                  return (
-                    <tr key={index}>
-                      <td><a href={order.img} target='_blank'>{order.numero}</a></td>
-                      <td className='text-left'>{order.descripcion}</td>
-                      {monthHeaders.map((month, index) => {
-                        if (index === deliveryColumn) {
-                          return (
-                            <td key={index} className={dateClassName} title={formattedDeliveryDate}>{formattedPrice}</td>
-                          );
-                        } else {
-                          return (
-                            <td key={index}></td>
-                          );
-                        }
-                      })}
-                    </tr>
-                  );
+                  if (deliveryDate <= sixMonthsAhead) {
+                    return (
+                      <tr key={index}>
+                        <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+                        <td className='text-left'>{order.descripcion}</td>
+                        {monthHeaders.map((month, index) => {
+                          if (index === deliveryColumn) {
+                            return (
+                              <td key={index} className={dateClassName} title={formattedDeliveryDate}>{formattedPrice}</td>
+                            );
+                          } else {
+                            return (
+                              <td key={index}></td>
+                            );
+                          }
+                        })}
+                      </tr>
+                    );
+                  } else {
+                    return null;
+                  }
                 })}
                 <tr style={{ background: 'green', color: 'white' }}>
                   <td>PROYECCIÓNES</td>
@@ -190,8 +199,9 @@ export const ReportsTable = () => {
         </div>
         <div className="info-labels mt-4">
           <span className="text-white label" style={{ backgroundColor: '#4eb466' }}>A tiempo</span>
-          <span className="text-white label" style={{ backgroundColor: '#de5866' }}>Atrasada</span>
-          <span className="text-white label" style={{ backgroundColor: '#f9c835' }}>Facturada</span>
+          <span className="text-white label" style={{ backgroundColor: '#f9c835' }}>Pendientes</span>
+          <span className="text-white label" style={{ backgroundColor: '#000000' }}>Retrasadas</span>
+          <span className="text-white label" style={{ backgroundColor: '#f46b5b' }}>Vencidas</span>
         </div>
       </div>
     </>
