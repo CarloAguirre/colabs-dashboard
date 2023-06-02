@@ -3,6 +3,7 @@
 import {  NavLink } from "react-router-dom";
 import '../App.css'
 import { Title } from "../Title";
+import { logoutHandler } from "../helpers/logoutHandlerToken";
 
 
 export const SideBar = () => {
@@ -42,8 +43,8 @@ export const SideBar = () => {
                             bar_chart
                         </span> Reportes
                     </NavLink>
-{/* 
-                <li className="sidebar-list-item">
+
+                {/* <li className="sidebar-list-item">
                     <span className="material-icons-outlined">
                     attach_money
                     </span> Total Fondos
@@ -52,12 +53,12 @@ export const SideBar = () => {
                     <span className="material-icons-outlined">
                     account_balance
                     </span> Bienes y activos
-                </li>
-                <li className="sidebar-list-item">
-                    <span className="material-icons-outlined">
-                        settings
-                    </span> Ajustes
                 </li> */}
+                <li className="sidebar-list-item" onClick={logoutHandler}>
+                    <span class="material-icons-outlined">
+                        logout
+                    </span> Cerrar sesión
+                </li> 
             </ul>
         </aside>
   )
