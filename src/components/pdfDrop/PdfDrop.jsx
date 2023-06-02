@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Document, Page, pdfjs } from 'react-pdf';
+import { pdfjs } from 'react-pdf';
 import Dropzone from 'react-dropzone';
 import './pdfDrop.css'
 import { useOrdenes } from '../../context';
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
+pdfjs.GlobalWorkerOptions.disableWorker = true; // Deshabilitar el uso de web workers
+pdfjs.GlobalWorkerOptions.imageResourcesPath = '/pdfjs/images/'; // Ruta de recursos de imágenes
 
 export const PdfDrop =({cliente})=> {
   //cargar imagen 
@@ -48,7 +50,7 @@ export const PdfDrop =({cliente})=> {
       });
     };
 
-    reader.readAsArrayBuffer(acceptedFiles[0]);
+    reader.readAsArrayBuffer(acceptedFiles[0], 'UTF-8');
     setFile(acceptedFiles[0]);
     
   };

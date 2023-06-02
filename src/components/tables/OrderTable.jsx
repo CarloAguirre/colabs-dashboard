@@ -36,13 +36,11 @@ export const OrderTable = ({status}) => {
     
     const [key, setKey] = useState('all')
     
-    
-    // console.log(orders)
-    console.log(tableOrders)
+  
 
-    useEffect(() => {
-      setTableOrders(orders)
-    }, [orders])
+    // useEffect(() => {
+    //   setTableOrders(orders)
+    // }, [orders])
     
     useEffect(() => {
         

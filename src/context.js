@@ -271,7 +271,13 @@ import es from 'date-fns/locale/es';
                     orderArray[10] = `${descriptionArray[0]} ${descriptionArray[1]} ${descriptionArray[2]} ${descriptionArray[3]} `;
                   }
                 } else {
-                  orderArray[10] = newOrder[indiceSAP + 14];
+                  const sapIndex = indiceSAP + 15
+                  if(newOrder[sapIndex] === " "){
+                    orderArray[10] = newOrder[indiceSAP + 16];                    
+                  }else{
+                    orderArray[10] = newOrder[indiceSAP + 15];                    
+
+                  }
                 }
                 
                 
@@ -432,11 +438,11 @@ import es from 'date-fns/locale/es';
           if(poNumberIndex){
             const paidOrderNumber = Number(newOrder[poNumberIndex + 2])
             console.log(paidOrderNumber)
-            console.log(orders[0].numero)
+
        
             const paidOrderId = orders.find(order => order.numero === paidOrderNumber)?._id;
               if(paidOrderId){
-                //Fecha invoice
+                console.log(paidOrderId)
                 let fechaFormatted = null;
                 const patronFecha = /\d{2}\/\d{2}\/\d{4}/;
                 const coincidencias = newOrder[0].match(patronFecha);
