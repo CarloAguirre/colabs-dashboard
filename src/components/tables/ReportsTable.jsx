@@ -199,9 +199,8 @@ export const ReportsTable = () => {
         </div>
         <div className="info-labels mt-4">
           <span className="text-white label" style={{ backgroundColor: '#4eb466' }}>A tiempo</span>
-          <span className="text-white label" style={{ backgroundColor: '#f9c835' }}>Pendientes</span>
-          <span className="text-white label" style={{ backgroundColor: '#000000' }}>Retrasadas</span>
-          <span className="text-white label" style={{ backgroundColor: '#f46b5b' }}>Vencidas</span>
+          <span className="text-white label" style={{ backgroundColor: '#f9c835' }}>Facturadas</span>
+          <span className="text-white label" style={{ backgroundColor: '#f46b5b' }}>Atrasadas</span>
         </div>
       </div>
     </>
