@@ -9,8 +9,7 @@ export const OrdersRanking = () => {
 
   let invoiceDate = [];
   let orderPrice = [];
-
-  let orderNumber = []
+  let orderNumber = [];
 
   const allUsersArray = () => {
     const currentDate = new Date();
@@ -24,25 +23,33 @@ export const OrdersRanking = () => {
         orderNumber.push(order.numero);
         orderPrice.push(Number(order.precio));
       }
-      console.log(invoiceDate)
     });
 
     invoiceDate.sort((a, b) => {
       const [dayA, monthA, yearA] = a.split("/");
       const [dayB, monthB, yearB] = b.split("/");
       return new Date(yearA, monthA - 1, dayA) - new Date(yearB, monthB - 1, dayB);
-    }); // Ordenar el array invoiceDate por fecha
+    });
 
-    invoiceDate = invoiceDate.slice(0, 5); // Limitar el array a 10 fechas
-    orderPrice = orderPrice.slice(0, 5); 
+    invoiceDate = invoiceDate.slice(0, 5);
+    orderPrice = orderPrice.slice(0, 5);
   };
 
   useEffect(() => {
     allUsersArray();
-    setChart(infoChart(invoiceDate, orderPrice));
+    const updatedChart = infoChart(invoiceDate, orderPrice);
+    updatedChart.options.tooltip = {
+      ...updatedChart.options.tooltip,
+      formatter: function (val) {
+        const orderIndex = val.dataPointIndex;
+        const orderNum = orderNumber[orderIndex];
+        return `Order Number: ${orderNum}`;
+      }
+    };
+    setChart(updatedChart);
   }, [orders]);
 
-  const [chart, setChart] = useState(infoChart(invoiceDate, orderPrice ));
+  const [chart, setChart] = useState(infoChart(invoiceDate, orderPrice));
 
   return (
     <Chart options={chart.options} series={chart.series} type="bar" width={500} height={320} />

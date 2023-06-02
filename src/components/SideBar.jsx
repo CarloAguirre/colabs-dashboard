@@ -54,7 +54,7 @@ export const SideBar = () => {
                     account_balance
                     </span> Bienes y activos
                 </li> */}
-                <li className="sidebar-list-item" onClick={logoutHandler}>
+                <li className="sidebar-list-item" onClick={logoutHandler} >
                     <span class="material-icons-outlined">
                         logout
                     </span> Cerrar sesión

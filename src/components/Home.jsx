@@ -5,6 +5,7 @@ import { UsersInfoChart } from "./UsersInfoChart"
 import { OrdersRanking } from "./OrdersRanking"
 import './tables/tables.css'
 import { tokenValidatior } from "../helpers/tokenValidator"
+import { DoubleChart } from "./DoubleChart"
 
 
 
@@ -68,8 +69,9 @@ export const Home = () => {
     <div className="charts">
 
         <div className="charts-card">
-            <p className="chart-title">Proximas Entregas</p>
-            <div className='users-charts'><OrdersRanking/></div>
+            <p className="chart-title">Proyeccion vs Ventas</p>
+            {/* <div className='users-charts'><OrdersRanking/></div> */}
+            <div className='users-charts'><DoubleChart/></div>
         </div>
         <div className="charts-card">
             <p className="chart-title">Ultimas 10 ventas</p>
