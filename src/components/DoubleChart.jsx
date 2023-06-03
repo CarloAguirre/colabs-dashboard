@@ -18,7 +18,7 @@ export const DoubleChart = () => {
   const allUsersArray = () => {
     const currentDate = new Date();
     const pastDate = new Date();
-    pastDate.setDate(pastDate.getDate() - 55);
+    pastDate.setDate(pastDate.getDate() - 60);
   
     orders.forEach((order) => {
       const [day, month, year] = order.entrega.split("/");
@@ -90,7 +90,7 @@ export const DoubleChart = () => {
     const options = {
       chart: {
         height: 420,
-        width: 680,
+        width: 633,
         type: "area",
       },
       dataLabels: {
