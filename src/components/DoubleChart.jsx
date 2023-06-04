@@ -89,7 +89,7 @@ export const DoubleChart = () => {
     const options = {
       chart: {
         height: 420,
-        width: 633,
+        width: 505,
         type: "bar",
       },
       dataLabels: {
