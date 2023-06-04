@@ -6,7 +6,6 @@ export const DoubleChart = () => {
   const chartRef = useRef(null);
 
   const { orders } = useOrdenes();
-  console.log(orders);
 
   let invoiceDate = [];
   let orderNumber = [];
@@ -91,7 +90,7 @@ export const DoubleChart = () => {
       chart: {
         height: 420,
         width: 633,
-        type: "area",
+        type: "bar",
       },
       dataLabels: {
         enabled: false,

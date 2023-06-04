@@ -151,10 +151,10 @@ body{
   border-left: 7px solid #246dec;
 }
 .card:nth-child(2){
-  border-left: 7px solid #f5b74f;
+  border-left: 7px solid #367952;
 }
 .card:nth-child(3){
-  border-left: 7px solid #367952;
+  border-left: 7px solid #f5b74f;
 }
 .card:nth-child(4){
   border-left: 7px solid #cc3c43;

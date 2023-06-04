@@ -15,7 +15,7 @@ export const Home = () => {
         tokenValidatior();
     }, [])
     
-    const {orders, totalMoney, warningOrder, topUser, users, counter} = useOrdenes()
+    const {totalDebt, totalMoney, warningOrder, topUser, counter, totalAtrasos} = useOrdenes()
     
   return (
     <div className="main-container">
@@ -38,7 +38,7 @@ export const Home = () => {
         <div className="card">
             <div className="card-inner">
                 <p className="text-primary">PROYECCIÓN DE INGRESOS</p>
-                <span className="material-icons-outlined text-orange">
+                <span className="material-icons-outlined text-green">
                 attach_money
                 </span>
             </div>
@@ -47,22 +47,22 @@ export const Home = () => {
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">ORDEN TOP</p>
-                <span className="material-icons-outlined text-green">
-                how_to_reg
+                <p className="text-primary">Total atrasos</p>
+                <span className="material-icons-outlined text-orange">
+                error
                 </span>
             </div>
-            <span className="text-primary font-weight-bold">#{topUser.nombre}</span>
+            <span className="text-primary font-weight-bold">{totalAtrasos}</span>
         </div>
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">ORDEN ATRASADA</p>
+                <p className="text-primary">MONTO ATRASOS</p>
                 <span className="material-icons-outlined text-red">
                     notifications
                 </span>
             </div>
-            <span className="text-primary font-weight-bold">#{warningOrder}</span>
+            <span className="text-primary font-weight-bold">${totalDebt.toLocaleString()}</span>
         </div>
 
     </div>
@@ -70,13 +70,13 @@ export const Home = () => {
     <div className="charts">
 
         <div className="charts-card">
-            <p className="chart-title">Proyeccion vs Ventas</p>
-            {/* <div className='users-charts'><OrdersRanking/></div> */}
+            <p className="chart-title">Última Actividad</p>
             <div className='users-charts'><DoubleChart/></div>
         </div>
         <div className="charts-card">
-            <p className="chart-title">Ultimas 10 ventas</p>
+            <p className="chart-title">Visión General</p>
             {/* <div className='users-charts'><UsersInfoChart /></div> */}
+            {/* <div className='users-charts'><OrdersRanking/></div> */}
             <div className='users-charts'><DoubleChartMonthly /></div>
         </div>
 

@@ -26,6 +26,9 @@ import es from 'date-fns/locale/es';
      const [cliente, setCliente] = useState()
 
     const [contratosArray, setContratosArray] =useState([])
+
+    const [proyecciones, setProyecciones] = useState([])
+    const [ventas, setVentas] = useState([])
      
      const [newOrder, setNewOrder] = useState([])
      const [newOrderData, setNewOrderData] = useState([])
@@ -580,6 +583,8 @@ import es from 'date-fns/locale/es';
          
      // stats configs
      let totalMoney = 0;
+     let totalDebt = 0;
+     let totalAtrasos = 0;
      let warningOrder = "Sin atrasos";
      const [topUser, setTopUser] = useState({
        cantidad: 0,
@@ -590,6 +595,7 @@ import es from 'date-fns/locale/es';
        let oldestOrder = null; // Variable para almacenar la orden más antigua
      
        orders.forEach(order => {
+        
          let monto = Number(order.precio);
          totalMoney += monto;
      
@@ -600,12 +606,14 @@ import es from 'date-fns/locale/es';
            entregaDate < new Date() &&
            order.completada === false
          ) {
-           if (!oldestOrder || entregaDate < oldestOrder.entregaDate) {
-             oldestOrder = {
-               entregaDate,
-               numero: order.numero
-             };
-           }
+          totalDebt += monto
+          totalAtrasos += 1
+          //  if (!oldestOrder || entregaDate < oldestOrder.entregaDate) {
+          //    oldestOrder = {
+          //      entregaDate,
+          //      numero: order.numero
+          //    };
+          //  }
          }
      
          if (monto > topUser.cantidad) {
@@ -616,28 +624,132 @@ import es from 'date-fns/locale/es';
          }
        });
      
-       if (oldestOrder) {
-         warningOrder = oldestOrder.numero;
-       }
+      //  if (oldestOrder) {
+      //    warningOrder = oldestOrder.numero;
+      //  }
      };
      
      statsGenerator();
      
 
 
- 
-  
+     const months = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
+
+
+      
+      const calculateProjectionPrice = (month) => {
+        const projectedOrders = [];
+        
+        orders.forEach((order) => {
+          if (order.completada === false) {
+            const formattedDeliveryDate = order.entrega.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
+          const deliveryDate = new Date(formattedDeliveryDate);
+          const deliveryMonth = deliveryDate.getMonth();
+          
+          const currentYear = new Date().getFullYear();
+          const currentDate = new Date();
+          const minDeliveryDate = new Date(currentYear, deliveryMonth - 6);
+          const maxDeliveryDate = new Date(currentYear, currentDate.getMonth() + 5, currentDate.getDate()); // Máximo 5 meses hacia el futuro
+          
+          if (months[deliveryMonth] === month && deliveryDate >= minDeliveryDate && deliveryDate <= maxDeliveryDate) {
+            projectedOrders.push(order);
+          }
+        }
+      });
+      
+      let totalPrice = 0;
+      
+      projectedOrders.forEach((order) => {
+        totalPrice += Number(order.precio);
+      });
+      
+      const formattedPrice = totalPrice.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+      });
+      
+      return formattedPrice;
+    };
+    
+    const calculateTotalPrice = (month) => {
+      const completedOrders = [];
+      
+      orders.forEach((order) => {
+        if (order.completada === true) {
+          const formattedInvoiceDate = order.invoice_date.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
+          const invoiceDate = new Date(formattedInvoiceDate);
+          const invoiceMonth = invoiceDate.getMonth();
+          
+          if (months[invoiceMonth] === month) {
+            completedOrders.push(order);
+          }
+        }
+      });
+      
+      let totalPrice = 0;
+      
+      completedOrders.forEach((order) => {
+        totalPrice += Number(order.precio);
+      });
+
+      const formattedPrice = totalPrice.toLocaleString('en-US', {
+        style: 'currency',
+        currency: 'USD',
+        minimumFractionDigits: 2,
+      });
+      
+      return formattedPrice;
+    };
+
+    
+    useEffect(() => {
+      if (orders && orders.length > 0) {
+        const ventasArray = months.map((month) => calculateTotalPrice(month));
+        setVentas(ventasArray);
+    
+        const proyeccionesArray = months.map((month) => calculateProjectionPrice(month));
+        setProyecciones(proyeccionesArray);
+      }
+    }, [orders]);
+
+    let ventasConvertidas = [];
+    let proyeccionesConvertidas = [];
+    
+    useEffect(() => {
+      console.log(tableOrders)
+      console.log(ventas)
+      console.log(proyecciones)
+    }, [orders])
+    
+    if (ventas !== [] && ventas.length > 0 && proyecciones !== [] && proyecciones.length > 0) {
+      ventasConvertidas = ventas.map((venta) => {
+        const ventaLimpia = parseFloat(venta.replace("$", "").replace(",", ""));
+        return ventaLimpia;
+      });
+    
+      proyeccionesConvertidas = proyecciones.map((proyeccion) => {
+        const proyeccionLimpia = parseFloat(proyeccion.replace("$", "").replace(",", ""));
+        return proyeccionLimpia;
+      });
+    }
+    
+    
     const globalState = {
-        counter,
-        setCounter,
-        inputValue,
-        setInputValue,
-        statsGenerator,
-        onRefreshSubmit,
+      counter,
+      setCounter,
+      inputValue,
+      setInputValue,
+      statsGenerator,
+      onRefreshSubmit,
         onSearchInput,
         onInputChange,
         onSubmitHandler,
         totalMoney,
+        totalDebt,
         warningOrder,
         topUser,
         searchedOrder,
@@ -656,7 +768,17 @@ import es from 'date-fns/locale/es';
         contratosArray,
         setContratosArray,
         selectContratoForm,
-        selectReportsForm
+        selectReportsForm,
+        proyecciones,
+        setProyecciones,
+        ventas,
+        setVentas,
+        months,
+        calculateProjectionPrice,
+        calculateTotalPrice,
+        ventasConvertidas,
+        proyeccionesConvertidas,
+        totalAtrasos
       }
         return (
             <OrdenesContext.Provider
