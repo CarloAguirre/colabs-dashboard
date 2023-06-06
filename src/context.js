@@ -292,15 +292,15 @@ import es from 'date-fns/locale/es';
 
             //Cantidad
             const contadorUnidades = newOrder.reduce((contador, texto, index) => {
-              if (texto === 'Unidades') {
+              if (texto === 'Unidades' || texto === 'Juego') {
                 return contador + 1;
               }
               return contador;
             }, 0);
             
-           // Cantidad
+            // Cantidad
             if (contadorUnidades === 1) {
-              const indiceUnidades = newOrder.indexOf('Unidades');
+              const indiceUnidades = newOrder.indexOf('Unidades') !== -1 ? newOrder.indexOf('Unidades') : newOrder.indexOf('Juego');
               orderArray[8] = Number(newOrder[indiceUnidades - 2]);
             } else if (contadorUnidades > 1) {
               const sumaUnidades = newOrder.reduce((suma, texto, index) => {
@@ -315,7 +315,8 @@ import es from 'date-fns/locale/es';
               orderArray[8] = sumaUnidades;
             } else {
               orderArray[8] = Number(newOrder[indiceSAP + 15]) - resultados.length + 1;
-            }        
+            }
+                   
             }
           orderData()
 

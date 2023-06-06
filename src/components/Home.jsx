@@ -47,7 +47,7 @@ export const Home = () => {
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">Total atrasos</p>
+                <p className="text-primary">TOTAL ATRASOS</p>
                 <span className="material-icons-outlined text-orange">
                 error
                 </span>
