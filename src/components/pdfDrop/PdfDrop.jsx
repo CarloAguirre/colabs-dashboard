@@ -26,7 +26,7 @@ export const PdfDrop =({cliente})=> {
     reader.onload = () => {
       const typedArray = new Uint8Array(reader.result);
       pdfjs.getDocument(typedArray).promise.then((pdf) => {
-        const numPages = Math.min(pdf.numPages, 3); // Leer solo las tres primeras páginas
+        const numPages = Math.min(pdf.numPages, 4); // Leer solo las tres primeras páginas
 
         const getPageText = async (pageNum) => {
           const page = await pdf.getPage(pageNum);

@@ -81,9 +81,9 @@ export const Login = () => {
           <hr />
           </form>
           <div>
-            <a href="/registration">
-            <button className="btn btn-success mb-4">Crear cuenta</button>
-            </a>
+            {/* <a href="/registration"> */}
+            <button className="btn btn-success mb-4" disabled>Crear cuenta</button>
+            {/* </a> */}
           </div>
       </div>
       <div id='errorMsg' className='text-center mt-3' ></div>

@@ -39,21 +39,13 @@ import es from 'date-fns/locale/es';
      useEffect(() => {
        console.log(newOrder)
      }, [newOrder])
-     
-    //  useEffect(() => {
-    //   const payOrderFetch = ()=>{
-    //     payOrder(invoice, invoiceDate)
-    //   }
-    //   payOrderFetch()
-    //  }, [invoiceDate])
-     
 
      useEffect(() => {
         const fetchData = async()=>{
             const res =  await fetch(`${serverPath}api/productos?limite=1000&desde=0`)
             const orders = await res.json()
             const {productos } = orders;
-            console.log(productos)
+            // console.log(productos)
             setOrders(productos)    
         }
         fetchData();
@@ -441,12 +433,10 @@ import es from 'date-fns/locale/es';
           
           if(poNumberIndex){
             const paidOrderNumber = Number(newOrder[poNumberIndex + 2])
-            console.log(paidOrderNumber)
 
        
             const paidOrderId = orders.find(order => order.numero === paidOrderNumber)?._id;
               if(paidOrderId){
-                console.log(paidOrderId)
                 let fechaFormatted = null;
                 const patronFecha = /\d{2}\/\d{2}\/\d{4}/;
                 const coincidencias = newOrder[0].match(patronFecha);
@@ -466,7 +456,6 @@ import es from 'date-fns/locale/es';
         }
 
         setNewOrderData(orderArray)
-        console.log(orderArray)
      }, [newOrder])
      
      
@@ -519,10 +508,6 @@ import es from 'date-fns/locale/es';
         }
       }
     };
-
-        useEffect(() => {
-          console.log(archivo)
-        }, [archivo])
 
      
      // buscador de colaborador config
@@ -719,12 +704,6 @@ import es from 'date-fns/locale/es';
 
     let ventasConvertidas = [];
     let proyeccionesConvertidas = [];
-    
-    useEffect(() => {
-      console.log(tableOrders)
-      console.log(ventas)
-      console.log(proyecciones)
-    }, [orders])
     
     if (ventas !== [] && ventas.length > 0 && proyecciones !== [] && proyecciones.length > 0) {
       ventasConvertidas = ventas.map((venta) => {

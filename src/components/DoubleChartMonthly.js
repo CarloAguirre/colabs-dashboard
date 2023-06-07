@@ -9,8 +9,6 @@ export const DoubleChartMonthly = () => {
   
   useEffect(() => {
     if (chartRef.current && ventasConvertidas !== [] && proyeccionesConvertidas !== []) {
-      console.log(ventasConvertidas)
-      console.log(ventas)
     if (chartRef.current) {
       const options = {
         chart: {

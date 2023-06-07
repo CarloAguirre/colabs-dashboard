@@ -25,7 +25,7 @@ function App() {
         <BrowserRouter>
           <Routes>
             <Route path="/" element={<Login />} />
-            <Route path="/registration" element={<Registration />} />
+            <Route path="/registration_sdlfeif3" element={<Registration />} />
             <Route
               path="/dashboard"
               element={
