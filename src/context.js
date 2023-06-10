@@ -54,8 +54,8 @@ import es from 'date-fns/locale/es';
     useEffect(() => {
       let counter = 0
       orders.map(order=>{
-        if(order.completada === false){
-          counter += 1
+        if(order.completada === true){
+          counter += order.precio
         }
         setCounter(counter)
       })
@@ -68,6 +68,7 @@ import es from 'date-fns/locale/es';
        const orderArray =[]
        let mayorNumero = 0;
       let indiceMayorNumero = -1;
+      let materialCantidad = {};
        if(cliente === "codelco"){
          const orderData = ()=>{
            let fecha = null;
@@ -77,7 +78,6 @@ import es from 'date-fns/locale/es';
            const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
            const regexSAP = /(?:^|\D)(\d{7})(?!\d|\w|\D)/g;
           
-
 
           let resultados = [];
          
@@ -210,8 +210,8 @@ import es from 'date-fns/locale/es';
                 
                   if (matches) {
                     matches.forEach(match => {
-                      const numeros = match.match(/\d{7}/g); // Obtener solo los números de 7 dígitos
-                      resultados = resultados.concat(numeros);
+                      const material = match.match(/\d{7}/)[0]; // Obtener el número de material
+                      resultados.push(material);
                     });
                   }
                 }
@@ -267,7 +267,9 @@ import es from 'date-fns/locale/es';
                   }
                 } else {
                   const sapIndex = indiceSAP + 15
-                  if(newOrder[sapIndex] === " "){
+                  if(!isNaN(parseFloat(newOrder[sapIndex])) && isFinite(newOrder[sapIndex])){
+                    orderArray[10] = newOrder[indiceSAP + 14];
+                  }else if(newOrder[sapIndex] === " "){
                     orderArray[10] = newOrder[indiceSAP + 16];                    
                   }else{
                     orderArray[10] = newOrder[indiceSAP + 15];                    
@@ -290,24 +292,51 @@ import es from 'date-fns/locale/es';
               return contador;
             }, 0);
             
-            // Cantidad
-            if (contadorUnidades === 1) {
-              const indiceUnidades = newOrder.indexOf('Unidades') !== -1 ? newOrder.indexOf('Unidades') : newOrder.indexOf('Juego');
-              orderArray[8] = Number(newOrder[indiceUnidades - 2]);
-            } else if (contadorUnidades > 1) {
-              const sumaUnidades = newOrder.reduce((suma, texto, index) => {
-                if (texto === 'Unidades') {
-                  const valorUnidades = Number(newOrder[index - 2]);
-                  if (!isNaN(valorUnidades)) {
-                    return suma + valorUnidades;
-                  }
-                }
-                return suma;
-              }, 0);
-              orderArray[8] = sumaUnidades;
-            } else {
-              orderArray[8] = Number(newOrder[indiceSAP + 15]) - resultados.length + 1;
-            }
+                    
+          // Cantidad
+// Cantidad
+if (contadorUnidades === 1) {
+  const indiceUnidades = newOrder.indexOf('Unidades') !== -1 ? newOrder.indexOf('Unidades') : newOrder.indexOf('Juego');
+  const material = resultados[0]; // Primer material encontrado
+  const cantidad = Number(newOrder[indiceUnidades - 2]);
+  const precioString = newOrder[indiceUnidades + 2].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+  const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
+  materialCantidad[material] = [cantidad, precioNumber];
+  orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
+} else if (contadorUnidades > 1) {
+  let cantidadIndex = 0; // Índice para recorrer las cantidades
+  let sumaUnidades = 0; // Variable para calcular la suma de las unidades
+  newOrder.forEach((texto, index) => {
+    if (texto === 'Unidades') {
+      const material = resultados[cantidadIndex]; // Material correspondiente a la posición actual
+      const valorUnidades = Number(newOrder[index - 2]);
+      const precioString = newOrder[index + 2].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+      const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
+      if (!isNaN(valorUnidades)) {
+        if (!materialCantidad[material]) {
+          materialCantidad[material] = [0, 0];
+        }
+        materialCantidad[material][0] += valorUnidades;
+        materialCantidad[material][1] += precioNumber;
+        cantidadIndex++;
+        sumaUnidades += valorUnidades;
+      }
+    }
+  });
+  orderArray[8] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
+} else {
+  const material = resultados[0]; // Primer material encontrado
+  const cantidad = Number(newOrder[indiceSAP + 15]) - resultados.length + 1;
+  const precioString = newOrder[indiceSAP + 19].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+  const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
+  materialCantidad[material] = [cantidad, precioNumber];
+  orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
+}
+
+
+          orderArray[11] = materialCantidad;
+
+
                    
             }
           orderData()
@@ -454,7 +483,8 @@ import es from 'date-fns/locale/es';
           }
 
         }
-
+        console.log(materialCantidad)
+        console.log(orderArray)
         setNewOrderData(orderArray)
      }, [newOrder])
      
@@ -468,12 +498,16 @@ import es from 'date-fns/locale/es';
      })
      };
         
+     const [spinnerSwitch, setSpinnerSwitch] = useState(false)
      const onSubmitHandler = async (event) => {
+
+      setSpinnerSwitch(true)
       event.preventDefault();
       
       const existeProducto = orders.find(order=> order.numero === newOrderData[0])
       if(existeProducto){
         alert(`La Orden N°${newOrderData[0]} ya existe en la base de datos`)
+        setSpinnerSwitch(false)
         return
       }
        
@@ -498,13 +532,17 @@ import es from 'date-fns/locale/es';
 
           const formattedDate = format(dateString, 'dd/MM/yyyy');
           const formattedDelivery = format(deliveryDateString, 'dd/MM/yyyy');
-          const createOrder = await createProducto(newOrderData[0], formattedDate, newOrderData[2], newOrderData[3], formattedDelivery, newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria);
+          console.log(newOrderData)
+          const createOrder = await createProducto(newOrderData[0], formattedDate, newOrderData[2], newOrderData[3], formattedDelivery, newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria, newOrderData[11]);
           
           if (createOrder) {
             await cargarImagen(archivo, null);
           } 
         } catch (error) {
           console.error(error);
+          alert("Ha habido un problema, vuelve a intentarlo mas tarde o comunicate con el programador carlo_aguirre@outlook.cl....¿Estas seguro que subiste el formato de orden correcto?")
+         setSpinnerSwitch(false)
+
         }
       }
     };
@@ -664,7 +702,7 @@ import es from 'date-fns/locale/es';
     const calculateTotalPrice = (month) => {
       const completedOrders = [];
       
-      orders.forEach((order) => {
+      tableOrders.forEach((order) => {
         if (order.completada === true) {
           const formattedInvoiceDate = order.invoice_date.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
           const invoiceDate = new Date(formattedInvoiceDate);
@@ -758,7 +796,9 @@ import es from 'date-fns/locale/es';
         calculateTotalPrice,
         ventasConvertidas,
         proyeccionesConvertidas,
-        totalAtrasos
+        totalAtrasos,
+        spinnerSwitch,
+        setSpinnerSwitch
       }
         return (
             <OrdenesContext.Provider

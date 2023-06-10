@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie'
 import { serverPath } from '../config/serverPath';
 
 
-export const createProducto = async (numero = null, fecha = null, contrato = null, division = null, entrega = null, nombre = null, mail = null, material = null, cantidad = null, precio = null, descripcion = null, categoria = null) => {
+export const createProducto = async (numero = null, fecha = null, contrato = null, division = null, entrega = null, nombre = null, mail = null, material = null, cantidad = null, precio = null, descripcion = null, categoria = null, sapinfo = {}) => {
     const cookies = new Cookies();
     const token = cookies.get("token");
     // console.log(token);
@@ -20,7 +20,8 @@ export const createProducto = async (numero = null, fecha = null, contrato = nul
       "cantidad": cantidad,
       "precio": precio,
       "descripcion": descripcion,
-      "categoria": categoria
+      "categoria": categoria,
+      "sap_info": sapinfo
     });
   
     var config = {

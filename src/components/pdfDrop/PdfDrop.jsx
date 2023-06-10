@@ -3,6 +3,8 @@ import { pdfjs } from 'react-pdf';
 import Dropzone from 'react-dropzone';
 import './pdfDrop.css'
 import { useOrdenes } from '../../context';
+import { SpinnerCustom } from '../spinner/SpinnerCustom';
+
 
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
@@ -11,7 +13,7 @@ pdfjs.GlobalWorkerOptions.imageResourcesPath = '/pdfjs/images/'; // Ruta de recu
 
 export const PdfDrop =({cliente})=> {
   //cargar imagen 
-  const {setArchivo, setNewOrder, setCliente} = useOrdenes()
+  const {setArchivo, setNewOrder, setCliente, spinnerSwitch} = useOrdenes()
     
   const onInputChange = (event)=>{    
       setArchivo(event.target.files[0]);
@@ -60,17 +62,20 @@ export const PdfDrop =({cliente})=> {
   }, [file])
 
   return (
-    <div className="App">
-      <h1 className='text-center'>Solo Archivos PDF</h1>
+    <div className="App ">
+      <h1 className='text-center '>Solo Archivos PDF</h1>
       <Dropzone onDrop={onDrop}>
         {({ getRootProps, getInputProps }) => (
           <div {...getRootProps()} className="dropzone">
             <input type='file' onChange={onInputChange} {...getInputProps()} />
-            {file ? (        
+            {(spinnerSwitch === false)?
+            (file) ? (        
               <p className='text-center'>Archivo cargado: {file.name}</p>
-            ) : (
-              <p className='text-center'>Arrastra y suelta un archivo PDF aquí, o haz clic para seleccionar uno.</p>
-            )}
+              ) : (
+                <p className='text-center'>Arrastra y suelta un archivo PDF aquí, o haz clic para seleccionar uno.</p>
+                )
+                :<p className='text-center'><SpinnerCustom/></p>
+                }
           </div>
         )}
       </Dropzone>

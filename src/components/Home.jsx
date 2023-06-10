@@ -27,19 +27,19 @@ export const Home = () => {
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">ORDENES EN CURSO</p>
-                <span className="material-icons-outlined text-blue">
-                    inventory
+                <p className="text-primary">TOTAL FACTURADO</p>
+                <span className="material-icons-outlined text-green">
+                    attach_money
                 </span>
             </div>
-            <span className="text-primary font-weight-bold">{counter}</span>
+            <span className="text-primary font-weight-bold">${counter.toLocaleString()}</span>
         </div>
 
         <div className="card">
             <div className="card-inner">
                 <p className="text-primary">PROYECCIÓN DE INGRESOS</p>
-                <span className="material-icons-outlined text-green">
-                attach_money
+                <span className="material-icons-outlined text-blue">
+                insights
                 </span>
             </div>
             <span className="text-primary font-weight-bold">${totalMoney.toLocaleString()}</span>
@@ -48,8 +48,8 @@ export const Home = () => {
         <div className="card">
             <div className="card-inner">
                 <p className="text-primary">TOTAL ATRASOS</p>
-                <span className="material-icons-outlined text-orange">
-                error
+                <span class="material-icons-outlined text-orange">
+                info
                 </span>
             </div>
             <span className="text-primary font-weight-bold">{totalAtrasos}</span>
