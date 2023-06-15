@@ -3,10 +3,11 @@ import { useOrdenes } from "../context"
 import { UsersCountChart } from "./UsersCountChart"
 import { UsersInfoChart } from "./UsersInfoChart"
 import { OrdersRanking } from "./OrdersRanking"
-import './tables/tables.css'
 import { tokenValidatior } from "../helpers/tokenValidator"
 import { DoubleChart } from "./DoubleChart"
 import { DoubleChartMonthly } from "./DoubleChartMonthly"
+import { useNavigate } from "react-router-dom"
+import './tables/tables.css'
 
 
 
@@ -15,7 +16,18 @@ export const Home = () => {
         tokenValidatior();
     }, [])
     
-    const {totalDebt, totalMoney, warningOrder, topUser, counter, totalAtrasos} = useOrdenes()
+    const {totalDebt, totalMoney, warningOrder, topUser, counter, totalAtrasos, setInputValue} = useOrdenes()
+    
+    const navigate = useNavigate()
+    const onAtrasosHandler = ()=>{
+        setInputValue("atrasos")
+        navigate('/orders')
+    }
+
+    const onMontoAtrasosHandler = ()=>{   
+        setInputValue("atrasos")
+        navigate('/reports')
+    }
     
   return (
     <div className="main-container">
@@ -27,7 +39,7 @@ export const Home = () => {
 
         <div className="card">
             <div className="card-inner">
-                <p className="text-primary">TOTAL FACTURADO</p>
+                <p className="text-primary">FACTURADO ULTIMO AÑO</p>
                 <span className="material-icons-outlined text-green">
                     attach_money
                 </span>
@@ -45,7 +57,7 @@ export const Home = () => {
             <span className="text-primary font-weight-bold">${totalMoney.toLocaleString()}</span>
         </div>
 
-        <div className="card">
+        <div className="card" onClick={()=> onAtrasosHandler()}>
             <div className="card-inner">
                 <p className="text-primary">TOTAL ATRASOS</p>
                 <span class="material-icons-outlined text-orange">
@@ -55,7 +67,7 @@ export const Home = () => {
             <span className="text-primary font-weight-bold">{totalAtrasos}</span>
         </div>
 
-        <div className="card">
+        <div className="card" onClick={()=> onMontoAtrasosHandler()}>
             <div className="card-inner">
                 <p className="text-primary">MONTO ATRASOS</p>
                 <span className="material-icons-outlined text-red">

@@ -52,17 +52,30 @@ import es from 'date-fns/locale/es';
     }, [])
 
     useEffect(() => {
-      let counter = 0
-      orders.map(order=>{
-        if(order.completada === true){
-          counter += order.precio
+      let counter = 0;
+    
+      orders.map(order => {
+        if (order.completada === true) {
+          const orderDateParts = order.fecha.split('/');
+          const orderDay = parseInt(orderDateParts[0]);
+          const orderMonth = parseInt(orderDateParts[1]) - 1; // Restamos 1 ya que los meses en JavaScript son indexados desde 0 (enero = 0)
+          const orderYear = parseInt(orderDateParts[2]);
+    
+          const orderDate = new Date(orderYear, orderMonth, orderDay);
+          const currentDate = new Date();
+          const oneMonthAgo = new Date();
+          oneMonthAgo.setMonth(currentDate.getMonth() - 12);
+    
+          if (orderDate <= currentDate && orderDate >= oneMonthAgo) {
+            counter += order.precio;
+          }
         }
-        setCounter(counter)
-      })
-    }, [orders])
     
+        setCounter(counter);
+      });
+    }, [orders]);    
     
-    
+     
      useEffect(() => { 
        
        const orderArray =[]
@@ -559,23 +572,39 @@ if (contadorUnidades === 1) {
       const { value } = target;
       setSearchedOrder(value);
     }
+   
     
     useEffect(() => {
-      const filteredOrders = orders.filter(order => {
-        for (let key in order) {
-          if (order.hasOwnProperty(key)) {
-            const value = order[key];
-            const lowercaseValue = typeof value === 'string' ? value.toLowerCase() : value?.toString().toLowerCase();
-            const lowercaseSearch = searchedOrder.toLowerCase();
-    
-            if (lowercaseValue && lowercaseValue.includes(lowercaseSearch)) {
-              return true;
+      let filteredOrders = null
+      if (searchedOrder.toLowerCase() === "atrasos" || searchedOrder.toLowerCase() === "atrasadas" || searchedOrder.toLowerCase() === "atrasados") {
+        const currentDate = new Date();
+        filteredOrders = orders.filter(order => {
+          const entregaDateParts = order.entrega.split("/");
+          const entregaDate = new Date(
+            entregaDateParts[2],
+            entregaDateParts[1] - 1,
+            entregaDateParts[0]
+          );
+          return !order.completada && entregaDate < currentDate;
+        });
+      }      
+      else{
+        filteredOrders = orders.filter(order => {
+          for (let key in order) {
+            if (order.hasOwnProperty(key)) {
+              const value = order[key];
+              const lowercaseValue = typeof value === 'string' ? value.toLowerCase() : value?.toString().toLowerCase();
+              const lowercaseSearch = searchedOrder.toLowerCase();
+              
+              if (lowercaseValue && lowercaseValue.includes(lowercaseSearch)) {
+                return true;
+              }
             }
           }
-        }
-        return false;
-      });
-    
+          return false;
+        });
+        
+      }
       setTableOrders(filteredOrders);
     }, [searchedOrder, orders]);
     
@@ -619,9 +648,11 @@ if (contadorUnidades === 1) {
        let oldestOrder = null; // Variable para almacenar la orden más antigua
      
        orders.forEach(order => {
-        
+  
          let monto = Number(order.precio);
-         totalMoney += monto;
+         if(!order.completada){
+           totalMoney += monto;
+         }
      
          const [day, month, year] = order.entrega.split("/");
          const entregaDate = new Date(Number(year), Number(month) - 1, Number(day));
@@ -738,7 +769,7 @@ if (contadorUnidades === 1) {
         const proyeccionesArray = months.map((month) => calculateProjectionPrice(month));
         setProyecciones(proyeccionesArray);
       }
-    }, [orders]);
+    }, [orders, tableOrders]);
 
     let ventasConvertidas = [];
     let proyeccionesConvertidas = [];

@@ -145,6 +145,7 @@ body{
   border: 1px solid #d2d2d3;
   border-radius: 5px;
   box-shadow: 0 6px 7px -4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
 }
 
 .card:first-child{
@@ -155,6 +156,7 @@ body{
 }
 .card:nth-child(3){
   border-left: 7px solid #f5b74f;
+
 }
 .card:nth-child(4){
   border-left: 7px solid #cc3c43;
