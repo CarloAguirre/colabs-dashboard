@@ -16,6 +16,9 @@ import { tokenValidatior } from '../../helpers/tokenValidator';
 import { writeFile, saveAs } from "file-saver";
 import * as XLSX from "xlsx";
 import Button from 'react-bootstrap/Button';
+// import ExcelJS from 'exceljs';
+import ExcelJS from "exceljs";
+
 
 
 
@@ -41,12 +44,106 @@ export const OrderTable = ({status}) => {
     
     const [key, setKey] = useState('all')
     
-    const exportToExcel = () => {
-      const workbook = XLSX.utils.table_to_book(document.getElementById("tabla"));
-      const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
-      const data = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
-      saveAs(data, `Infome_ordenes.xlsx`);
+
+
+    const exportToExcel = async () => {
+      const table = document.getElementById("tabla");
+    
+      // Crear un nuevo libro de Excel
+      const workbook = new ExcelJS.Workbook();
+    
+      // Agregar una nueva hoja al libro de Excel
+      const sheet = workbook.addWorksheet("Hoja1");
+    
+      // Establecer el formato de fecha general para todas las celdas
+      sheet.eachRow((row) => {
+        row.eachCell((cell) => {
+          cell.numFmt = "General";
+        });
+      });
+    
+      // Obtener los encabezados de columna de la tabla
+      const headerRow = table.querySelector("thead tr");
+      const headerCells = Array.from(headerRow.querySelectorAll("th"));
+    
+      // Escribir los encabezados de columna en el libro de Excel
+      headerCells.forEach((headerCell, cellIndex) => {
+        sheet.getCell(1, cellIndex + 1).value = headerCell.textContent;
+      });
+    
+      // Obtener las filas de datos de la tabla
+      const dataRows = Array.from(table.querySelectorAll("tbody tr"));
+    
+      // Recorrer las filas de datos y obtener los valores de las celdas
+      dataRows.forEach((dataRow, rowIndex) => {
+        const dataCells = Array.from(dataRow.querySelectorAll("td"));
+    
+        // Escribir los valores de las celdas en el libro de Excel
+        dataCells.forEach((dataCell, cellIndex) => {
+          const cellContent = dataCell.innerHTML;
+    
+          // Verificar si el contenido de la celda contiene un enlace
+          if (cellContent.includes("<a ")) {
+            // Verificar si el contenido de la celda es un enlace
+            const linkRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1[^>]*>(.*?)<\/a>/i;
+            const linkMatch = cellContent.match(linkRegex);
+    
+            if (linkMatch) {
+              const href = linkMatch[2]; // URL del enlace
+              const text = linkMatch[3]; // Texto del enlace
+    
+              // Agregar un hipervínculo a la celda
+              const cell = sheet.getCell(rowIndex + 2, cellIndex + 1);
+              cell.value = { text, hyperlink: href };
+            } else {
+              // Escribir el contenido de la celda
+              sheet.getCell(rowIndex + 2, cellIndex + 1).value = cellContent;
+            }
+          } else {
+            // Verificar si el contenido de la celda es un elemento HTML completo o solo texto sin etiquetas
+            const htmlRegex = /<("[^"]*"|'[^']*'|[^'">])*>/;
+            const isHTML = htmlRegex.test(cellContent);
+    
+            if (isHTML) {
+              // Escribir el contenido de la celda como texto sin etiquetas
+              const div = document.createElement("div");
+              div.innerHTML = cellContent;
+              const text = div.textContent || div.innerText || "";
+    
+              sheet.getCell(rowIndex + 2, cellIndex + 1).value = text;
+            } else {
+              // Verificar si el contenido de la celda es una fecha
+              const dateRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+              if (dateRegex.test(cellContent)) {
+                // Obtener los componentes de la fecha
+                const [, day, month, year] = dateRegex.exec(cellContent);
+    
+                // Crear la fecha en el formato "dd/mm/yyyy"
+                const formattedDate = new Date(`${month}/${day}/${year}`);
+    
+                // Escribir la fecha en la celda
+                sheet.getCell(rowIndex + 2, cellIndex + 1).value = formattedDate;
+              } else {
+                // Escribir el contenido de la celda
+                sheet.getCell(rowIndex + 2, cellIndex + 1).value = cellContent;
+              }
+            }
+          }
+        });
+      });
+    
+      // Generar un búfer de Excel en memoria
+      const excelBuffer = await workbook.xlsx.writeBuffer();
+    
+      // Crear un objeto Blob a partir del búfer de Excel
+      const data = new Blob([excelBuffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+    
+      // Descargar el archivo de Excel
+      saveAs(data, `Informe_ordenes.xlsx`);
     };
+    
     
     
     useEffect(() => {
@@ -63,8 +160,6 @@ export const OrderTable = ({status}) => {
 
     }, [orders])
     
-
-    const [orderEntrega, setOrderEntrega] = useState({});
 
     const handleDateChange = async(orderNumber, newDate) => {
 
