@@ -6,6 +6,10 @@ import { OnSearch } from '../onSearch/OnSearch';
 import { useEffect, useState } from "react";
 import { tokenValidatior } from "../../helpers/tokenValidator";
 
+import { writeFile, saveAs } from "file-saver";
+import * as XLSX from "xlsx";
+import Button from 'react-bootstrap/Button';
+
 export const ReportsTable = () => {
   const { selectReportsForm, contratosArray, tableOrders, setProyecciones, setVentas, months, calculateProjectionPrice, calculateTotalPrice } = useOrdenes();
 
@@ -15,7 +19,13 @@ export const ReportsTable = () => {
   }, []);
 
 
-
+  const exportToExcel = () => {
+    console.log("hola")
+    const workbook = XLSX.utils.table_to_book(document.getElementById("tabla"));
+    const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+    const data = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+    saveAs(data, `Infome_ordenes.xlsx`);
+  };
 
   const currentMonthIndex = new Date().getMonth();
   const startIndex = currentMonthIndex - 6 >= 0 ? currentMonthIndex - 6 : 12 + (currentMonthIndex - 6);
@@ -49,7 +59,7 @@ export const ReportsTable = () => {
             })}
           </Form.Select>
           <div className="table-container table-size">
-            <table className="table table-bordered table_report">
+            <table className="table table-bordered table_report" id="tabla">
               <thead>
                 <tr>
                   <th scope="col">NUMERO</th>
@@ -132,6 +142,9 @@ export const ReportsTable = () => {
             </table>
           </div>
         </div>
+          <Button variant="outline-success" onClick={exportToExcel} className="btn-lg">
+        Descargar Excel
+        </Button>
         <div className="info-labels mt-4">
           <span className="text-white label" style={{ backgroundColor: '#4eb466' }}>A tiempo</span>
           <span className="text-white label" style={{ backgroundColor: '#f9c835' }}>Facturadas</span>

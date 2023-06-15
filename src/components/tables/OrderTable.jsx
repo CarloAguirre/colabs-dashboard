@@ -13,9 +13,14 @@ import { format } from 'date-fns';
 import { orderUpdate } from '../../helpers/orderUpdate';
 import { tokenValidatior } from '../../helpers/tokenValidator';
 
+import { writeFile, saveAs } from "file-saver";
+import * as XLSX from "xlsx";
+import Button from 'react-bootstrap/Button';
+
+
 
 export const OrderTable = ({status}) => {
-  const {orders, tableOrders, setTableOrders, contratosArray, setContratosArray, selectContratoForm  } = useOrdenes()
+  const {orders, tableOrders, setTableOrders, contratosArray, setContratosArray, selectContratoForm,searchedOrder  } = useOrdenes()
 
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -36,11 +41,13 @@ export const OrderTable = ({status}) => {
     
     const [key, setKey] = useState('all')
     
-  
-
-    // useEffect(() => {
-    //   setTableOrders(orders)
-    // }, [orders])
+    const exportToExcel = () => {
+      const workbook = XLSX.utils.table_to_book(document.getElementById("tabla"));
+      const excelBuffer = XLSX.write(workbook, { bookType: "xlsx", type: "array" });
+      const data = new Blob([excelBuffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
+      saveAs(data, `Infome_ordenes.xlsx`);
+    };
+    
     
     useEffect(() => {
         
@@ -94,7 +101,8 @@ export const OrderTable = ({status}) => {
            </Form.Select>
             }   
     <div className="table-container table-size">
-        <table className="table table-bordered table-striped">
+
+        <table className="table table-bordered table-striped" id='tabla'>
           {(ordenNumber === "reports") ?
           <thead>
             <tr>
@@ -255,7 +263,7 @@ export const OrderTable = ({status}) => {
                  orderNumber={order._id}
                   deliveryDate={order.entrega} 
                   onDateChange={handleDateChange}
-              /></td>
+              /><span style={{ display: 'none' }}>{order.entrega}</span></td>
               <td>{order.material}</td>
               {(order.material.includes("/") ? <td>{formattedPrice}</td>
                 : <td>{formattedPrecioUnitario}</td>)}
@@ -280,7 +288,7 @@ export const OrderTable = ({status}) => {
                  orderNumber={order._id}
                   deliveryDate={order.entrega} 
                   onDateChange={handleDateChange}
-              /></td>
+              /><span style={{ display: 'none' }}>{order.entrega}</span></td>
               <td>{order.material}</td>
               {(order.material.includes("/") ? <td>{formattedPrice}</td>
                 : <td>{formattedPrecioUnitario}</td>)}
@@ -306,7 +314,7 @@ export const OrderTable = ({status}) => {
                  orderNumber={order._id}
                   deliveryDate={order.entrega} 
                   onDateChange={handleDateChange}
-              /></td>
+              /><span style={{ display: 'none' }}>{order.entrega}</span></td>
                 <td>{order.material}</td>
                 {(order.material.includes("/") ? <td>{formattedPrice}</td>
                 : <td>{formattedPrecioUnitario}</td>)}
@@ -320,7 +328,10 @@ export const OrderTable = ({status}) => {
       }}))
     }
   </tbody>
+  <div>
+  </div>
         </table>
+
     </div>                
         </div>
     }
@@ -355,7 +366,9 @@ export const OrderTable = ({status}) => {
                     {tableModel('bhp')}
             </Tab>
         </Tabs>
-    
+        <Button variant="outline-success" onClick={exportToExcel} className="btn-lg">
+        Descargar Excel
+        </Button>
     </div> 
   )
 }
