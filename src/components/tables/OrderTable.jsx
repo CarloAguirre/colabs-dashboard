@@ -144,14 +144,8 @@ export const OrderTable = ({status}) => {
       // Descargar el archivo de Excel
       saveAs(data, `Informe_ordenes.xlsx`);
     };
-    
-    
-    
-    
-    
-    
-    
-    
+     
+  
     useEffect(() => {
         
         const contratosList =()=>{
