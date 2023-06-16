@@ -8,6 +8,8 @@ import { format, parse } from 'date-fns';
 import es from 'date-fns/locale/es';
 import { counterOrdersTotalprice } from "./helpers/counter";
 import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
+import { onSubmit } from "./helpers/newOrderSubmit";
+import { filterOrders } from "./helpers/filterOrder";
 
 
  const OrdenesContext = createContext({})
@@ -19,31 +21,29 @@ import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
     const [tableOrders, setTableOrders] = useState(orders)
     const [invoice, setInvoice] = useState(null)
     const [invoiceDate, setInvoiceDate] = useState()
-
     const [cliente, setCliente] = useState()
-
     const [contratosArray, setContratosArray] =useState([])
-
     const [proyecciones, setProyecciones] = useState([])
-    const [ventas, setVentas] = useState([])
-     
+    const [ventas, setVentas] = useState([])   
     const [newOrder, setNewOrder] = useState([])
     const [newOrderData, setNewOrderData] = useState([])
     const [paidOrdersLastYear, setPaidOrdersLastYear] = useState(0);
+    const [inputValue, setInputValue] = useState(""); 
+    const [searchedOrder, setSearchedOrder] = useState("");
+    const [FilteredArray, setFilteredArray] = useState([]);
 
-    const [inputValue, setInputValue] = useState("");
-
-
-     useEffect(() => {
-        const fetchData = async()=>{
-            const res =  await fetch(`${serverPath}api/productos?limite=1000&desde=0`)
-            const orders = await res.json()
-            const {productos } = orders;
-            setOrders(productos)    
-        }
-        fetchData();
+    // Generador de toda la data de la aplicacion
+    useEffect(() => {
+      const fetchData = async()=>{
+          const res =  await fetch(`${serverPath}api/productos?limite=1000&desde=0`)
+          const orders = await res.json()
+          const {productos } = orders;
+          setOrders(productos)    
+      }
+      fetchData();
     }, [])
 
+    //Generador de lo facturado en los ultimos 12 meses
     useEffect(() => {
       let counter = counterOrdersTotalprice(orders)
         setPaidOrdersLastYear(counter);
@@ -56,7 +56,7 @@ import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
      }, [newOrder])
      
      
-     
+     //Configuración de input "Buscar"
      const onInputChange = ({target})=>{
      const {name, value} = target;
      setInputValue({
@@ -64,59 +64,7 @@ import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
          [name]: value
      })
      };
-        
-     const [spinnerSwitch, setSpinnerSwitch] = useState(false)
-     const onSubmitHandler = async (event) => {
 
-      setSpinnerSwitch(true)
-      event.preventDefault();
-      
-      const existeProducto = orders.find(order=> order.numero === newOrderData[0])
-      if(existeProducto){
-        alert(`La Orden N°${newOrderData[0]} ya existe en la base de datos`)
-        setSpinnerSwitch(false)
-        return
-      }
-       
-      const categoria = event.target.name
-      
-      if(categoria === 'invoice'){
-        try {   
-          // const invoiceString = parse(invoice, 'dd/MM/yyyy', new Date(), { locale: es });
-          const invoiceDateString = parse(invoiceDate, 'dd/MM/yyyy', new Date(), { locale: es });
-          
-          // const formattedInvoice = format(invoiceString, 'dd/MM/yyyy');
-          const formattedInvoiceDate = format(invoiceDateString, 'dd/MM/yyyy');
-          await orderUpdate(invoice, formattedInvoiceDate)
-          await cargarImagen(archivo, invoice);
-        } catch (error) {
-          console.log(error)
-        }       
-      }else{ 
-        try {
-          const dateString = parse(newOrderData[1], 'dd/MM/yyyy', new Date(), { locale: es });
-          const deliveryDateString = parse(newOrderData[4], 'dd/MM/yyyy', new Date(), { locale: es });
-
-          const formattedDate = format(dateString, 'dd/MM/yyyy');
-          const formattedDelivery = format(deliveryDateString, 'dd/MM/yyyy');
-          const createOrder = await createProducto(newOrderData[0], formattedDate, newOrderData[2], newOrderData[3], formattedDelivery, newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria, newOrderData[11]);
-          
-          if (createOrder) {
-            await cargarImagen(archivo, null);
-          } 
-        } catch (error) {
-          console.error(error);
-          alert("Ha habido un problema, vuelve a intentarlo mas tarde o comunicate con el programador carlo_aguirre@outlook.cl....¿Estas seguro que subiste el formato de orden correcto?")
-         setSpinnerSwitch(false)
-
-        }
-      }
-    };
-
-     
-     const [searchedOrder, setSearchedOrder] = useState("");
-     const [FilteredArray, setFilteredArray] = useState([]);
- 
      const onSearchInput = ({ target }) => {
       const { value } = target;
       if(value === ""){
@@ -127,48 +75,23 @@ import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
 
       }
     }
-   
-    
+
+    //Configuración de "Filtrar orden"
     useEffect(() => {
-      let filteredOrders = null
-      if (searchedOrder.toLowerCase() === "atrasos" || searchedOrder.toLowerCase() === "atrasadas" || searchedOrder.toLowerCase() === "atrasados") {
-        const currentDate = new Date();
-        filteredOrders = orders.filter(order => {
-          const entregaDateParts = order.entrega.split("/");
-          const entregaDate = new Date(
-            entregaDateParts[2],
-            entregaDateParts[1] - 1,
-            entregaDateParts[0]
-          );
-          return !order.completada && entregaDate < currentDate;
-        });
-      }      
-      else{
-        filteredOrders = orders.filter(order => {
-          for (let key in order) {
-            if (order.hasOwnProperty(key)) {
-              const value = order[key];
-              const lowercaseValue = typeof value === 'string' ? value.toLowerCase() : value?.toString().toLowerCase();
-              const lowercaseSearch = searchedOrder.toLowerCase();
-              
-              if (lowercaseValue && lowercaseValue.includes(lowercaseSearch)) {
-                return true;
-              }
-            }
-          }
-          return false;
-        });
-        
-      }
+      const filteredOrders = filterOrders(searchedOrder, orders);
       setTableOrders(filteredOrders);
     }, [searchedOrder, orders]);
-    
-     const onRefreshSubmit = (event)=>{
-         event.preventDefault()
-         setTableOrders(orders)
-     }
 
-     const selectContratoForm = ({target})=>{
+    //Configuración de "Subir orden"
+    const [spinnerSwitch, setSpinnerSwitch] = useState(false)
+
+    const onSubmitHandler = async (event) => {
+    onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders);
+    };
+
+    
+    //Configuración de formularios de "Filtro por contrato"
+    const selectContratoForm = ({target})=>{
       if(target.value === 'todos'){
           const filter = orders.filter(order=> order.contrato != null && order.categoria === "646d30f6df85d0a4c4958449" )
           setTableOrders(filter)
@@ -177,17 +100,17 @@ import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
           const filter = orders.filter(order=> order.contrato === target.value)
           setTableOrders(filter)
       }
-  }
-
-  const selectReportsForm = ({target})=>{
-    if(target.value === 'todos'){
-        setTableOrders(orders)
-        
-    }else{
-        const filter = orders.filter(order=> order.contrato === target.value)
-        setTableOrders(filter)
     }
-}
+
+    const selectReportsForm = ({target})=>{
+      if(target.value === 'todos'){
+          setTableOrders(orders)
+          
+      }else{
+          const filter = orders.filter(order=> order.contrato === target.value)
+          setTableOrders(filter)
+      }
+    }
          
      // stats configs
      let totalMoney = 0;
@@ -338,7 +261,6 @@ import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
       inputValue,
       setInputValue,
       statsGenerator,
-      onRefreshSubmit,
         onSearchInput,
         onInputChange,
         onSubmitHandler,
