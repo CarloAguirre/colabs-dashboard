@@ -104,10 +104,30 @@ export const OrderTable = ({status}) => {
               // Escribir la fecha en la celda
               const cell = sheet.getCell(rowIndex + 2, cellIndex + 1);
               cell.value = formattedDate;
-              cell.numFmt = "dd/mm/yyyy"; // Establecer el formato de fecha como "dd/mm/yyyy"
+              // cell.numFmt = "mm/dd/yyyy"; // Establecer el formato de fecha como "mm/dd/yyyy"
             } else {
-              // Escribir el valor de la celda
-              sheet.getCell(rowIndex + 2, cellIndex + 1).value = cellValue;
+              // Verificar si el valor de la celda contiene el signo "$"
+              if (cellValue.includes("$")) {
+                // Eliminar el signo de peso y las comas del valor
+                const numericValue = cellValue.replace(/\$|,/g, "");
+    
+                // Verificar si el valor es un número
+                if (!isNaN(parseFloat(numericValue))) {
+                  // Convertir el valor a número y escribirlo en la celda
+                  const numericCellValue = parseFloat(numericValue);
+                  const cell = sheet.getCell(rowIndex + 2, cellIndex + 1);
+                  cell.value = numericCellValue;
+    
+                  // Establecer el formato de número en la celda
+                  cell.numFmt = "#,##0.00";
+                } else {
+                  // Escribir el valor de la celda sin modificar
+                  sheet.getCell(rowIndex + 2, cellIndex + 1).value = cellValue;
+                }
+              } else {
+                // Escribir el valor de la celda sin modificar
+                sheet.getCell(rowIndex + 2, cellIndex + 1).value = cellValue;
+              }
             }
           }
         });
@@ -124,6 +144,11 @@ export const OrderTable = ({status}) => {
       // Descargar el archivo de Excel
       saveAs(data, `Informe_ordenes.xlsx`);
     };
+    
+    
+    
+    
+    
     
     
     
