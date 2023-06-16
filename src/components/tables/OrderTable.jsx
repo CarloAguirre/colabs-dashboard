@@ -80,53 +80,34 @@ export const OrderTable = ({status}) => {
     
         // Escribir los valores de las celdas en el libro de Excel
         dataCells.forEach((dataCell, cellIndex) => {
-          const cellContent = dataCell.innerHTML;
+          const cellValue = dataCell.textContent;
     
-          // Verificar si el contenido de la celda contiene un enlace
-          if (cellContent.includes("<a ")) {
-            // Verificar si el contenido de la celda es un enlace
-            const linkRegex = /<a\s+(?:[^>]*?\s+)?href=(["'])(.*?)\1[^>]*>(.*?)<\/a>/i;
-            const linkMatch = cellContent.match(linkRegex);
+          // Verificar si el valor de la celda es un enlace
+          if (dataCell.querySelector("a")) {
+            const linkElement = dataCell.querySelector("a");
+            const href = linkElement.getAttribute("href");
+            const text = linkElement.textContent;
     
-            if (linkMatch) {
-              const href = linkMatch[2]; // URL del enlace
-              const text = linkMatch[3]; // Texto del enlace
-    
-              // Agregar un hipervínculo a la celda
-              const cell = sheet.getCell(rowIndex + 2, cellIndex + 1);
-              cell.value = { text, hyperlink: href };
-            } else {
-              // Escribir el contenido de la celda
-              sheet.getCell(rowIndex + 2, cellIndex + 1).value = cellContent;
-            }
+            // Agregar un hipervínculo a la celda
+            const cell = sheet.getCell(rowIndex + 2, cellIndex + 1);
+            cell.value = { text, hyperlink: href };
           } else {
-            // Verificar si el contenido de la celda es un elemento HTML completo o solo texto sin etiquetas
-            const htmlRegex = /<("[^"]*"|'[^']*'|[^'">])*>/;
-            const isHTML = htmlRegex.test(cellContent);
+            // Verificar si el valor de la celda es una fecha
+            const dateRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
+            if (dateRegex.test(cellValue)) {
+              // Obtener los componentes de la fecha
+              const [, day, month, year] = dateRegex.exec(cellValue);
     
-            if (isHTML) {
-              // Escribir el contenido de la celda como texto sin etiquetas
-              const div = document.createElement("div");
-              div.innerHTML = cellContent;
-              const text = div.textContent || div.innerText || "";
+              // Crear la fecha en el formato "dd/mm/yyyy"
+              const formattedDate = new Date(`${month}/${day}/${year}`);
     
-              sheet.getCell(rowIndex + 2, cellIndex + 1).value = text;
+              // Escribir la fecha en la celda
+              const cell = sheet.getCell(rowIndex + 2, cellIndex + 1);
+              cell.value = formattedDate;
+              cell.numFmt = "dd/mm/yyyy"; // Establecer el formato de fecha como "dd/mm/yyyy"
             } else {
-              // Verificar si el contenido de la celda es una fecha
-              const dateRegex = /^(\d{1,2})\/(\d{1,2})\/(\d{4})$/;
-              if (dateRegex.test(cellContent)) {
-                // Obtener los componentes de la fecha
-                const [, day, month, year] = dateRegex.exec(cellContent);
-    
-                // Crear la fecha en el formato "dd/mm/yyyy"
-                const formattedDate = new Date(`${month}/${day}/${year}`);
-    
-                // Escribir la fecha en la celda
-                sheet.getCell(rowIndex + 2, cellIndex + 1).value = formattedDate;
-              } else {
-                // Escribir el contenido de la celda
-                sheet.getCell(rowIndex + 2, cellIndex + 1).value = cellContent;
-              }
+              // Escribir el valor de la celda
+              sheet.getCell(rowIndex + 2, cellIndex + 1).value = cellValue;
             }
           }
         });
