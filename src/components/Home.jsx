@@ -14,7 +14,7 @@ export const Home = () => {
         tokenValidatior();
     }, [])
     
-    const {totalDebt, totalMoney, counter, totalAtrasos, setInputValue} = useOrdenes()
+    const {totalDebt, totalMoney, paidOrdersLastYear, totalAtrasos, setInputValue} = useOrdenes()
     
     const navigate = useNavigate()
     const onAtrasosHandler = ()=>{
@@ -42,7 +42,7 @@ export const Home = () => {
                     attach_money
                 </span>
             </div>
-            <span className="text-primary font-weight-bold">${counter.toLocaleString()}</span>
+            <span className="text-primary font-weight-bold">${paidOrdersLastYear.toLocaleString()}</span>
         </div>
 
         <div className="card">
