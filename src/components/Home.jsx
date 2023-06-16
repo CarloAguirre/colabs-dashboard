@@ -60,7 +60,7 @@ export const Home = () => {
         <div className="card" onClick={()=> onAtrasosHandler()}>
             <div className="card-inner">
                 <p className="text-primary">TOTAL ATRASOS</p>
-                <span class="material-icons-outlined text-orange">
+                <span className="material-icons-outlined text-orange">
                 info
                 </span>
             </div>

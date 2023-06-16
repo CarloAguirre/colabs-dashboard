@@ -36,16 +36,12 @@ import es from 'date-fns/locale/es';
  
      const [inputValue, setInputValue] = useState("");
 
-     useEffect(() => {
-       console.log(newOrder)
-     }, [newOrder])
 
      useEffect(() => {
         const fetchData = async()=>{
             const res =  await fetch(`${serverPath}api/productos?limite=1000&desde=0`)
             const orders = await res.json()
             const {productos } = orders;
-            // console.log(productos)
             setOrders(productos)    
         }
         fetchData();
@@ -496,8 +492,6 @@ if (contadorUnidades === 1) {
           }
 
         }
-        console.log(materialCantidad)
-        console.log(orderArray)
         setNewOrderData(orderArray)
      }, [newOrder])
      
@@ -545,7 +539,6 @@ if (contadorUnidades === 1) {
 
           const formattedDate = format(dateString, 'dd/MM/yyyy');
           const formattedDelivery = format(deliveryDateString, 'dd/MM/yyyy');
-          console.log(newOrderData)
           const createOrder = await createProducto(newOrderData[0], formattedDate, newOrderData[2], newOrderData[3], formattedDelivery, newOrderData[5], newOrderData[6], newOrderData[7], newOrderData[8], newOrderData[9], newOrderData[10], categoria, newOrderData[11]);
           
           if (createOrder) {

@@ -55,7 +55,7 @@ export const SideBar = () => {
                     </span> Bienes y activos
                 </li> */}
                 <li className="sidebar-list-item" onClick={logoutHandler} >
-                    <span class="material-icons-outlined">
+                    <span className="material-icons-outlined">
                         logout
                     </span> Cerrar sesión
                 </li> 
