@@ -1,12 +1,10 @@
 import { useEffect } from "react"
 import { useOrdenes } from "../context"
-import { UsersCountChart } from "./UsersCountChart"
-import { UsersInfoChart } from "./UsersInfoChart"
-import { OrdersRanking } from "./OrdersRanking"
 import { tokenValidatior } from "../helpers/tokenValidator"
 import { DoubleChart } from "./DoubleChart"
 import { DoubleChartMonthly } from "./DoubleChartMonthly"
 import { useNavigate } from "react-router-dom"
+
 import './tables/tables.css'
 
 
@@ -16,7 +14,7 @@ export const Home = () => {
         tokenValidatior();
     }, [])
     
-    const {totalDebt, totalMoney, warningOrder, topUser, counter, totalAtrasos, setInputValue} = useOrdenes()
+    const {totalDebt, totalMoney, counter, totalAtrasos, setInputValue} = useOrdenes()
     
     const navigate = useNavigate()
     const onAtrasosHandler = ()=>{
