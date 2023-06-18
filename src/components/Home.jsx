@@ -26,6 +26,14 @@ export const Home = () => {
         setInputValue("atrasos")
         navigate('/reports')
     }
+    const onProyeccionHandler = ()=>{   
+        setInputValue("")
+        navigate('/orders')
+    }
+    const onFacturadoHandler = ()=>{   
+        setInputValue("")
+        navigate('/paids')
+    }
     
   return (
     <div className="main-container">
@@ -35,7 +43,7 @@ export const Home = () => {
 
     <div className="main-cards">
 
-        <div className="card">
+        <div className="card" onClick={()=> onFacturadoHandler()}>
             <div className="card-inner">
                 <p className="text-primary">FACTURADO ULTIMO AÑO</p>
                 <span className="material-icons-outlined text-green">
@@ -45,7 +53,7 @@ export const Home = () => {
             <span className="text-primary font-weight-bold">${paidOrdersLastYear.toLocaleString()}</span>
         </div>
 
-        <div className="card">
+        <div className="card" onClick={()=> onProyeccionHandler()}>
             <div className="card-inner">
                 <p className="text-primary">PROYECCIÓN DE INGRESOS</p>
                 <span className="material-icons-outlined text-blue">

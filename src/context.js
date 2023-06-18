@@ -53,7 +53,12 @@ import { filterOrders } from "./helpers/filterOrder";
     //Generador de informacion para la nueva orden agregada.
      useEffect(() => {    
       pdfInfoExtractor(tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData)
+      console.log(newOrder)
      }, [newOrder])
+     
+     useEffect(() => {
+       console.log(newOrderData)
+     }, [newOrderData])
      
      
      //Configuración de input "Buscar"

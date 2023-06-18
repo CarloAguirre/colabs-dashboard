@@ -43,7 +43,6 @@ export const PdfDrop =({cliente})=> {
             const pageText = await getPageText(i);
             textItems.push(...pageText);
           }
-          console.log(textItems)
          setCliente(cliente)
          setNewOrder(textItems);
         };

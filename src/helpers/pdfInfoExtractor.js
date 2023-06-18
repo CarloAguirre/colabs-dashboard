@@ -211,7 +211,33 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                 }
               }
               
-              
+             
+          //SRM Respuesta a licitacion:
+          function capturarNumeroOferta(cadena) {
+            const patron = /(?:N° Oferta )?SRM: (\d+)/; 
+            const coincidencias = cadena.match(patron);
+            if (coincidencias) {
+              return coincidencias[1];  // Retorna la primera coincidencia encontrada
+            } else {
+              return null;  // Retorna null si no se encuentra ninguna coincidencia
+            }
+          }   
+            const numeroOferta = capturarNumeroOferta(texto);
+            if (numeroOferta) {
+              orderArray[12] = numeroOferta
+            }
+
+          // RFX Licitacion:
+          const rfxInlineIndex = texto.includes("RFX:");
+
+          if(rfxInlineIndex){
+          orderArray[13] = texto.split(" ")[1]
+
+          }else if(texto === "RFX"){
+            const rfxNumber = newOrder[index + 2];
+            orderArray[13] = rfxNumber.split(" ")[1];          
+          }
+
 
           })
           //SAP parte II
@@ -225,50 +251,47 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
             }
             return contador;
           }, 0);
-          
-                  
-        // Cantidad
-// Cantidad
-if (contadorUnidades === 1) {
-const indiceUnidades = newOrder.indexOf('Unidades') !== -1 ? newOrder.indexOf('Unidades') : newOrder.indexOf('Juego');
-const material = resultados[0]; // Primer material encontrado
-const cantidad = Number(newOrder[indiceUnidades - 2]);
-const precioString = newOrder[indiceUnidades + 2].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
-const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
-materialCantidad[material] = [cantidad, precioNumber];
-orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
-} else if (contadorUnidades > 1) {
-let cantidadIndex = 0; // Índice para recorrer las cantidades
-let sumaUnidades = 0; // Variable para calcular la suma de las unidades
-newOrder.forEach((texto, index) => {
-  if (texto === 'Unidades') {
-    const material = resultados[cantidadIndex]; // Material correspondiente a la posición actual
-    const valorUnidades = Number(newOrder[index - 2]);
-    const precioString = newOrder[index + 2].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
-    const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
-    if (!isNaN(valorUnidades)) {
-      if (!materialCantidad[material]) {
-        materialCantidad[material] = [0, 0];
-      }
-      materialCantidad[material][0] += valorUnidades;
-      materialCantidad[material][1] += precioNumber;
-      cantidadIndex++;
-      sumaUnidades += valorUnidades;
-    }
-  }
-});
-orderArray[8] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
-} else {
-const material = resultados[0]; // Primer material encontrado
-const cantidad = Number(newOrder[indiceSAP + 15]) - resultados.length + 1;
-const precioString = newOrder[indiceSAP + 19].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
-const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
-materialCantidad[material] = [cantidad, precioNumber];
-orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
-}
 
+          // Cantidad
+          if (contadorUnidades === 1) {
+          const indiceUnidades = newOrder.indexOf('Unidades') !== -1 ? newOrder.indexOf('Unidades') : newOrder.indexOf('Juego');
+          const material = resultados[0]; // Primer material encontrado
+          const cantidad = Number(newOrder[indiceUnidades - 2]);
+          const precioString = newOrder[indiceUnidades + 2].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+          const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
+          materialCantidad[material] = [cantidad, precioNumber];
+          orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
+          } else if (contadorUnidades > 1) {
+          let cantidadIndex = 0; // Índice para recorrer las cantidades
+          let sumaUnidades = 0; // Variable para calcular la suma de las unidades
+          newOrder.forEach((texto, index) => {
+            if (texto === 'Unidades') {
+              const material = resultados[cantidadIndex]; // Material correspondiente a la posición actual
+              const valorUnidades = Number(newOrder[index - 2]);
+              const precioString = newOrder[index + 2].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+              const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
+              if (!isNaN(valorUnidades)) {
+                if (!materialCantidad[material]) {
+                  materialCantidad[material] = [0, 0];
+                }
+                materialCantidad[material][0] += valorUnidades;
+                materialCantidad[material][1] += precioNumber;
+                cantidadIndex++;
+                sumaUnidades += valorUnidades;
+              }
+            }
+          });
+          orderArray[8] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
+          } else {
+          const material = resultados[0]; // Primer material encontrado
+          const cantidad = Number(newOrder[indiceSAP + 15]) - resultados.length + 1;
+          const precioString = newOrder[indiceSAP + 19].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+          const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
+          materialCantidad[material] = [cantidad, precioNumber];
+          orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
+          }
+          orderArray[11] = materialCantidad;
 
-        orderArray[11] = materialCantidad;
 
 
                  
