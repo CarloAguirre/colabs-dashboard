@@ -226,13 +226,17 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               const patron = /(?:N° Oferta )?SRM:/; 
               const patronDos = /OFERTA\s+SRM/;
               const patronTres = /(?:N° Oferta )?SRM:(\d+)/; 
+              const patronCuatro = /N° Oferta SRM (\d+)/;
               const coincidencias = cadena.match(patron);
               const coincidenciasDos = cadena.match(patronDos);
               const coincidenciasTres = cadena.match(patronTres);
-              if (coincidencias || coincidenciasDos || coincidenciasTres) {
+              const coincidenciasCuatro = cadena.match(patronCuatro);
+              if (coincidencias || coincidenciasDos || coincidenciasTres || coincidenciasCuatro) {
                 if (coincidenciasTres) {
                   return coincidenciasTres[1];
-                } else {
+                } else if(coincidenciasCuatro){
+                  return coincidenciasCuatro[1]
+                }else {
                   return newOrder[index + 2];
                 }
               }
@@ -246,11 +250,18 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
           // RFX Licitacion:
           const rfxInlineIndex = texto.includes("RFX:") || texto.includes("Rfx:");
+          const patron = /RFX:(\d+)/;
+          const patronDos = /Rfx:(\d+)/;
+          const coincidencias = texto.match(patron);
+          const coincidenciasDos = texto.match(patronDos);
 
           if (rfxInlineIndex) {
             if(texto === "RFX:" || texto === "Rfx:"){
               orderArray[12] = newOrder[index + 2]
-              // console.log("holaaa")
+
+            }else if(coincidencias || coincidenciasDos){
+              orderArray[12] = coincidencias[1] || coincidenciasDos[1]
+
             }else{
               orderArray[12] = texto.split(" ")[1];
             }
