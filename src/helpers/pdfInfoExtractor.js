@@ -213,30 +213,49 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               
              
           //SRM Respuesta a licitacion:
-          function capturarNumeroOferta(cadena) {
+          function capturarNumeroOferta(cadena, index) {
             const patron = /(?:N° Oferta )?SRM: (\d+)/; 
             const coincidencias = cadena.match(patron);
             if (coincidencias) {
-              return coincidencias[1];  // Retorna la primera coincidencia encontrada
+              const regex = /\d/;
+              let tester = regex.test(coincidencias[0]);
+              if(tester === true){
+                return coincidencias[1];  // Retorna la primera coincidencia encontrada
+              }
             } else {
-              return null;  // Retorna null si no se encuentra ninguna coincidencia
+              const patron = /(?:N° Oferta )?SRM:/; 
+              const coincidencias = cadena.match(patron);
+              if (coincidencias) {
+                return newOrder[index + 2]
+              }
             }
           }   
-            const numeroOferta = capturarNumeroOferta(texto);
+            const numeroOferta = capturarNumeroOferta(texto, index);
             if (numeroOferta) {
-              orderArray[12] = numeroOferta
+              orderArray[13] = numeroOferta
             }
 
           // RFX Licitacion:
-          const rfxInlineIndex = texto.includes("RFX:");
+          const rfxInlineIndex = texto.includes("RFX:") || texto.includes("Rfx:");
 
-          if(rfxInlineIndex){
-          orderArray[13] = texto.split(" ")[1]
-
-          }else if(texto === "RFX"){
+          if (rfxInlineIndex) {
+            if(texto === "RFX:" || texto === "Rfx:"){
+              orderArray[12] = newOrder[index + 2]
+              // console.log("holaaa")
+            }else{
+              orderArray[12] = texto.split(" ")[1];
+            }
+          } else if (texto === "RFX" || texto === "Rfx") {
             const rfxNumber = newOrder[index + 2];
-            orderArray[13] = rfxNumber.split(" ")[1];          
+            const soloDigitos = rfxNumber.replace(/\D/g, "");
+            
+            if (soloDigitos !== "") {
+              orderArray[12] = soloDigitos;
+            } else {
+              orderArray[12] = rfxNumber.split(" ")[1];
+            }
           }
+          
 
 
           })
