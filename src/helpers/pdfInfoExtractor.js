@@ -224,11 +224,20 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               }
             } else {
               const patron = /(?:N° Oferta )?SRM:/; 
+              const patronDos = /OFERTA\s+SRM/;
+              const patronTres = /(?:N° Oferta )?SRM:(\d+)/; 
               const coincidencias = cadena.match(patron);
-              if (coincidencias) {
-                return newOrder[index + 2]
+              const coincidenciasDos = cadena.match(patronDos);
+              const coincidenciasTres = cadena.match(patronTres);
+              if (coincidencias || coincidenciasDos || coincidenciasTres) {
+                if (coincidenciasTres) {
+                  return coincidenciasTres[1];
+                } else {
+                  return newOrder[index + 2];
+                }
               }
             }
+            
           }   
             const numeroOferta = capturarNumeroOferta(texto, index);
             if (numeroOferta) {
