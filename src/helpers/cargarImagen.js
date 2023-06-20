@@ -2,13 +2,15 @@ import FormData from 'form-data'
 import Cookies from 'universal-cookie'
 import { serverPath } from '../config/serverPath';
 
-export const cargarImagen = async(archivo, invoice = null)=>{
+export const cargarImagen = async(archivo, invoice = null, licitationNumber = null)=>{
 
     const { name } = archivo;
     const cookies = new Cookies();
     let id = ""
     if(invoice){
         id = invoice
+    }else if(licitationNumber){
+        id = licitationNumber
     }else{
         id = cookies.get("id")
     }
@@ -29,19 +31,32 @@ export const cargarImagen = async(archivo, invoice = null)=>{
     body: formdata,
     redirect: 'follow',
    };
-
-    await fetch(`${serverPath}api/uploads/productos/${id}`, requestOptions)
+   if(licitationNumber){
+    await fetch(`${serverPath}api/uploads/licitaciones/${id}`, requestOptions)
     .then(response => {
         response.text()
         console.log(response)
-        if(invoice){
-        return window.location.href = "./orders"   
-        }else{
-            alert('Orden añadida con exito')
-            window.location.href = "./orders"
-        }
-    })
-    .catch(error => console.log( error));
-                 
+     
+             alert('Licitación añadida con exito')
+             window.location.href = "./licitations"
+         
+     })
+     .catch(error => console.log( error));
+   }else{
+
+       await fetch(`${serverPath}api/uploads/productos/${id}`, requestOptions)
+       .then(response => {
+           response.text()
+           console.log(response)
+           if(invoice){
+               return window.location.href = "./orders"   
+            }else{
+                alert('Orden añadida con exito')
+                window.location.href = "./orders"
+            }
+        })
+        .catch(error => console.log( error));
+    }
+        
     }
 

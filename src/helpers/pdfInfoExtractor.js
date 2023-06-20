@@ -1,10 +1,11 @@
 import { format } from 'date-fns';
 
-export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData)=>{
+export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation)=>{
     const orderArray =[]
     let mayorNumero = 0;
     let indiceMayorNumero = -1;
     let materialCantidad = {};
+    let LicitationNumber = ""
      if(cliente === "codelco"){
        const orderData = ()=>{
          let fecha = null;
@@ -279,6 +280,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
 
           })
+
           //SAP parte II
           const numerosAgrupados = resultados.join('/');
           orderArray[7] = numerosAgrupados
@@ -481,9 +483,12 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
       }else if(cliente === "licitacion"){
         //numero
         const bidNumberIndex = newOrder.indexOf('Bid number:')
+
         if(bidNumberIndex){
           orderArray[0] = newOrder[bidNumberIndex + 2]
+          LicitationNumber = newOrder[bidNumberIndex + 2]
         }
+        
         let resultados = [];
         newOrder.map((texto, index)=>{
 
@@ -511,10 +516,69 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
           }
           const numerosAgrupados = resultados.join('/');
           orderArray[4] = numerosAgrupados
-        })
-        }
-      
 
+
+          
+
+        })
+         //Cantidad
+         const contadorUnidades = newOrder.reduce((contador, texto, index) => {
+          if (texto === 'Quantity' || texto === 'Quantity') {
+            return contador + 1;
+          }
+          return contador;
+        }, 0);
+
+        // Cantidad
+        if (contadorUnidades === 1) {
+        const indiceUnidades = newOrder.indexOf('Quantity') !== -1 ? newOrder.indexOf('Quantity') : newOrder.indexOf('Quantity');
+        const material = resultados[0]; // Primer material encontrado
+        const cantidad = Number(newOrder[indiceUnidades + 14]);
+        const precioString = newOrder[indiceUnidades + 20].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+        const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
+        materialCantidad[material] = [cantidad, precioNumber];
+        orderArray[5] = cantidad; // Guardar cantidad en orderArray[8]
+        } else if (contadorUnidades > 1) {
+        let cantidadIndex = 0; // Índice para recorrer las cantidades
+        let sumaUnidades = 0; // Variable para calcular la suma de las unidades
+        newOrder.forEach((texto, index) => {
+          if (texto === 'Quantity') {
+            const material = resultados[cantidadIndex]; // Material correspondiente a la posición actual
+            const valorUnidades = Number(newOrder[index + 14]);
+            const precioString = newOrder[index + 20].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+            const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
+            if (!isNaN(valorUnidades)) {
+              if (!materialCantidad[material]) {
+                materialCantidad[material] = [0, 0];
+              }
+              materialCantidad[material][0] += valorUnidades;
+              materialCantidad[material][1] += precioNumber;
+              cantidadIndex++;
+              sumaUnidades += valorUnidades;
+            }
+          }
+        });
+        orderArray[5] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
+        } 
+        orderArray[8] = materialCantidad;
+
+       
+        }
+        
+        setLicitation(LicitationNumber)
+
+        //precio
+        let totalPrecios = 0;
+
+        for (let llaveMaterial in materialCantidad) {
+          const precio = materialCantidad[llaveMaterial][1];
+          totalPrecios += precio;
+        }
+        orderArray[6] = totalPrecios
+
+        //descripcion
+        const descIndex = newOrder.indexOf("Description:")
+        orderArray[7] = newOrder[descIndex + 2]
 
       setNewOrderData(orderArray)
 }

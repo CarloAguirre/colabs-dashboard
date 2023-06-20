@@ -1,4 +1,4 @@
-export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders) {
+export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders, createLicitation, licitationNumber) {
   setSpinnerSwitch(true);
   event.preventDefault();
 
@@ -21,7 +21,30 @@ export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, ar
       console.log(error);
     }
   } else if(categoria === "licitacion"){
-    console.log("es licitacion!!")
+
+    try {
+      const dateString = parse(newOrderData[1], 'dd/MM/yyyy', new Date(), { locale: es });
+      const formattedDate = format(dateString, 'dd/MM/yyyy');
+      const createLicitationFetch = await createLicitation(
+        newOrderData[0],
+        formattedDate,
+        newOrderData[2],
+        newOrderData[3],
+        newOrderData[4],
+        newOrderData[5],
+        newOrderData[6],
+        newOrderData[7],
+        newOrderData[8],
+      );
+      if (createLicitationFetch) {
+        await cargarImagen(archivo, null, licitationNumber);
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Ha habido un problema, vuelve a intentarlo más tarde o comunícate con el programador carlo_aguirre@outlook.cl....¿Estás seguro que subiste el formato de orden correcto?');
+      setSpinnerSwitch(false);
+    }
+
   }else {
     try {
       const dateString = parse(newOrderData[1], 'dd/MM/yyyy', new Date(), { locale: es });

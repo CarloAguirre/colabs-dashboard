@@ -10,6 +10,7 @@ import { counterOrdersTotalprice } from "./helpers/counter";
 import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
 import { onSubmit } from "./helpers/newOrderSubmit";
 import { filterOrders } from "./helpers/filterOrder";
+import { createLicitation } from "./helpers/newLicitationFetch";
 
 
  const OrdenesContext = createContext({})
@@ -20,6 +21,7 @@ import { filterOrders } from "./helpers/filterOrder";
     const [archivo, setArchivo] = useState(null); //imagen de la orden ({path:..., name:...})
     const [tableOrders, setTableOrders] = useState(orders)
     const [invoice, setInvoice] = useState(null)
+    const [licitation, setLicitation] = useState(null)
     const [invoiceDate, setInvoiceDate] = useState()
     const [cliente, setCliente] = useState()
     const [contratosArray, setContratosArray] =useState([])
@@ -52,7 +54,7 @@ import { filterOrders } from "./helpers/filterOrder";
     
     //Generador de informacion para la nueva orden agregada.
      useEffect(() => {    
-      pdfInfoExtractor(tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData)
+      pdfInfoExtractor(tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation)
       console.log(newOrder)
      }, [newOrder])
      
@@ -91,7 +93,7 @@ import { filterOrders } from "./helpers/filterOrder";
     const [spinnerSwitch, setSpinnerSwitch] = useState(false)
 
     const onSubmitHandler = async (event) => {
-    onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders);
+    onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders, createLicitation, licitation);
     };
 
     
@@ -301,7 +303,9 @@ import { filterOrders } from "./helpers/filterOrder";
         proyeccionesConvertidas,
         totalAtrasos,
         spinnerSwitch,
-        setSpinnerSwitch
+        setSpinnerSwitch,
+        licitation,
+        setLicitation
       }
         return (
             <OrdenesContext.Provider
