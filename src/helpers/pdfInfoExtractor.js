@@ -486,7 +486,6 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
         if(bidNumberIndex){
           orderArray[0] = newOrder[bidNumberIndex + 2]
-          LicitationNumber = newOrder[bidNumberIndex + 2]
         }
         
         let resultados = [];
@@ -534,7 +533,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         const indiceUnidades = newOrder.indexOf('Quantity') !== -1 ? newOrder.indexOf('Quantity') : newOrder.indexOf('Quantity');
         const material = resultados[0]; // Primer material encontrado
         const cantidad = Number(newOrder[indiceUnidades + 14]);
-        const precioString = newOrder[indiceUnidades + 20].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+        const precioStringComplete =  newOrder[indiceUnidades + 18]
+        const partes = precioStringComplete.split(" ");
+        const precioString = partes[0].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
         const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
         materialCantidad[material] = [cantidad, precioNumber];
         orderArray[5] = cantidad; // Guardar cantidad en orderArray[8]
@@ -545,7 +546,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
           if (texto === 'Quantity') {
             const material = resultados[cantidadIndex]; // Material correspondiente a la posición actual
             const valorUnidades = Number(newOrder[index + 14]);
-            const precioString = newOrder[index + 20].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
+            const precioStringComplete = newOrder[index + 18]
+            const partes = precioStringComplete.split(" ");
+            const precioString = partes[0].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
             const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
             if (!isNaN(valorUnidades)) {
               if (!materialCantidad[material]) {
@@ -560,10 +563,8 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         });
         orderArray[5] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
         } 
-        orderArray[8] = materialCantidad;
+        orderArray[8] = materialCantidad
 
-       
-        }
         
         setLicitation(LicitationNumber)
 
@@ -579,6 +580,8 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         //descripcion
         const descIndex = newOrder.indexOf("Description:")
         orderArray[7] = newOrder[descIndex + 2]
+       
+        }
 
       setNewOrderData(orderArray)
 }

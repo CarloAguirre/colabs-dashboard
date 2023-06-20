@@ -16,7 +16,7 @@ export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, ar
       const invoiceDateString = parse(invoiceDate, 'dd/MM/yyyy', new Date(), { locale: es });
       const formattedInvoiceDate = format(invoiceDateString, 'dd/MM/yyyy');
       await orderUpdate(invoice, formattedInvoiceDate);
-      await cargarImagen(archivo, invoice);
+      await cargarImagen(archivo, invoice, null);
     } catch (error) {
       console.log(error);
     }
@@ -69,9 +69,11 @@ export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, ar
         newOrderData[12],
         newOrderData[13]
       );
+      console.log("1: se creo el producto!!")
 
       if (createOrder) {
-        await cargarImagen(archivo, null);
+        console.log("2: se creo el producto!!")
+        await cargarImagen(archivo, null, null);
       }
     } catch (error) {
       console.error(error);

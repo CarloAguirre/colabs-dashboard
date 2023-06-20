@@ -6,7 +6,6 @@ import { serverPath } from '../config/serverPath';
 export const createLicitation = async (numero = null, fecha = null, division = null, nombre = null, material = null, cantidad = null, precio = null, descripcion = null, sapinfo = {}) => {
     const cookies = new Cookies();
     const token = cookies.get("token");
-    // console.log(token);
   
     var data = JSON.stringify({
       "numero": numero,
