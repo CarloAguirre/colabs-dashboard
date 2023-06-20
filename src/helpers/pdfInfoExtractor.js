@@ -573,7 +573,8 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
         for (let llaveMaterial in materialCantidad) {
           const precio = materialCantidad[llaveMaterial][1];
-          totalPrecios += precio;
+          const cantidad = materialCantidad[llaveMaterial][0];
+          totalPrecios += Number(precio)* Number(cantidad);
         }
         orderArray[6] = totalPrecios
 
@@ -582,8 +583,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         orderArray[7] = newOrder[descIndex + 2]
 
         //Rfx Number
-        orderArray[9] = rfxNumber
-       
+        orderArray[9] = rfxNumber      
         }
 
       setNewOrderData(orderArray)
