@@ -35,6 +35,7 @@ export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, ar
         newOrderData[6],
         newOrderData[7],
         newOrderData[8],
+        newOrderData[9]
       );
       if (createLicitationFetch) {
         await cargarImagen(archivo, null, licitationNumber);
@@ -69,10 +70,8 @@ export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, ar
         newOrderData[12],
         newOrderData[13]
       );
-      console.log("1: se creo el producto!!")
 
       if (createOrder) {
-        console.log("2: se creo el producto!!")
         await cargarImagen(archivo, null, null);
       }
     } catch (error) {

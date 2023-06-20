@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie'
 import { serverPath } from '../config/serverPath';
 
 
-export const createLicitation = async (numero = null, fecha = null, division = null, nombre = null, material = null, cantidad = null, precio = null, descripcion = null, sapinfo = {}) => {
+export const createLicitation = async (numero = null, fecha = null, division = null, nombre = null, material = null, cantidad = null, precio = null, descripcion = null, sapinfo = {}, rfxNumber = null) => {
     const cookies = new Cookies();
     const token = cookies.get("token");
   
@@ -17,6 +17,7 @@ export const createLicitation = async (numero = null, fecha = null, division = n
       "precio": precio,
       "descripcion": descripcion,
       "sap_info": sapinfo,
+      "rfx": rfxNumber
     });
   
     var config = {

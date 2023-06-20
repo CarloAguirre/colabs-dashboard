@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 
-export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation)=>{
+export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber)=>{
     const orderArray =[]
     let mayorNumero = 0;
     let indiceMayorNumero = -1;
@@ -580,6 +580,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         //descripcion
         const descIndex = newOrder.indexOf("Description:")
         orderArray[7] = newOrder[descIndex + 2]
+
+        //Rfx Number
+        orderArray[9] = rfxNumber
        
         }
 

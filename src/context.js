@@ -33,6 +33,7 @@ import { createLicitation } from "./helpers/newLicitationFetch";
     const [inputValue, setInputValue] = useState(""); 
     const [searchedOrder, setSearchedOrder] = useState("");
     const [FilteredArray, setFilteredArray] = useState([]);
+    const [rfxNumber, setRfxNumber] = useState('');
 
     // Generador de toda la data de la aplicacion
     useEffect(() => {
@@ -54,7 +55,7 @@ import { createLicitation } from "./helpers/newLicitationFetch";
     
     //Generador de informacion para la nueva orden agregada.
      useEffect(() => {    
-      pdfInfoExtractor(tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation)
+      pdfInfoExtractor(tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber)
       console.log(newOrder)
      }, [newOrder])
      
@@ -305,7 +306,9 @@ import { createLicitation } from "./helpers/newLicitationFetch";
         spinnerSwitch,
         setSpinnerSwitch,
         licitation,
-        setLicitation
+        setLicitation,
+        rfxNumber,
+        setRfxNumber
       }
         return (
             <OrdenesContext.Provider
