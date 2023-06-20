@@ -40,7 +40,9 @@ export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, ar
         newOrderData[9],
         newOrderData[10],
         categoria,
-        newOrderData[11]
+        newOrderData[11],
+        newOrderData[12],
+        newOrderData[13]
       );
 
       if (createOrder) {
