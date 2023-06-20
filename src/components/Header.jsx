@@ -17,6 +17,7 @@ export const Header = () => {
             </div>
 
             <div className="header-right">
+            <ModalPdfDrop cliente = "licitacion"/>   
             <ModalPdfDrop cliente = "invoice"/>     
                 {/* <span className="material-icons-outlined">
                     notifications

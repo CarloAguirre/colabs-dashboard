@@ -478,6 +478,43 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
             }
         }
 
-      }
+      }else if(cliente === "licitacion"){
+        //numero
+        const bidNumberIndex = newOrder.indexOf('Bid number:')
+        if(bidNumberIndex){
+          orderArray[0] = newOrder[bidNumberIndex + 2]
+        }
+        let resultados = [];
+        newOrder.map((texto, index)=>{
+
+          
+          //fecha
+          const fecha = new Date;
+          
+          const fechaFormateada = format(fecha, 'dd/MM/yyyy');
+          orderArray[1] = fechaFormateada;
+
+          //Division
+          orderArray[2] = "Por definir"
+          
+          //Nombre de contacto
+          orderArray[3] = "Por definir"
+          
+          //material
+          const regexSAP = /(?:^|\D)(\d{7})(?!\d|\w|\D)/g;
+          if (regexSAP.test(texto)) {
+            const matches = texto.match(regexSAP);
+            if (matches) {
+              const filteredMatches = matches.filter(match => /^\d+$/.test(match));
+              resultados = resultados.concat(filteredMatches);
+            }
+          }
+          const numerosAgrupados = resultados.join('/');
+          orderArray[4] = numerosAgrupados
+        })
+        }
+      
+
+
       setNewOrderData(orderArray)
 }

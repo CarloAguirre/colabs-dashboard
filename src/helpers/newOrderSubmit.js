@@ -20,7 +20,9 @@ export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, ar
     } catch (error) {
       console.log(error);
     }
-  } else {
+  } else if(categoria === "licitacion"){
+    console.log("es licitacion!!")
+  }else {
     try {
       const dateString = parse(newOrderData[1], 'dd/MM/yyyy', new Date(), { locale: es });
       const deliveryDateString = parse(newOrderData[4], 'dd/MM/yyyy', new Date(), { locale: es });

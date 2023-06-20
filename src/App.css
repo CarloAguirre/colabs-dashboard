@@ -41,6 +41,11 @@ body{
   flex-direction: row;
   gap: 15px;
 }
+.header-right{
+  display: flex;
+  flex-direction: row;
+  gap: 15px;
+}
 
 /* sidebar  */
 #sidebar{
