@@ -16,13 +16,15 @@ export const ModalPdfDrop = ({ cliente }) => {
 
   const onLicitationInputHandler = (event) => {
     const { value } = event.target;
-    console.log(value)
     setRfxNumber(value);
   };
 
   const handleNext = () => {
     if (rfxNumber) {
       setShowPdfDrop(true);
+      const button = document.getElementById('add-licitation')
+      button.style.display = ""
+      
     }
   };
 
@@ -85,11 +87,17 @@ export const ModalPdfDrop = ({ cliente }) => {
               Agregar
             </Button>
           )}
-          {(cliente === 'invoice' || cliente === 'licitacion') && (
+          {(cliente === 'invoice' ) && (
             <Button variant="primary" onClick={onSubmitHandler} name={cliente}>
               Agregar
             </Button>
           )}
+          {(cliente === 'licitacion') && (
+            <Button variant="primary" onClick={onSubmitHandler} name={cliente} id='add-licitation' style={{display: "none"}}>
+              Agregar
+            </Button>
+          )}
+          
         </Modal.Footer>
       </Modal>
     </>

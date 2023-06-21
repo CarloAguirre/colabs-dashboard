@@ -532,8 +532,14 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         if (contadorUnidades === 1) {
         const indiceUnidades = newOrder.indexOf('Quantity') !== -1 ? newOrder.indexOf('Quantity') : newOrder.indexOf('Quantity');
         const material = resultados[0]; // Primer material encontrado
-        const cantidad = Number(newOrder[indiceUnidades + 14]);
-        const precioStringComplete =  newOrder[indiceUnidades + 18]
+        let cantidad = Number(newOrder[indiceUnidades + 14]);
+        if(cantidad < 1 || cantidad === " "){
+          cantidad = Number(newOrder[indiceUnidades + 15]);
+        }
+        let precioStringComplete =  newOrder[indiceUnidades + 18]
+        if(precioStringComplete === NaN || precioStringComplete === 0 || precioStringComplete === " "){
+          precioStringComplete = newOrder[indiceUnidades + 19]
+        }
         const partes = precioStringComplete.split(" ");
         const precioString = partes[0].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
         const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
@@ -546,7 +552,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
           if (texto === 'Quantity') {
             const material = resultados[cantidadIndex]; // Material correspondiente a la posición actual
             const valorUnidades = Number(newOrder[index + 14]);
-            const precioStringComplete = newOrder[index + 18]
+            let precioStringComplete = newOrder[index + 18]
             const partes = precioStringComplete.split(" ");
             const precioString = partes[0].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
             const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
