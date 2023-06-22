@@ -6,7 +6,10 @@ import { Title } from "../Title";
 import { logoutHandler } from "../helpers/logoutHandlerToken";
 
 
+
+
 export const SideBar = () => {
+
   return (
     <aside id="sidebar">
 
@@ -45,7 +48,7 @@ export const SideBar = () => {
                     </NavLink>
 
                     <NavLink  to="/licitations" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
-                        <span className="material-icons-outlined">
+                        <span className="material-icons-outlined" >
                          attach_money
                         </span> Licitaciones
                     </NavLink>

@@ -32,6 +32,7 @@ export const filterOrders = (searchedOrder, orders) => {
           }
         }
         return false;
+        
       });
     }
   

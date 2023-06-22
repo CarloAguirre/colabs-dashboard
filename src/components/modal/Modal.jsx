@@ -62,7 +62,7 @@ export const ModalPdfDrop = ({ cliente }) => {
                   <Form.Text id="passwordHelpBlock" muted>
                     Ingresa el número RFx (N° de licitación) correspondiente a la respuesta que deseas subir.
                   </Form.Text>
-                  <Button variant="primary" onClick={handleNext}>
+                  <Button variant="primary" onClick={handleNext} className='mt-3'>
                     Next
                   </Button>
                 </>

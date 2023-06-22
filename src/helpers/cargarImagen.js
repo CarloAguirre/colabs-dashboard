@@ -9,6 +9,8 @@ export const cargarImagen = async(archivo, invoice = null, licitationNumber = nu
     let id = ""
     if(invoice){
         id = invoice
+    }else if(licitationNumber){
+        id = licitationNumber
     }else{
         id = cookies.get("id")
     }
@@ -29,18 +31,19 @@ export const cargarImagen = async(archivo, invoice = null, licitationNumber = nu
     body: formdata,
     redirect: 'follow',
    };
-//    if(licitationNumber =! null){
-//     await fetch(`${serverPath}api/uploads/licitaciones/${id}`, requestOptions)
-//     .then(response => {
-//         response.text()
-//         console.log(response)
+   if(licitationNumber =! null){
+    await fetch(`${serverPath}api/uploads/licitaciones/${id}`, requestOptions)
+    .then(response => {
+        console.log("soy una licitacion")
+        response.text()
+        console.log(response)
      
-//              alert('Licitación añadida con exito')
-//              window.location.href = "./licitations"
+             alert('Licitación añadida con exito')
+             window.location.href = "./licitations"
          
-//      })
-//      .catch(error => console.log( error));
-//    }else{
+     })
+     .catch(error => console.log( error));
+   }else{
 
        await fetch(`${serverPath}api/uploads/productos/${id}`, requestOptions)
        .then(response => {
@@ -57,4 +60,4 @@ export const cargarImagen = async(archivo, invoice = null, licitationNumber = nu
     // }
         
     }
-
+}

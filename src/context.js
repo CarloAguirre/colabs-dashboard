@@ -11,6 +11,8 @@ import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
 import { onSubmit } from "./helpers/newOrderSubmit";
 import { filterOrders } from "./helpers/filterOrder";
 import { createLicitation } from "./helpers/newLicitationFetch";
+import { onLicitacionesFetch } from "./helpers/licitationsFetch";
+import { filterLicitations } from "./helpers/filterLicitations";
 
 
  const OrdenesContext = createContext({})
@@ -34,13 +36,19 @@ import { createLicitation } from "./helpers/newLicitationFetch";
     const [searchedOrder, setSearchedOrder] = useState("");
     const [FilteredArray, setFilteredArray] = useState([]);
     const [rfxNumber, setRfxNumber] = useState('');
+    const [licitations, setLicitations] = useState([]);
+    const [tableLicitations, setTableLicitations] = useState(licitations)
+    const [searchedLicitation, setSearchedLicitation] = useState("");
+    const [inputLicitationsValue, setInputLicitationsValue] = useState(""); 
+
+
 
     // Generador de toda la data de la aplicacion
     useEffect(() => {
       const fetchData = async()=>{
           const res =  await fetch(`${serverPath}api/productos?limite=1000&desde=0`)
           const orders = await res.json()
-          const {productos } = orders;
+          const { productos } = orders;
           setOrders(productos)    
       }
       fetchData();
@@ -59,20 +67,6 @@ import { createLicitation } from "./helpers/newLicitationFetch";
       console.log(newOrder)
      }, [newOrder])
      
-     useEffect(() => {
-       console.log(newOrderData)
-     }, [newOrderData])
-     
-     
-     //Configuración de input "Buscar"
-     const onInputChange = ({target})=>{
-     const {name, value} = target;
-     setInputValue({
-         ...inputValue,
-         [name]: value
-     })
-     };
-
      const onSearchInput = ({ target }) => {
       const { value } = target;
       if(value === ""){
@@ -84,11 +78,34 @@ import { createLicitation } from "./helpers/newLicitationFetch";
       }
     }
 
+    const onSearchLicitationsInput = ({ target }) => {
+      const { value } = target;
+      console.log(value)
+      if(value === ""){
+        setInputLicitationsValue("")
+        setSearchedLicitation("")
+      }else{
+        setSearchedLicitation(value);
+      }
+    }
+
+
     //Configuración de "Filtrar orden"
     useEffect(() => {
       const filteredOrders = filterOrders(searchedOrder, orders);
       setTableOrders(filteredOrders);
     }, [searchedOrder, orders]);
+
+    useEffect(() => {
+      const filteredLicitations = filterLicitations(searchedLicitation, licitations);
+      setTableLicitations(filteredLicitations);
+    }, [searchedLicitation, licitations]);
+
+    useEffect(() => {
+      setTableLicitations(licitations)
+    }, [licitations]);
+
+
 
     //Configuración de "Subir orden"
     const [spinnerSwitch, setSpinnerSwitch] = useState(false)
@@ -262,6 +279,19 @@ import { createLicitation } from "./helpers/newLicitationFetch";
       });
     }
     
+    useEffect(() => {
+
+      const fetchLicitationsData = async()=>{
+        const res =  await fetch(`${serverPath}api/licitaciones?limite=1000&desde=0`)
+        const licitations = await res.json()
+        const { licitaciones } = licitations;
+        setLicitations(licitaciones)    
+    }
+    fetchLicitationsData();
+
+    }, [])
+    
+    
     
     const globalState = {
       paidOrdersLastYear,
@@ -270,7 +300,7 @@ import { createLicitation } from "./helpers/newLicitationFetch";
       setInputValue,
       statsGenerator,
         onSearchInput,
-        onInputChange,
+        // onInputChange,
         onSubmitHandler,
         totalMoney,
         totalDebt,
@@ -308,7 +338,15 @@ import { createLicitation } from "./helpers/newLicitationFetch";
         licitation,
         setLicitation,
         rfxNumber,
-        setRfxNumber
+        setRfxNumber,
+        licitations,
+        setLicitations,
+        onSearchLicitationsInput,
+        searchedLicitation,
+        setSearchedLicitation,
+        inputLicitationsValue,
+        setInputLicitationsValue,
+        tableLicitations
       }
         return (
             <OrdenesContext.Provider
