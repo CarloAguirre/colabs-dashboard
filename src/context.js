@@ -105,6 +105,10 @@ import { filterLicitations } from "./helpers/filterLicitations";
       setTableLicitations(licitations)
     }, [licitations]);
 
+    useEffect(() => {
+      console.log(licitations)
+    }, [licitations]);
+
 
 
     //Configuración de "Subir orden"

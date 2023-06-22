@@ -11,13 +11,15 @@ export const Header = () => {
                     menu
                 </span>
             </div>
+            <div>
+                <ModalPdfDrop cliente = "licitacion"/>   
+            </div>
             <div className="header-left">     
             <ModalPdfDrop cliente = "codelco"/>   
             <ModalPdfDrop cliente = "bhp"/>     
             </div>
 
             <div className="header-right">
-            <ModalPdfDrop cliente = "licitacion"/>   
             <ModalPdfDrop cliente = "invoice"/>     
                 {/* <span className="material-icons-outlined">
                     notifications

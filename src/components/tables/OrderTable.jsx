@@ -73,8 +73,7 @@ export const OrderTable = ({status}) => {
             className="my-3"
             onSelect={(k) => {
                 setKey(k);
-                setTableOrders(orders); // Restablecer la lista de órdenes al valor original al cambiar de pestaña
-  
+                // setTableOrders(orders); // Restablecer la lista de órdenes al valor original al cambiar de pestaña
               }}
             >
             <Tab eventKey="all" title="Ordenes" style={{backgroundColor: 'transparent'}} >

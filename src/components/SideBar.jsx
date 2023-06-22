@@ -41,16 +41,16 @@ export const SideBar = () => {
                         </span> Facturadas
                     </NavLink>
                
+                    <NavLink  to="/licitations" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
+                        <span className="material-icons-outlined" >
+                         note_add
+                        </span> Licitaciones
+                    </NavLink>
+
                     <NavLink  to="/reports" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
                         <span className="material-icons-outlined">
                             bar_chart
                         </span> Reportes
-                    </NavLink>
-
-                    <NavLink  to="/licitations" className={({isActive})=>(isActive ? "sidebar-list-item selected-label" : "sidebar-list-item")} >
-                        <span className="material-icons-outlined" >
-                         attach_money
-                        </span> Licitaciones
                     </NavLink>
 
                 {/* <li className="sidebar-list-item">

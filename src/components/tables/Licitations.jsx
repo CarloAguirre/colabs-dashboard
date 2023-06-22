@@ -38,6 +38,7 @@ export const Licitations = () => {
             <tr>
               <th scope="col">N° DE RESPUESTA</th>
               <th scope="col">N° DE LICITACION</th>
+              <th scope="col">DESCRIPCIÓN</th>
               <th scope="col">MATERIAL</th>
               <th scope="col">CANTIDAD</th>
               <th scope="col">PRECIO/U</th>
@@ -62,6 +63,7 @@ export const Licitations = () => {
                 <tr key={licitacion.numero}>
                 <td><a href={licitacion.img} target='_blank'>{licitacion.numero}</a></td>
                 <td>{licitacion.rfx}</td>
+                <td>{licitacion.descripcion}</td>
                 <td>{licitacion.material}</td>
                 <td>{licitacion.cantidad}</td>
                 {(licitacion.material.includes("/") ? <td>{formattedPrice}</td>
