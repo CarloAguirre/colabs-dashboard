@@ -106,8 +106,8 @@ import { filterLicitations } from "./helpers/filterLicitations";
     }, [licitations]);
 
     useEffect(() => {
-      console.log(licitations)
-    }, [licitations]);
+      console.log(newOrderData)
+    }, [newOrderData]);
 
 
 
