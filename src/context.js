@@ -64,7 +64,6 @@ import { filterLicitations } from "./helpers/filterLicitations";
     //Generador de informacion para la nueva orden agregada.
      useEffect(() => {    
       pdfInfoExtractor(tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber)
-      console.log(newOrder)
      }, [newOrder])
      
      const onSearchInput = ({ target }) => {
@@ -80,7 +79,6 @@ import { filterLicitations } from "./helpers/filterLicitations";
 
     const onSearchLicitationsInput = ({ target }) => {
       const { value } = target;
-      console.log(value)
       if(value === ""){
         setInputLicitationsValue("")
         setSearchedLicitation("")
@@ -104,12 +102,6 @@ import { filterLicitations } from "./helpers/filterLicitations";
     useEffect(() => {
       setTableLicitations(licitations)
     }, [licitations]);
-
-    useEffect(() => {
-      console.log(newOrderData)
-    }, [newOrderData]);
-
-
 
     //Configuración de "Subir orden"
     const [spinnerSwitch, setSpinnerSwitch] = useState(false)

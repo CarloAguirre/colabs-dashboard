@@ -20,7 +20,7 @@ import { licitationsTableModel } from '../../helpers/licitationsTableModel';
 
 
 export const Licitations = () => {
-  const { tableLicitations } = useOrdenes();
+  const { tableLicitations, orders } = useOrdenes();
 
   useEffect(() => {
     tokenValidatior();
@@ -43,11 +43,11 @@ export const Licitations = () => {
                 // setTableOrders(orders); // Restablecer la lista de órdenes al valor original al cambiar de pestaña
               }}
             >
-            <Tab eventKey="all" title="En curso" style={{backgroundColor: 'transparent'}} >
-                    {licitationsTableModel(tableLicitations, "incomplete")}
+            <Tab eventKey="en curso" title="En curso" style={{backgroundColor: 'transparent'}} >
+                    {licitationsTableModel(tableLicitations, "incomplete", orders)}
             </Tab>
-            <Tab eventKey="44" title="Completadas" style={{backgroundColor: 'transparent'}}>
-                    {licitationsTableModel(tableLicitations, "complete")}
+            <Tab eventKey="completadas" title="Completadas" style={{backgroundColor: 'transparent'}}>
+                    {licitationsTableModel(tableLicitations, "complete", orders)}
             </Tab>
             
         </Tabs>

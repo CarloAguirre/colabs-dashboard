@@ -532,8 +532,8 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         if (contadorUnidades === 1) {
         const indiceUnidades = newOrder.indexOf('Quantity') !== -1 ? newOrder.indexOf('Quantity') : newOrder.indexOf('Quantity');
         const material = resultados[0]; // Primer material encontrado
-        let cantidad = Number(newOrder[indiceUnidades + 14]);       
-        if(cantidad != Number){
+        let cantidad = Number(newOrder[indiceUnidades + 14]);  
+        if(cantidad != Number && cantidad == NaN){
            cantidad = Number(newOrder[indiceUnidades + 18]);       
         }
         if(cantidad < 1 || cantidad === " "){
@@ -547,7 +547,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         if(Number(precioStringComplete) === cantidad){
           precioStringComplete = newOrder[indiceUnidades + 22] 
         }
-
+        
         const partes = precioStringComplete.split(" ");
         const precioString = partes[0].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
         const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
@@ -559,7 +559,16 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         newOrder.forEach((texto, index) => {
           if (texto === 'Quantity') {
             const material = resultados[cantidadIndex]; // Material correspondiente a la posición actual
-            const valorUnidades = Number(newOrder[index + 14]);
+            let valorUnidades = Number(newOrder[index + 14]);
+            if(valorUnidades != Number){
+              newOrder.map(item => {
+                const match = item.match(/^(\d+) UN$/); // Buscar un número en el texto
+                if(match){
+                  valorUnidades = Number(item.split(" ")[0]) // Convertir el número encontrado a entero
+                }
+              });
+              
+            }
             let precioStringComplete = newOrder[index + 18]
             const partes = precioStringComplete.split(" ");
             const precioString = partes[0].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
@@ -567,6 +576,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
             if (!isNaN(valorUnidades)) {
               if (!materialCantidad[material]) {
                 materialCantidad[material] = [0, 0];
+
               }
               materialCantidad[material][0] += valorUnidades;
               materialCantidad[material][1] += precioNumber;

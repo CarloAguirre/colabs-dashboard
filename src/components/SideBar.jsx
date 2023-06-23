@@ -2,10 +2,8 @@
 
 import {  NavLink } from "react-router-dom";
 import '../App.css'
-import { Title } from "../Title";
 import { logoutHandler } from "../helpers/logoutHandlerToken";
-
-
+import { Title } from "./Title";
 
 
 export const SideBar = () => {

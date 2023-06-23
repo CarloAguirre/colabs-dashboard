@@ -1,53 +1,86 @@
-import Form from 'react-bootstrap/Form';
-import { DatePickerComponent } from '../components/DatePickerComponent';
-import { handleDateChange } from './handleDateChange';
-
-
-export const licitationsTableModel = (tableLicitations)=>{
-
+export const licitationsTableModel = (tableLicitations, estado, orders) => {
   return (
     <div className="table-container table-size mt-5">
-    <table className="table table-bordered table-striped" id='tabla'>
-      <thead>
-        <tr>
-          <th scope="col">N° DE RESPUESTA</th>
-          <th scope="col">N° DE LICITACION</th>
-          <th scope="col">DESCRIPCIÓN</th>
-          <th scope="col">MATERIAL</th>
-          <th scope="col">CANTIDAD</th>
-          <th scope="col">PRECIO/U</th>
-          <th scope="col">TOTAL</th>
-        </tr>
-      </thead>
-      <tbody id='full-list'>
-        {(tableLicitations) && tableLicitations.map(licitacion => {
-          let price = (Number(licitacion.precio))
-          const formattedPrice = price.toLocaleString('en-US', {
-              style: 'currency',
-              currency: 'USD',
-              minimumFractionDigits: 2,
-            });
-          const formattedPrecioUnitario = (Number(licitacion.precio / Number(licitacion.cantidad))).toLocaleString('en-US', {
-            style: 'currency',
-            currency: 'USD',
-            minimumFractionDigits: 2,
-          });
-          return(
-
-            <tr key={licitacion.numero}>
-            <td><a href={licitacion.img} target='_blank'>{licitacion.numero}</a></td>
-            <td>{licitacion.rfx}</td>
-            <td>{licitacion.descripcion}</td>
-            <td>{licitacion.material}</td>
-            <td>{licitacion.cantidad}</td>
-            {(licitacion.material.includes("/") ? <td>{formattedPrice}</td>
-              : <td>{formattedPrecioUnitario}</td>)}
-            <td>{formattedPrice}</td>             
+      <table className="table table-bordered table-striped" id="tabla">
+        <thead>
+          <tr>
+            <th scope="col">N° DE LICITACION</th>
+            <th scope="col">N° DE RESPUESTA</th>
+            {estado === "complete" && <th scope="col">ORDEN</th>}
+            <th scope="col">DESCRIPCIÓN</th>
+            <th scope="col">MATERIAL</th>
+            <th scope="col">CANTIDAD</th>
+            <th scope="col">PRECIO/U</th>
+            <th scope="col">TOTAL</th>
           </tr>
-            )
-    })}
-      </tbody>
-    </table>
-  </div>
-  )
-}
+        </thead>
+        <tbody id="full-list">
+          {tableLicitations &&
+            tableLicitations.map((licitacion) => {
+              let price = Number(licitacion.precio);
+              const formattedPrice = price.toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 2,
+              });
+              const formattedPrecioUnitario = (
+                Number(licitacion.precio / Number(licitacion.cantidad))
+              ).toLocaleString("en-US", {
+                style: "currency",
+                currency: "USD",
+                minimumFractionDigits: 2,
+              });
+
+              const matchingOrder = orders.find(
+                (order) => licitacion.rfx === order.rfx
+              );
+
+              if (estado === "complete" && matchingOrder) {
+                return (
+                  <tr key={licitacion.numero}>
+                    <td>{licitacion.rfx}</td>
+                    <td>
+                      <a href={licitacion.img} target="_blank">
+                        {licitacion.numero}
+                      </a>
+                    </td>
+                    <td><a href={matchingOrder.img} target='_blank'>{matchingOrder.numero}</a></td>
+                    <td>{licitacion.descripcion}</td>
+                    <td>{licitacion.material}</td>
+                    <td>{licitacion.cantidad}</td>
+                    {licitacion.material.includes("/") ? (
+                      <td>{formattedPrice}</td>
+                    ) : (
+                      <td>{formattedPrecioUnitario}</td>
+                    )}
+                    <td>{formattedPrice}</td>
+                  </tr>
+                );
+              } else if (estado === "incomplete" && !matchingOrder) {
+                return (
+                  <tr key={licitacion.numero}>
+                    <td>{licitacion.rfx}</td>
+                    <td>
+                      <a href={licitacion.img} target="_blank">
+                        {licitacion.numero}
+                      </a>
+                    </td>
+                    <td>{licitacion.descripcion}</td>
+                    <td>{licitacion.material}</td>
+                    <td>{licitacion.cantidad}</td>
+                    {licitacion.material.includes("/") ? (
+                      <td>{formattedPrice}</td>
+                    ) : (
+                      <td>{formattedPrecioUnitario}</td>
+                    )}
+                    <td>{formattedPrice}</td>
+                  </tr>
+                );
+              }
+              return null; // Si no cumple ninguna condición, no se renderiza ninguna fila
+            })}
+        </tbody>
+      </table>
+    </div>
+  );
+};

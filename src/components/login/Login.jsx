@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react'
 import './login.css'
 import { loginFetch } from '../../helpers/loginFetch'
 import Cookies from 'universal-cookie'
-import { Title } from '../../Title'
+import { Title } from '../Title'
+
 
 
 export const Login = () => {
@@ -11,9 +12,6 @@ export const Login = () => {
     useEffect(() => {
       const cookies = new Cookies();
       const token = cookies.get("token")
-      // if(token){
-      //     window.location.href = "./dashboard"
-      // }
 
   }, [])
     const [formState, setFormState] = useState({

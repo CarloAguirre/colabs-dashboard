@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Cookies from 'universal-cookie'
 import '../login/login.css'
 import { registrationFetch } from '../../helpers/registrationFetch'
-import { Title } from '../../Title'
+import { Title } from '../Title'
 
 
 
