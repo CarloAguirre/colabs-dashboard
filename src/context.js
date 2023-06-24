@@ -40,6 +40,7 @@ import { filterLicitations } from "./helpers/filterLicitations";
     const [tableLicitations, setTableLicitations] = useState(licitations)
     const [searchedLicitation, setSearchedLicitation] = useState("");
     const [inputLicitationsValue, setInputLicitationsValue] = useState(""); 
+    
 
 
 

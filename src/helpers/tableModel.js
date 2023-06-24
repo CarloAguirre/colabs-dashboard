@@ -1,9 +1,33 @@
 import Form from 'react-bootstrap/Form';
 import { DatePickerComponent } from '../components/DatePickerComponent';
 import { handleDateChange } from './handleDateChange';
+import { compararFechas } from './compararFechas';
 
 
-export const tableModel = (ordenNumber, selectContratoForm, contratosArray, monthHeaders, tableOrders, status)=>{
+export const tableModel = (ordenNumber, selectContratoForm, contratosArray, monthHeaders, tableOrders, status, ordenAscendente, setOrdenAscendente)=>{
+
+
+  function handleClick() {
+    // Invertir el orden actual
+    setOrdenAscendente(!ordenAscendente);
+  }
+
+  // Función para manejar el evento onClick
+  function handleClick() {
+    // Invertir el orden actual
+    setOrdenAscendente(!ordenAscendente);
+  }
+
+  // Obtener la lista de órdenes ordenadas
+  const orderDateSort = tableOrders.map(order => order)
+    .sort((a, b) => {
+      if (ordenAscendente) {
+        return compararFechas(a.fecha, b.fecha);
+      } else {
+        return compararFechas(b.fecha, a.fecha);
+      }
+    });
+
 
   return <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
       {(ordenNumber === 45) &&
@@ -22,7 +46,9 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
       <tr>
         <th scope="col">NUMERO</th>
         <th scope="col">DESCRIPCIÓN</th>                  
-        <th scope="col">FECHA</th>
+        <th scope="col">FECHA<button onClick={handleClick}><span class="material-icons-outlined">
+            restart_alt
+            </span></button></th>
         <th scope="col">CANTIDAD</th> 
         {monthHeaders}
       </tr>
@@ -35,7 +61,9 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
       { (ordenNumber === 45 ) && <th scope="col">CONTRATO</th>   }   
       <th scope="col">DESCRIPCIÓN</th>                  
       { (ordenNumber === 'bhp' ) && <th scope="col">TELEFONO</th>   }   
-      <th scope="col">FECHA</th>
+      <th scope="col">FECHA<button onClick={handleClick}><span class="material-icons-outlined">
+            restart_alt
+            </span></button></th>
       <th scope="col">DIVISION</th>
       <th scope="col">ENTREGA</th> 
       <th scope="col">SAP</th>
@@ -49,7 +77,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
   <tbody id='full-list'>
 {(status === 'paids') ? 
 
-(tableOrders.map(order => {  
+(orderDateSort.map(order => {  
   let price = (Number(order.precio))
   const formattedPrice = price.toLocaleString('en-US', {
       style: 'currency',
@@ -66,8 +94,8 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
     if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
       return (
         <tr key={order.numero}>
-          <td><a href={order.img} target='_blank'>{order.numero}</a></td>
-          <td><a href={order.invoice} target='_blank'>VER FACTURA</a></td>
+          <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
+          <td><a href={order.invoice} target='_blank' rel="noreferrer">VER FACTURA</a></td>
           {(ordenNumber === 45) && <td>{order.contrato}</td>}
           <td className='text-left'>{order.descripcion}</td>
           {/* <td>{order.nombre}</td>
@@ -98,8 +126,8 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
       });  
       return (
         <tr key={order.numero}>
-          <td><a href={order.img} target='_blank'>{order.numero}</a></td>
-          <td><a href={order.invoice} target='_blank'>VER FACTURA</a></td>
+          <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
+          <td><a href={order.invoice} target='_blank' rel="noreferrer">VER FACTURA</a></td>
           <td className='text-left'>{order.descripcion}</td>
           {/* <td>{order.nombre}</td>
           <td>{order.mail}</td> */}
@@ -124,8 +152,8 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
       if (order.categoria === '646e2f1943ba97fc705a0276') {
         return (
           <tr key={order.numero}>
-            <td><a href={order.img} target='_blank'>{order.numero}</a></td>
-            <td><a href={order.invoice} target='_blank'>VER FACTURA</a></td>
+            <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
+            <td><a href={order.invoice} target='_blank' rel="noreferrer">VER FACTURA</a></td>
             <td className='text-left'>{order.descripcion}</td>
             <td>{order.contrato}</td>
             <td>{order.fecha}</td>
@@ -143,7 +171,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
   }
 }))
 :
-(tableOrders.map((order, index) => {  
+(orderDateSort.map((order, index) => {  
   if (order.completada === false) {
     let price = (Number(order.precio))
     const formattedPrice = price.toLocaleString('en-US', {
@@ -160,7 +188,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
   if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
     return (
       <tr key={order.numero}>
-        <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+        <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
         {(ordenNumber === 45) && <td>{order.contrato}</td>}
         <td className='text-left'>{order.descripcion}</td>
         <td>{order.fecha}</td>
@@ -184,7 +212,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
 
     return (
       <tr key={order.numero}>
-        <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+        <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
         <td className='text-left'>{order.descripcion}</td>
         <td>{order.fecha}</td>
         <td>{order.division}</td>
@@ -207,7 +235,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
     if (order.categoria === '646e2f1943ba97fc705a0276') {
       return (
         <tr key={order.numero}>
-          <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+          <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
           <td className='text-left'>{order.descripcion}</td>
           <td>{order.contrato}</td>
           <td>{order.fecha}</td>

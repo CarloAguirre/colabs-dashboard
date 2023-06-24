@@ -298,7 +298,7 @@ background-color: #246dec;
 .navLink{
   margin: 10px;
 }
-table thead{
+table thead, span, button{
   background-color: #302b63;
   color: white;
 }

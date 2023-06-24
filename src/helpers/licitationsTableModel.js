@@ -1,4 +1,16 @@
-export const licitationsTableModel = (tableLicitations, estado, orders) => {
+export const licitationsTableModel = (tableLicitations, estado, orders, ordenAscendente, setOrdenAscendente) => {
+
+  function handleClick() {
+    // Invertir el orden actual
+    setOrdenAscendente(!ordenAscendente);
+  }
+
+  // Función para manejar el evento onClick
+  function handleClick() {
+    // Invertir el orden actual
+    setOrdenAscendente(!ordenAscendente);
+  }
+
   return (
     <div className="table-container table-size mt-5">
       <table className="table table-bordered table-striped" id="tabla">
@@ -8,6 +20,9 @@ export const licitationsTableModel = (tableLicitations, estado, orders) => {
             <th scope="col">N° DE RESPUESTA</th>
             {estado === "complete" && <th scope="col">ORDEN</th>}
             <th scope="col">DESCRIPCIÓN</th>
+            <th scope="col">FECHA<button onClick={handleClick}><span class="material-icons-outlined">
+restart_alt
+</span></button></th>
             <th scope="col">MATERIAL</th>
             <th scope="col">CANTIDAD</th>
             <th scope="col">PRECIO/U</th>
@@ -46,6 +61,7 @@ export const licitationsTableModel = (tableLicitations, estado, orders) => {
                     </td>
                     <td><a href={matchingOrder.img} target='_blank'>{matchingOrder.numero}</a></td>
                     <td>{licitacion.descripcion}</td>
+                    <td>{licitacion.fecha}</td>
                     <td>{licitacion.material}</td>
                     <td>{licitacion.cantidad}</td>
                     {licitacion.material.includes("/") ? (
@@ -66,6 +82,7 @@ export const licitationsTableModel = (tableLicitations, estado, orders) => {
                       </a>
                     </td>
                     <td>{licitacion.descripcion}</td>
+                    <td>{licitacion.fecha}</td>
                     <td>{licitacion.material}</td>
                     <td>{licitacion.cantidad}</td>
                     {licitacion.material.includes("/") ? (

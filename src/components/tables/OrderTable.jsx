@@ -20,6 +20,8 @@ import { tableModel } from '../../helpers/tableModel';
 export const OrderTable = ({status}) => {
   const {orders, tableOrders, setTableOrders, contratosArray, setContratosArray, selectContratoForm, setInputValue } = useOrdenes()
 
+  const [ordenAscendente, setOrdenAscendente] = useState(true);
+
   const months = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
     'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
@@ -77,16 +79,16 @@ export const OrderTable = ({status}) => {
               }}
             >
             <Tab eventKey="all" title="Ordenes" style={{backgroundColor: 'transparent'}} >
-                    {tableModel('todos', selectContratoForm, contratosArray, monthHeaders, tableOrders, status)}
+                    {tableModel('todos', selectContratoForm, contratosArray, monthHeaders, tableOrders, status, ordenAscendente, setOrdenAscendente)}
             </Tab>
             <Tab eventKey="44" title="Codelco #44" style={{backgroundColor: 'transparent'}}>
-                    {tableModel(44, selectContratoForm, contratosArray, monthHeaders, tableOrders, status)}
+                    {tableModel(44, selectContratoForm, contratosArray, monthHeaders, tableOrders, status, ordenAscendente, setOrdenAscendente)}
             </Tab>
             <Tab eventKey="45" title="Codelco #45" style={{backgroundColor: 'transparent'}}>
-                    {tableModel(45, selectContratoForm, contratosArray, monthHeaders, tableOrders, status)}
+                    {tableModel(45, selectContratoForm, contratosArray, monthHeaders, tableOrders, status, ordenAscendente, setOrdenAscendente)}
             </Tab>
             <Tab eventKey="bhp" title="BHP" style={{backgroundColor: 'transparent'}}>
-                    {tableModel('bhp', selectContratoForm, contratosArray, monthHeaders, tableOrders, status)}
+                    {tableModel('bhp', selectContratoForm, contratosArray, monthHeaders, tableOrders, status, ordenAscendente, setOrdenAscendente)}
             </Tab>
         </Tabs>
         <Button variant="outline-success" onClick={()=> exportToExcel()} className="btn-lg">

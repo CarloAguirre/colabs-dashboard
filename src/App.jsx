@@ -8,13 +8,10 @@ import { Login } from './components/login';
 import { Registration } from './components/registration/Registration';
 import { OrderTable } from './components/tables/OrderTable';
 import { ReportsTable } from './components/tables/ReportsTable';
-import Cookies from 'universal-cookie'
-import { useEffect } from 'react';
 import { Licitations } from './components/tables/Licitations';
 
 
 function App() {
-
 
   const sidebarAndHeader = <>
         <SideBar />

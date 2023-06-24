@@ -25,6 +25,13 @@
     cursor: pointer;
   
   }
+  .table span{
+    color:white;
+    zoom: 1.4;
+  }
+  .table button{
+    margin-left: 10px;
+  }
   .table-container tbody tr:hover{
     background-color: rgb(230, 240, 249);
   }
