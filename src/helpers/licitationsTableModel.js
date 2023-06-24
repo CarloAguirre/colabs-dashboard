@@ -21,8 +21,8 @@ export const licitationsTableModel = (tableLicitations, estado, orders, ordenAsc
             {estado === "complete" && <th scope="col">ORDEN</th>}
             <th scope="col">DESCRIPCIÓN</th>
             <th scope="col">FECHA<button onClick={handleClick}><span class="material-icons-outlined">
-restart_alt
-</span></button></th>
+            restart_alt
+            </span></button></th>
             <th scope="col">MATERIAL</th>
             <th scope="col">CANTIDAD</th>
             <th scope="col">PRECIO/U</th>
