@@ -31,7 +31,7 @@ export const cargarImagen = async(archivo, invoice = null, licitationNumber = nu
     body: formdata,
     redirect: 'follow',
    };
-   if(licitationNumber =! null){
+   if(licitationNumber != null){
     await fetch(`${serverPath}api/uploads/licitaciones/${id}`, requestOptions)
     .then(response => {
         console.log("soy una licitacion")
@@ -49,15 +49,18 @@ export const cargarImagen = async(archivo, invoice = null, licitationNumber = nu
        .then(response => {
            response.text()
            console.log(response)
+           console.log("soy una order")
            if(invoice){
-               return window.location.href = "./orders"   
+                window.location.href = "./orders" 
+                return true;
+                 
             }else{
                 alert('Orden añadida con exito')
                 window.location.href = "./orders"
+                return true;
             }
         })
         .catch(error => console.log( error));
-    // }
         
     }
 }

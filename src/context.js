@@ -111,6 +111,10 @@ import { filterLicitations } from "./helpers/filterLicitations";
     onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders, createLicitation, licitation);
     };
 
+    useEffect(() => {
+      console.log(newOrderData)
+    }, [newOrderData])
+    
     
     //Configuración de formularios de "Filtro por contrato"
     const selectContratoForm = ({target})=>{
