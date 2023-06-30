@@ -13,6 +13,8 @@ import { filterOrders } from "./helpers/filterOrder";
 import { createLicitation } from "./helpers/newLicitationFetch";
 import { onLicitacionesFetch } from "./helpers/licitationsFetch";
 import { filterLicitations } from "./helpers/filterLicitations";
+import { calculateTotalPrice } from "./helpers/calculateTotalPrice";
+import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
 
 
  const OrdenesContext = createContext({})
@@ -39,10 +41,12 @@ import { filterLicitations } from "./helpers/filterLicitations";
     const [licitations, setLicitations] = useState([]);
     const [tableLicitations, setTableLicitations] = useState(licitations)
     const [searchedLicitation, setSearchedLicitation] = useState("");
-    const [inputLicitationsValue, setInputLicitationsValue] = useState(""); 
-    
+    const [inputLicitationsValue, setInputLicitationsValue] = useState("");
 
-
+    const months = [
+      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+    ];
 
     // Generador de toda la data de la aplicacion
     useEffect(() => {
@@ -143,14 +147,9 @@ import { filterLicitations } from "./helpers/filterLicitations";
      let totalDebt = 0;
      let totalAtrasos = 0;
      let warningOrder = "Sin atrasos";
-     const [topUser, setTopUser] = useState({
-       cantidad: 0,
-       nombre: ""
-     });
+ 
      
-     const statsGenerator = () => {
-       let oldestOrder = null; // Variable para almacenar la orden más antigua
-     
+     const statsGenerator = () => {     
        orders.forEach(order => {
   
          let monto = Number(order.precio);
@@ -168,99 +167,18 @@ import { filterLicitations } from "./helpers/filterLicitations";
           totalDebt += monto
           totalAtrasos += 1
          }
-     
-         if (monto > topUser.cantidad) {
-           setTopUser({
-             cantidad: order.precio,
-             nombre: order.numero
-           });
-         }
+    
        });
      };
      
      statsGenerator();
      
-
-
-     const months = [
-      'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
-      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
-    ];
-
-
-      
-      const calculateProjectionPrice = (month) => {
-        const projectedOrders = [];
-        
-        orders.forEach((order) => {
-          if (order.completada === false) {
-            const formattedDeliveryDate = order.entrega.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
-          const deliveryDate = new Date(formattedDeliveryDate);
-          const deliveryMonth = deliveryDate.getMonth();
-          
-          const currentYear = new Date().getFullYear();
-          const currentDate = new Date();
-          const minDeliveryDate = new Date(currentYear, deliveryMonth - 6);
-          const maxDeliveryDate = new Date(currentYear, currentDate.getMonth() + 5, currentDate.getDate()); // Máximo 5 meses hacia el futuro
-          
-          if (months[deliveryMonth] === month && deliveryDate >= minDeliveryDate && deliveryDate <= maxDeliveryDate) {
-            projectedOrders.push(order);
-          }
-        }
-      });
-      
-      let totalPrice = 0;
-      
-      projectedOrders.forEach((order) => {
-        totalPrice += Number(order.precio);
-      });
-      
-      const formattedPrice = totalPrice.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-      });
-      
-      return formattedPrice;
-    };
-    
-    const calculateTotalPrice = (month) => {
-      const completedOrders = [];
-      
-      tableOrders.forEach((order) => {
-        if (order.completada === true) {
-          const formattedInvoiceDate = order.invoice_date.replace(/(\d{1,2})\/(\d{1,2})\/(\d{4})/, '$2/$1/$3');
-          const invoiceDate = new Date(formattedInvoiceDate);
-          const invoiceMonth = invoiceDate.getMonth();
-          
-          if (months[invoiceMonth] === month) {
-            completedOrders.push(order);
-          }
-        }
-      });
-      
-      let totalPrice = 0;
-      
-      completedOrders.forEach((order) => {
-        totalPrice += Number(order.precio);
-      });
-
-      const formattedPrice = totalPrice.toLocaleString('en-US', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 2,
-      });
-      
-      return formattedPrice;
-    };
-
-    
-    useEffect(() => {
+     useEffect(() => {
       if (orders && orders.length > 0) {
-        const ventasArray = months.map((month) => calculateTotalPrice(month));
+        const ventasArray = months.map((month) => calculateTotalPrice(month, tableOrders, months));
         setVentas(ventasArray);
     
-        const proyeccionesArray = months.map((month) => calculateProjectionPrice(month));
+        const proyeccionesArray = months.map((month) => calculateProjectionPrice(month, orders, months));
         setProyecciones(proyeccionesArray);
       }
     }, [orders, tableOrders]);
@@ -301,12 +219,10 @@ import { filterLicitations } from "./helpers/filterLicitations";
       setInputValue,
       statsGenerator,
         onSearchInput,
-        // onInputChange,
         onSubmitHandler,
         totalMoney,
         totalDebt,
         warningOrder,
-        topUser,
         searchedOrder,
         setSearchedOrder,
         FilteredArray,
