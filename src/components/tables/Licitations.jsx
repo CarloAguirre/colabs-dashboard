@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useOrdenes } from "../../context";
-import { OnSearch } from '../onSearch/OnSearch';
 
-import { format } from 'date-fns';
-
-import { orderUpdate } from '../../helpers/orderUpdate';
 import { tokenValidatior } from '../../helpers/tokenValidator';
 import { exportToExcel } from '../../helpers/exportToExcel';
 
@@ -20,14 +16,13 @@ import { licitationsTableModel } from '../../helpers/licitationsTableModel';
 
 
 export const Licitations = () => {
-  const { tableLicitations, orders } = useOrdenes();
+  const { orders, licitations } = useOrdenes();
   const [ordenAscendente, setOrdenAscendente] = useState(true);
 
   useEffect(() => {
     tokenValidatior();
   }, []);
 
-  const [key, setKey] = useState('all');
 
   return (
     <div className="main-container">
@@ -39,16 +34,12 @@ export const Licitations = () => {
       <Tabs
             id="controlled-tab-example"
             className="my-3"
-            onSelect={(k) => {
-                setKey(k);
-                // setTableOrders(orders); // Restablecer la lista de órdenes al valor original al cambiar de pestaña
-              }}
             >
             <Tab eventKey="en curso" title="En curso" style={{backgroundColor: 'transparent'}} >
-                    {licitationsTableModel(tableLicitations, "incomplete", orders, ordenAscendente, setOrdenAscendente)}
+                    {licitationsTableModel("incomplete", orders, ordenAscendente, setOrdenAscendente, licitations)}
             </Tab>
             <Tab eventKey="completadas" title="Completadas" style={{backgroundColor: 'transparent'}}>
-                    {licitationsTableModel(tableLicitations, "complete", orders, ordenAscendente, setOrdenAscendente)}
+                    {licitationsTableModel("complete", orders, ordenAscendente, setOrdenAscendente, licitations)}
             </Tab>
             
         </Tabs>

@@ -9,9 +9,11 @@ import Button from 'react-bootstrap/Button';
 
 import './tables.css';
 import '../../App.css';
+import { calculateTotalPrice } from "../../helpers/calculateTotalPrice";
+import { calculateProjectionPrice } from "../../helpers/calculateProjectionPrice";
 
 export const ReportsTable = () => {
-  const { selectReportsForm, contratosArray, tableOrders, months, calculateProjectionPrice, calculateTotalPrice } = useOrdenes();
+  const { selectReportsForm, contratosArray, tableOrders, months, orders } = useOrdenes();
 
 
   useEffect(() => {
@@ -46,7 +48,10 @@ export const ReportsTable = () => {
         <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
           <Form.Select aria-label="Default select example" onChange={selectReportsForm}>
             <option value='todos'>Todas las ordenes</option>
-            {contratosArray.map(contrato => {
+            {contratosArray.map((contrato, index) => {
+              if(!contrato){
+                return <option value={contrato} key={index}>contrato: Sin contrato</option>
+              }
               return <option value={contrato} key={contrato}>contrato: {contrato}</option>
             })}
           </Form.Select>
@@ -96,7 +101,7 @@ export const ReportsTable = () => {
                   if (deliveryDate <= sixMonthsAhead) {
                     return (
                       <tr key={index}>
-                        <td><a href={order.img} target='_blank'>{order.numero}</a></td>
+                        <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
                         <td className='text-left'>{order.descripcion}</td>
                         {monthHeaders.map((month, index) => {
                           if (index === deliveryColumn) {
@@ -119,7 +124,7 @@ export const ReportsTable = () => {
                   <td>PROYECCIÓNES</td>
                   <td></td>
                   {monthHeaders.map((month, index) => {
-                   return <td key={index}>{calculateProjectionPrice(month)}</td>
+                   return <td key={index}>{calculateProjectionPrice(month, orders, months)}</td>
                 })}
                 </tr>
                 <tr style={{ background: 'rgb(249, 200, 53)', color: 'black' }}>
@@ -127,7 +132,7 @@ export const ReportsTable = () => {
                   <td></td>
                   {monthHeaders.map((month, index) => {
                     
-                     return <td key={index}>{calculateTotalPrice(month)}</td>
+                     return <td key={index}>{calculateTotalPrice(month, tableOrders, months)}</td>
                 })}
                 </tr>
               </tbody>

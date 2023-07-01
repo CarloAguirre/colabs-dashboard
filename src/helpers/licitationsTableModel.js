@@ -1,15 +1,21 @@
-export const licitationsTableModel = (tableLicitations, estado, orders, ordenAscendente, setOrdenAscendente) => {
+import { compararFechas } from "./compararFechas";
+
+export const licitationsTableModel = (estado, orders, licitationsAscendente, setOrdenAscendente, licitations) => {
 
   function handleClick() {
     // Invertir el orden actual
-    setOrdenAscendente(!ordenAscendente);
+    setOrdenAscendente(!licitationsAscendente);
   }
 
-  // Función para manejar el evento onClick
-  function handleClick() {
-    // Invertir el orden actual
-    setOrdenAscendente(!ordenAscendente);
-  }
+
+  const licitationsDateSort = licitations.map(order => order)
+  .sort((a, b) => {
+    if (licitationsAscendente) {
+      return compararFechas(a.fecha, b.fecha);
+    } else {
+      return compararFechas(b.fecha, a.fecha);
+    }
+  });
 
   return (
     <div className="table-container table-size mt-5">
@@ -30,8 +36,8 @@ export const licitationsTableModel = (tableLicitations, estado, orders, ordenAsc
           </tr>
         </thead>
         <tbody id="full-list">
-          {tableLicitations &&
-            tableLicitations.map((licitacion) => {
+          {licitationsDateSort &&
+            licitationsDateSort.map((licitacion) => {
               let price = Number(licitacion.precio);
               const formattedPrice = price.toLocaleString("en-US", {
                 style: "currency",
@@ -55,11 +61,11 @@ export const licitationsTableModel = (tableLicitations, estado, orders, ordenAsc
                   <tr key={licitacion.numero}>
                     <td>{licitacion.rfx}</td>
                     <td>
-                      <a href={licitacion.img} target="_blank">
+                      <a href={licitacion.img} target="_blank" rel="noreferrer">
                         {licitacion.numero}
                       </a>
                     </td>
-                    <td><a href={matchingOrder.img} target='_blank'>{matchingOrder.numero}</a></td>
+                    <td><a href={matchingOrder.img} target='_blank' rel="noreferrer">{matchingOrder.numero}</a></td>
                     <td>{licitacion.descripcion}</td>
                     <td>{licitacion.fecha}</td>
                     <td>{licitacion.material}</td>
@@ -77,7 +83,7 @@ export const licitationsTableModel = (tableLicitations, estado, orders, ordenAsc
                   <tr key={licitacion.numero}>
                     <td>{licitacion.rfx}</td>
                     <td>
-                      <a href={licitacion.img} target="_blank">
+                      <a href={licitacion.img} target="_blank" rel="noreferrer">
                         {licitacion.numero}
                       </a>
                     </td>
