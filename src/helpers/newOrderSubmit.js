@@ -1,13 +1,19 @@
-export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders, createLicitation, licitationNumber) {
+export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders, createLicitation, licitationNumber, licitations) {
   setSpinnerSwitch(true);
   event.preventDefault();
 
   const existeProducto = orders && orders.find((order) => order.numero === newOrderData[0]);
+  const existeLicitacion = licitations && licitations.find((licitation) => +licitation.numero === +newOrderData[0]);
   if (existeProducto) {
     alert(`La Orden N°${newOrderData[0]} ya existe en la base de datos`);
     setSpinnerSwitch(false);
     return;
+  }else if(existeLicitacion){
+    alert(`La Licitación N°${newOrderData[0]} ya existe en la base de datos`);
+    setSpinnerSwitch(false);
+    return;
   }
+
 
   const categoria = event.target.name;
 

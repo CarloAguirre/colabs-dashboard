@@ -2,6 +2,7 @@ import Form from 'react-bootstrap/Form';
 import { DatePickerComponent } from '../components/DatePickerComponent';
 import { handleDateChange } from './handleDateChange';
 import { compararFechas } from './compararFechas';
+import Cookies from 'universal-cookie';
 
 
 export const tableModel = (ordenNumber, selectContratoForm, contratosArray, monthHeaders, tableOrders, status, ordenAscendente, setOrdenAscendente)=>{
@@ -27,14 +28,37 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
         return compararFechas(b.fecha, a.fecha);
       }
     });
+  
 
+    //TODO: boton o modalidad para eliminar ordenes y licitaciones//////////////////////////////////////////////////////////////////////
+
+  //   const onClickHandleDelete = async()=>{
+
+  //     var opcion = confirm(`¿Estas segura que deseas eliminar el tour ${title}?`);
+  //     if (opcion == true) {
+  //         const cookies = new Cookies;
+      
+  //         const token = cookies.get('token')
+
+  //         await deleteFetch(id, token)
+  //         .then(response => console.log(response))
+  //         .then(()=>{
+
+  //             // alert(`Haz eliminado correctamente el tour ${title}`)
+  //             window.location.href = './'
+  //         })
+  //     } else {
+  //         return;
+  //     }
+  // }
 
   return <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
       {(ordenNumber === 45) &&
        <Form.Select aria-label="Default select example" onChange={selectContratoForm} >
-       <option value='todos'>Contratos #45</option>
+       <option value='todos'>Ver todos los contratos</option>
        {contratosArray.map(contrato=>{
-          return <option value={contrato} key={contrato}>{contrato}</option>              
+
+          return <option value={contrato} key={contrato}>Contrato #{contrato}</option>              
        })}
      </Form.Select>
       }   

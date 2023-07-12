@@ -1,17 +1,16 @@
 import { createContext, useState, useEffect, useContext } from "react"
 
+import es from 'date-fns/locale/es';
 import { cargarImagen } from "./helpers/cargarImagen";
 import { createProducto } from "./helpers/newOrderFetch";
 import { orderUpdate } from "./helpers/orderUpdate";
 import { serverPath } from "./config/serverPath";
 import { format, parse } from 'date-fns';
-import es from 'date-fns/locale/es';
 import { counterOrdersTotalprice } from "./helpers/counter";
 import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
 import { onSubmit } from "./helpers/newOrderSubmit";
 import { filterOrders } from "./helpers/filterOrder";
 import { createLicitation } from "./helpers/newLicitationFetch";
-import { onLicitacionesFetch } from "./helpers/licitationsFetch";
 import { filterLicitations } from "./helpers/filterLicitations";
 import { calculateTotalPrice } from "./helpers/calculateTotalPrice";
 import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
@@ -63,6 +62,7 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     useEffect(() => {
       let counter = counterOrdersTotalprice(orders)
         setPaidOrdersLastYear(counter);
+        setTableOrders(orders)
     }, [orders]);    
     
     
@@ -91,11 +91,11 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
         setSearchedLicitation(value);
       }
     }
-
+    
 
     //Configuración de "Filtrar orden"
     useEffect(() => {
-      const filteredOrders = filterOrders(searchedOrder, orders);
+      const filteredOrders = filterOrders(searchedOrder, orders, contrato);
       setTableOrders(filteredOrders);
     }, [searchedOrder, orders]);
 
@@ -106,31 +106,68 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
 
     useEffect(() => {
       setTableLicitations(licitations)
+      console.log(licitations)
     }, [licitations]);
 
     //Configuración de "Subir orden"
     const [spinnerSwitch, setSpinnerSwitch] = useState(false)
 
     const onSubmitHandler = async (event) => {
-    onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders, createLicitation, licitation);
+    onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders, createLicitation, licitation, licitations);
     };
 
-    useEffect(() => {
-      console.log(newOrderData)
-    }, [newOrderData])
-    
+    const [contrato, setContrato] = useState("")
     
     //Configuración de formularios de "Filtro por contrato"
-    const selectContratoForm = ({target})=>{
-      if(target.value === 'todos'){
-          const filter = orders.filter(order=> order.contrato != null && order.categoria === "646d30f6df85d0a4c4958449" )
-          setTableOrders(filter)
-          
-      }else{
-          const filter = orders.filter(order=> order.contrato === target.value)
-          setTableOrders(filter)
+    const selectContratoForm = ({ target }) => {
+      if (target.value !== 'todos') {
+        let filteredOrders = [];
+    
+        if (
+          searchedOrder.toLowerCase() === "atrasos" ||
+          searchedOrder.toLowerCase() === "atrasadas" ||
+          searchedOrder.toLowerCase() === "atrasados"
+        ) {
+          const currentDate = new Date();
+          filteredOrders = orders.filter(order => {
+            if (order.contrato === target.value) {
+              const entregaDateParts = order.entrega.split("/");
+              const entregaDate = new Date(
+                entregaDateParts[2],
+                entregaDateParts[1] - 1,
+                entregaDateParts[0]
+              );
+              return !order.completada && entregaDate < currentDate;
+            }
+            return false;
+          });
+        } else {
+          filteredOrders = orders.filter(order => {
+            if (order.contrato === target.value) {
+              for (let key in order) {
+                if (order.hasOwnProperty(key)) {
+                  const value = order[key];
+                  const lowercaseValue = typeof value === "string" ? value.toLowerCase() : value?.toString().toLowerCase();
+                  const lowercaseSearch = searchedOrder.toLowerCase();
+                  
+                  if (lowercaseValue && lowercaseValue.includes(lowercaseSearch)) {
+                    return true;
+                  }
+                }
+              }
+            }
+            return false;
+          });
+        }
+    
+        setTableOrders(filteredOrders);
+        setContrato(target.value);
+      } else {
+        setSearchedOrder("");
+        setTableOrders(orders);
+        setContrato("");
       }
-    }
+    };
 
     const selectReportsForm = ({target})=>{
       if(target.value === 'todos'){
@@ -146,7 +183,12 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
      let totalMoney = 0;
      let totalDebt = 0;
      let totalAtrasos = 0;
+     let totalNoCompletadas = 0;
+     let totalCompletadas = 0
      let warningOrder = "Sin atrasos";
+
+     let totalLicitations = 0;
+     let totalLicitationsMoney = 0;
  
      
      const statsGenerator = () => {     
@@ -155,6 +197,9 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
          let monto = Number(order.precio);
          if(!order.completada){
            totalMoney += monto;
+           totalNoCompletadas ++
+         }else if(order.completada){
+            totalCompletadas ++         
          }
      
          const [day, month, year] = order.entrega.split("/");
@@ -167,8 +212,13 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
           totalDebt += monto
           totalAtrasos += 1
          }
-    
        });
+
+       licitations.forEach(licitation =>{
+        let monto = licitation.precio
+          totalLicitations ++
+          totalLicitationsMoney += monto;
+       })
      };
      
      statsGenerator();
@@ -210,17 +260,17 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
 
     }, [])
     
-    
-    
+ 
     const globalState = {
-      paidOrdersLastYear,
-      setPaidOrdersLastYear,
-      inputValue,
-      setInputValue,
-      statsGenerator,
+        paidOrdersLastYear,
+        setPaidOrdersLastYear,
+        inputValue,
+        setInputValue,
+        statsGenerator,
         onSearchInput,
         onSubmitHandler,
         totalMoney,
+        totalNoCompletadas,
         totalDebt,
         warningOrder,
         searchedOrder,
@@ -263,7 +313,10 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
         setSearchedLicitation,
         inputLicitationsValue,
         setInputLicitationsValue,
-        tableLicitations
+        tableLicitations,
+        totalLicitationsMoney,
+        totalLicitations,
+        totalCompletadas
       }
         return (
             <OrdenesContext.Provider

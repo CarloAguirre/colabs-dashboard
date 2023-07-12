@@ -14,7 +14,7 @@ export const Home = () => {
         tokenValidatior();
     }, [])
     
-    const {totalDebt, totalMoney, paidOrdersLastYear, totalAtrasos, setInputValue} = useOrdenes()
+    const {totalDebt, totalMoney, totalNoCompletadas, paidOrdersLastYear, totalAtrasos, setInputValue, totalLicitationsMoney, totalLicitations, totalCompletadas} = useOrdenes()
     
     const navigate = useNavigate()
     const onAtrasosHandler = ()=>{
@@ -34,7 +34,11 @@ export const Home = () => {
         setInputValue("")
         navigate('/paids')
     }
-    
+    const onLicitationHandler = ()=>{   
+        setInputValue("")
+        navigate('/licitations')
+    }
+   
   return (
     <div className="main-container">
     <div className="main-title">
@@ -43,6 +47,29 @@ export const Home = () => {
 
     <div className="main-cards">
 
+       
+    <div className="card" onClick={()=> onLicitationHandler()}>
+            <div className="card-inner">
+                <p className="text-primary">TOTAL LICITACIONES</p>
+                <span className="material-icons-outlined text-orange">
+                info
+                </span>
+            </div>
+            <p className="text-primary font-weight-bold"># {totalLicitations}</p>
+            <span className="text-primary font-weight-bold">${totalLicitationsMoney.toLocaleString()}</span>
+        </div>
+
+        <div className="card" onClick={()=> onProyeccionHandler()}>
+            <div className="card-inner">
+                <p className="text-primary">ORDENES EN CURSO</p>
+                <span className="material-icons-outlined text-blue">
+                insights
+                </span>
+            </div>
+            <p className="text-primary font-weight-bold"># {totalNoCompletadas} </p>
+            <span className="text-primary font-weight-bold">${totalMoney.toLocaleString()}</span>
+        </div>
+
         <div className="card" onClick={()=> onFacturadoHandler()}>
             <div className="card-inner">
                 <p className="text-primary">FACTURADO ULTIMO AÑO</p>
@@ -50,36 +77,20 @@ export const Home = () => {
                     attach_money
                 </span>
             </div>
+            <p className="text-primary font-weight-bold"># {totalCompletadas}</p>
             <span className="text-primary font-weight-bold">${paidOrdersLastYear.toLocaleString()}</span>
         </div>
 
-        <div className="card" onClick={()=> onProyeccionHandler()}>
-            <div className="card-inner">
-                <p className="text-primary">PROYECCIÓN DE INGRESOS</p>
-                <span className="material-icons-outlined text-blue">
-                insights
-                </span>
-            </div>
-            <span className="text-primary font-weight-bold">${totalMoney.toLocaleString()}</span>
-        </div>
 
         <div className="card" onClick={()=> onAtrasosHandler()}>
             <div className="card-inner">
                 <p className="text-primary">TOTAL ATRASOS</p>
-                <span className="material-icons-outlined text-orange">
-                info
-                </span>
-            </div>
-            <span className="text-primary font-weight-bold">{totalAtrasos}</span>
-        </div>
-
-        <div className="card" onClick={()=> onMontoAtrasosHandler()}>
-            <div className="card-inner">
-                <p className="text-primary">MONTO ATRASOS</p>
                 <span className="material-icons-outlined text-red">
                     notifications
                 </span>
+                
             </div>
+            <p className="text-primary font-weight-bold"># {totalAtrasos}</p>
             <span className="text-primary font-weight-bold">${totalDebt.toLocaleString()}</span>
         </div>
 

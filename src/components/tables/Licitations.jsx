@@ -15,8 +15,9 @@ import { licitationsTableModel } from '../../helpers/licitationsTableModel';
 
 
 
+
 export const Licitations = () => {
-  const { orders, licitations } = useOrdenes();
+  const { orders, tableLicitations } = useOrdenes();
   const [ordenAscendente, setOrdenAscendente] = useState(true);
 
   useEffect(() => {
@@ -36,10 +37,10 @@ export const Licitations = () => {
             className="my-3"
             >
             <Tab eventKey="en curso" title="En curso" style={{backgroundColor: 'transparent'}} >
-                    {licitationsTableModel("incomplete", orders, ordenAscendente, setOrdenAscendente, licitations)}
+                    {licitationsTableModel("incomplete", orders, ordenAscendente, setOrdenAscendente, tableLicitations)}
             </Tab>
             <Tab eventKey="completadas" title="Completadas" style={{backgroundColor: 'transparent'}}>
-                    {licitationsTableModel("complete", orders, ordenAscendente, setOrdenAscendente, licitations)}
+                    {licitationsTableModel("complete", orders, ordenAscendente, setOrdenAscendente, tableLicitations)}
             </Tab>
             
         </Tabs>

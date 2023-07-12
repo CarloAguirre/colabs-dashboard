@@ -1,6 +1,6 @@
 import { compararFechas } from "./compararFechas";
 
-export const licitationsTableModel = (estado, orders, licitationsAscendente, setOrdenAscendente, licitations) => {
+export const licitationsTableModel = (estado, orders, licitationsAscendente, setOrdenAscendente, tableLicitations) => {
 
   function handleClick() {
     // Invertir el orden actual
@@ -8,7 +8,7 @@ export const licitationsTableModel = (estado, orders, licitationsAscendente, set
   }
 
 
-  const licitationsDateSort = licitations.map(order => order)
+  const licitationsDateSort = tableLicitations.map(order => order)
   .sort((a, b) => {
     if (licitationsAscendente) {
       return compararFechas(a.fecha, b.fecha);

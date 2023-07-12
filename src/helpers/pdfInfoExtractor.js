@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 
 export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber)=>{
     const orderArray =[]
@@ -20,7 +20,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
        
           newOrder.map((texto, index)=>{
               //Numero de Orden
-              if (texto.includes('ORDEN DE COMPRA')) {
+              if (texto.includes('ORDEN DE COMPRA')) {  
                   orderArray[0] = Number(texto.match(/\d+/g));
               }
 
@@ -46,14 +46,37 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                 }
               }else{
                 const fechaMatch = texto.match(/Fecha de Emisión: (.+)/);
+                const mesesTraduccion = {
+                  Ene: 'Jan',
+                  Feb: 'Feb',
+                  Mar: 'Mar',
+                  Abr: 'Apr',
+                  May: 'May',
+                  Jun: 'Jun',
+                  Jul: 'Jul',
+                  Ago: 'Aug',
+                  Sep: 'Sep',
+                  Oct: 'Oct',
+                  Nov: 'Nov',
+                  Dic: 'Dec'
+                };
+                
                 if (fechaMatch) {
                   const fechaTexto = fechaMatch[1].trim();
-                  const fecha = new Date(fechaTexto);
-                  if (!isNaN(fecha)) {        
+                
+                  // Obtener el mes de la fechaTexto
+                  const mes = fechaTexto.substring(3, 6);
+                  const mesTraducido = mesesTraduccion[mes];
+                
+                  // Reemplazar el mes en fechaTexto
+                  const fechaTextoTraducida = fechaTexto.replace(mes, mesTraducido);
+                
+                  const fecha = new Date(fechaTextoTraducida);
+                  if (!isNaN(fecha)) {
                     const fechaFormateada = format(fecha, 'dd/MM/yyyy');
                     orderArray[1] = fechaFormateada;
                   }
-                } 
+                }
               }
 
               //Contrato:
@@ -79,8 +102,6 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                   }
               
              // Entrega
-
-
             let fechaEntrega = null;
             if (texto.startsWith('FECHA DE ENTREGA:')) {
             const indiceDosPuntos = texto.indexOf(':');
@@ -609,6 +630,5 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         //Rfx Number
         orderArray[9] = rfxNumber      
         }
-
       setNewOrderData(orderArray)
 }
