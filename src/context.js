@@ -5,7 +5,7 @@ import { cargarImagen } from "./helpers/cargarImagen";
 import { createProducto } from "./helpers/newOrderFetch";
 import { orderUpdate } from "./helpers/orderUpdate";
 import { serverPath } from "./config/serverPath";
-import { format, parse } from 'date-fns';
+import { format, parse, isBefore } from 'date-fns';
 import { counterOrdersTotalprice } from "./helpers/counter";
 import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
 import { onSubmit } from "./helpers/newOrderSubmit";
@@ -41,6 +41,7 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     const [tableLicitations, setTableLicitations] = useState(licitations)
     const [searchedLicitation, setSearchedLicitation] = useState("");
     const [inputLicitationsValue, setInputLicitationsValue] = useState("");
+    const [year, setYear] = useState();
 
     const months = [
       'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -106,7 +107,6 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
 
     useEffect(() => {
       setTableLicitations(licitations)
-      console.log(licitations)
     }, [licitations]);
 
     //Configuración de "Subir orden"
@@ -115,6 +115,12 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     const onSubmitHandler = async (event) => {
     onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders, createLicitation, licitation, licitations);
     };
+
+    useEffect(() => {
+      console.log(newOrder)
+      console.log(newOrderData)
+    }, [newOrderData])
+    
 
     const [contrato, setContrato] = useState("")
     
@@ -259,6 +265,25 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     fetchLicitationsData();
 
     }, [])
+
+    useEffect(() => {
+      if (year === "all") {
+        // Si se selecciona "Todos los periodos", mostrar todas las orders y licitations
+        setTableOrders(orders);
+        setTableLicitations(licitations);
+      } else {
+        // Filtrar las orders y licitations según el año seleccionado (septiembre a septiembre)
+        const startYear = parseInt(year);
+        const endYear = startYear + 1;
+        const startDate = new Date(`${startYear}-09-01`);
+        const endDate = new Date(`${endYear}-09-01`);
+        const filteredOrders = orders.filter((order) => isBefore(parse(order.fecha, 'dd/MM/yyyy', new Date()), endDate));
+        const filteredLicitations = licitations.filter((licitation) => isBefore(parse(licitation.fecha, 'dd/MM/yyyy', new Date()), endDate));
+        setTableOrders(filteredOrders);
+        setTableLicitations(filteredLicitations);
+      }
+    }, [year]);
+    
     
  
     const globalState = {
@@ -316,7 +341,9 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
         tableLicitations,
         totalLicitationsMoney,
         totalLicitations,
-        totalCompletadas
+        totalCompletadas,
+        year,
+        setYear
       }
         return (
             <OrdenesContext.Provider

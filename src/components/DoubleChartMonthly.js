@@ -13,7 +13,7 @@ export const DoubleChartMonthly = () => {
       const options = {
         chart: {
           height: 420,
-          width: 505,
+          width: 550,
           type: "area",
         },
         dataLabels: {

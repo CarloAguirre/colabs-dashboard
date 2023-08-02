@@ -1,9 +1,9 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import ApexCharts from "apexcharts";
 import { useOrdenes } from "../context";
 import { parse, getMonth, getYear, format } from "date-fns";
 
-export const DoubleChart = () => {
+export const Tester = () => {
   const chartRef = useRef(null);
   const { orders } = useOrdenes();
 
@@ -45,8 +45,8 @@ export const DoubleChart = () => {
     
       // Formatear los valores total44 y total45 con toFixed(2)
       Object.values(totalsByMonth).forEach((monthData) => {
-        monthData.total44 = monthData.total44.toFixed(0);
-        monthData.total45 = monthData.total45.toFixed(0);
+        monthData.total44 = monthData.total44.toFixed(2);
+        monthData.total45 = monthData.total45.toFixed(2);
       });
     
       return totalsByMonth;
@@ -77,7 +77,7 @@ export const DoubleChart = () => {
       chart: {
         type: "bar",
         height: 420,
-        width: 550,
+        width: 505,
         stacked: true,
         stackType: "%",
       },
@@ -99,7 +99,7 @@ export const DoubleChart = () => {
       yaxis: {
         labels: {
           formatter: function (value) {
-            return value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            return value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           },
         },
         
@@ -110,7 +110,7 @@ export const DoubleChart = () => {
           dataLabels: {
             position: "top",
             formatter: function (val, opts) {
-              return opts.w.globals.labels[opts.dataPointIndex] + ": " + val.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+              return opts.w.globals.labels[opts.dataPointIndex] + ": " + val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
             },
           },
         },
@@ -118,7 +118,7 @@ export const DoubleChart = () => {
       tooltip: {
         y: {
           formatter: function (val) {
-            return val.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 });
+            return val.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
           },
         },
       },
@@ -130,7 +130,6 @@ export const DoubleChart = () => {
         offsetX: 0,
         offsetY: 50,
       },
-      colors: ["#FF5733", "#9333FF"],
     };
 
     if (chartRef.current) {

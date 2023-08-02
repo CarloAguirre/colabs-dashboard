@@ -214,7 +214,8 @@ body{
 .charts-card{
   background-color: #ffffff;
   margin-bottom: 20px;
-  padding: 25px;
+  padding-top: 20px;
+  padding-bottom: 20px;
   box-sizing: border-box;
   border: 1px solid #d2ded3;
   border-radius: 5px;

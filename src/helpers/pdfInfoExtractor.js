@@ -510,9 +510,16 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         }
         
         let resultados = [];
+        let totalPrecios = 0;
+        const precioPattern = /(\d{1,3}(?:\.\d{3})*(?:,\d{1,2})?) USD\b(?!\/)/g;
         newOrder.map((texto, index)=>{
+        //precio
+        const match = precioPattern.exec(texto);
+        if (match) {
+          const precioNumerico = parseFloat(match[1].replace(/\./g, "").replace(",", "."));
+          totalPrecios += precioNumerico;
+        }
 
-          
           //fecha
           const fecha = new Date;
           
@@ -559,6 +566,10 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         }
         if(cantidad < 1 || cantidad === " "){
           cantidad = Number(newOrder[indiceUnidades + 15]);
+          if(cantidad = " "){
+            cantidad = Number(newOrder[indiceUnidades + 20]);
+
+          }
         }
         let precioStringComplete =  newOrder[indiceUnidades + 18]
 
@@ -579,8 +590,35 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         let sumaUnidades = 0; // Variable para calcular la suma de las unidades
         newOrder.forEach((texto, index) => {
           if (texto === 'Quantity') {
+            function esNumeroEntero(valor) {
+              return !isNaN(valor) && Number.isInteger(Number(valor));
+            }
+            
             const material = resultados[cantidadIndex]; // Material correspondiente a la posición actual
             let valorUnidades = Number(newOrder[index + 14]);
+                        
+                if (!esNumeroEntero(valorUnidades)) {
+              if (esNumeroEntero(newOrder[index + 16])) {
+                valorUnidades = Number(newOrder[index + 16]);
+
+                if (esNumeroEntero(newOrder[index + 32])) {
+                  valorUnidades += Number(newOrder[index + 32]);
+
+                  if (esNumeroEntero(newOrder[index + 47])) {
+                    valorUnidades += Number(newOrder[index + 47]);
+
+                    if (esNumeroEntero(newOrder[index + 96])) {
+                      valorUnidades += Number(newOrder[index + 96]);
+
+                      if (esNumeroEntero(newOrder[index + 112])) {
+                        valorUnidades += Number(newOrder[index + 112]);
+                      }
+                    }
+                  }
+                }
+              }
+              }
+                        
             if(valorUnidades != Number){
               newOrder.map(item => {
                 const match = item.match(/^(\d+) UN$/); // Buscar un número en el texto
@@ -608,20 +646,13 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         });
         orderArray[5] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
         } 
+        orderArray[6] = totalPrecios
         orderArray[8] = materialCantidad
 
         
         setLicitation(LicitationNumber)
 
-        //precio
-        let totalPrecios = 0;
 
-        for (let llaveMaterial in materialCantidad) {
-          const precio = materialCantidad[llaveMaterial][1];
-          const cantidad = materialCantidad[llaveMaterial][0];
-          totalPrecios += Number(precio)* Number(cantidad);
-        }
-        orderArray[6] = totalPrecios
 
         //descripcion
         const descIndex = newOrder.indexOf("Description:")

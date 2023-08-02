@@ -2,7 +2,7 @@ import Form from 'react-bootstrap/Form';
 import { DatePickerComponent } from '../components/DatePickerComponent';
 import { handleDateChange } from './handleDateChange';
 import { compararFechas } from './compararFechas';
-import Cookies from 'universal-cookie';
+
 
 
 export const tableModel = (ordenNumber, selectContratoForm, contratosArray, monthHeaders, tableOrders, status, ordenAscendente, setOrdenAscendente)=>{
@@ -157,7 +157,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
           <td>{order.mail}</td> */}
           <td>{order.fecha}</td>
           <td>{order.division}</td>
-          <td>{order.entrega}</td>
+          <td>{order.invoice_date}</td>
           <td>{order.material}</td>
           {(order.material.includes("/") ? <td>{formattedPrice}</td>
           : <td>{formattedPrecioUnitario}</td>)}

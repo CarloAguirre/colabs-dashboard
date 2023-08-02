@@ -1,3 +1,4 @@
+import Form from 'react-bootstrap/Form';
 import { useEffect } from "react"
 import { useOrdenes } from "../context"
 import { tokenValidatior } from "../helpers/tokenValidator"
@@ -6,6 +7,8 @@ import { DoubleChartMonthly } from "./DoubleChartMonthly"
 import { useNavigate } from "react-router-dom"
 
 import './tables/tables.css'
+import { Tester } from "./Tester"
+import { YearSelector } from './YearSelector';
 
 
 
@@ -41,8 +44,9 @@ export const Home = () => {
    
   return (
     <div className="main-container">
-    <div className="main-title">
+    <div className="main-title" style={{justifyContent:'space-between'}}>
         <p className="font-weight-bold">DASHBOARD</p>
+        <YearSelector />
     </div>
 
     <div className="main-cards">
@@ -99,20 +103,14 @@ export const Home = () => {
     <div className="charts">
 
         <div className="charts-card">
-            <p className="chart-title">Última Actividad</p>
+            <p className="chart-title">Últimos 6 meses</p>
             <div className='users-charts'><DoubleChart/></div>
+
         </div>
         <div className="charts-card">
             <p className="chart-title">Visión General</p>
-            {/* <div className='users-charts'><UsersInfoChart /></div> */}
-            {/* <div className='users-charts'><OrdersRanking/></div> */}
             <div className='users-charts'><DoubleChartMonthly /></div>
         </div>
-
-        {/* <div className="charts-card">
-            <p className="chart-title">Ordenes Facturadas</p>
-            <div className='users-charts'><UsersCountChart orders={orders} users={users}/></div>
-        </div> */}
     </div>
 
    

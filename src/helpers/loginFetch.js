@@ -23,7 +23,6 @@ export const loginFetch = async(password, email)=>{
       
       await axios(config)
       .then((response) => {
-        console.log(response)
         const {data} = response;
 
         cookies.set('name', data.usuario.nombre, {"path": "/"});
@@ -35,7 +34,6 @@ export const loginFetch = async(password, email)=>{
           
       })
       .catch(({response}) =>{
-        console.log(response)
         if(response.data.errors){
           const{msg} = response.data.errors[0]
   
