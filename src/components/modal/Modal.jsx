@@ -7,7 +7,7 @@ import { useOrdenes } from '../../context';
 import Form from 'react-bootstrap/Form';
 
 export const ModalPdfDrop = ({ cliente }) => {
-  const { onSubmitHandler, rfxNumber, setRfxNumber } = useOrdenes();
+  const { onSubmitHandler, rfxNumber, setRfxNumber, setLicitationDivision } = useOrdenes();
   const [show, setShow] = useState(false);
 
 
@@ -17,6 +17,12 @@ export const ModalPdfDrop = ({ cliente }) => {
   const onLicitationInputHandler = (event) => {
     const { value } = event.target;
     setRfxNumber(value);
+
+  };
+
+  const onDivisionInputHandler = (event) => {
+    const { value } = event.target;
+    setLicitationDivision(value);
   };
 
   const handleNext = () => {
@@ -62,10 +68,23 @@ export const ModalPdfDrop = ({ cliente }) => {
                   <Form.Text id="passwordHelpBlock" muted>
                     Ingresa el número RFx (N° de licitación) correspondiente a la respuesta que deseas subir.
                   </Form.Text>
+                  <hr />
+                  <Form.Label>Division</Form.Label>
+                  <Form.Select id="passwordHelpBlock" onChange={onDivisionInputHandler}>
+                    <option disabled selected value="POR DEFINIR">División</option>
+                    <option value="CHUQUICAMATA">CHUQUICAMATA</option>
+                    <option value="EL TENIENTE">EL TENIENTE</option>
+                    <option value="RADOMIRO TOMIC">RADOMIRO TOMIC</option>
+                    <option value="EL SALVADOR">EL SALVADOR</option>
+                    <option value="ANDINA">ANDINA</option>
+                    <option value="GABRIELA MISTRAL">GABRIELA MISTRAL</option>
+                  </Form.Select>
                   <Button variant="primary" onClick={handleNext} className='mt-3'>
                     Next
                   </Button>
+       
                 </>
+                
               )}
               {showPdfDrop && <PdfDrop cliente={cliente} />}
             </>

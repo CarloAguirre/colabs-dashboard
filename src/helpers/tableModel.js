@@ -19,6 +19,23 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
     setOrdenAscendente(!ordenAscendente);
   }
 
+  function handleClickDatePicker() {
+    const tableHeight = document.querySelector('.table-container');
+    if (tableHeight) {
+      // Guarda el estilo actual para poder restaurarlo después
+      const originalMinHeight = tableHeight.style.minHeight;
+  
+      // Establece la propiedad de estilo durante 10 segundos
+      tableHeight.style.minHeight = '850px';
+  
+      // Después de 10 segundos, restaura el estilo original
+      setTimeout(() => {
+        tableHeight.style.minHeight = originalMinHeight;
+      }, 10000); // 10000 milisegundos = 10 segundos
+    }
+  }
+  
+
   // Obtener la lista de órdenes ordenadas
   const orderDateSort = tableOrders.map(order => order)
     .sort((a, b) => {
@@ -28,6 +45,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
         return compararFechas(b.fecha, a.fecha);
       }
     });
+    
   
 
     //TODO: boton o modalidad para eliminar ordenes y licitaciones//////////////////////////////////////////////////////////////////////
@@ -217,7 +235,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
         <td className='text-left'>{order.descripcion}</td>
         <td>{order.fecha}</td>
         <td>{order.division}</td>
-        <td className = 'datePicker-td text-center'>
+        <td className = 'datePicker-td text-center' onClick={handleClickDatePicker}>
         <DatePickerComponent
         className = 'datePicker'
            orderNumber={order._id}
@@ -240,7 +258,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
         <td className='text-left'>{order.descripcion}</td>
         <td>{order.fecha}</td>
         <td>{order.division}</td>
-        <td className = 'datePicker-td text-center'>
+        <td className = 'datePicker-td text-center' onClick={handleClickDatePicker}>
         <DatePickerComponent
         className = 'datePicker'
            orderNumber={order._id}
@@ -263,8 +281,8 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
           <td className='text-left'>{order.descripcion}</td>
           <td>{order.contrato}</td>
           <td>{order.fecha}</td>
-          <td>{order.division}</td>
-          <td className = 'datePicker-td text-center'>
+          <td>{order.division}</td> 
+          <td className = 'datePicker-td text-center' onClick={handleClickDatePicker}>
         <DatePickerComponent
         className = 'datePicker'
            orderNumber={order._id}

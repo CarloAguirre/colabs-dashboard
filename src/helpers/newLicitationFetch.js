@@ -17,7 +17,7 @@ export const createLicitation = async (numero = null, fecha = null, division = n
       "precio": precio,
       "descripcion": descripcion,
       "sap_info": sapinfo,
-      "rfx": rfxNumber
+      "rfx": rfxNumber,
     });
   
     var config = {

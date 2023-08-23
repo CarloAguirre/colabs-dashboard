@@ -1,0 +1,25 @@
+.tooltip-arrow {
+    position: absolute;
+    top: -10px;
+    left: 86.3%;
+    transform: translateX(-50%);
+    border: solid transparent  ;
+    content: '';
+    height: 0;
+    width: 0;
+    pointer-events: none;
+    border-width: 10px;
+    border-top-color: #f1f1f1;
+}
+.info-popup{
+    position: absolute;
+    top: 55px;
+    right: 10px;
+    background-color: #f1f1f1;
+    border: 1px solid #ccc;
+    padding: 5px;
+    z-index: 1000;
+    font-size: small;
+    border-radius: 10px;
+      
+}

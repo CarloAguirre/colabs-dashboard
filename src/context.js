@@ -42,11 +42,13 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     const [searchedLicitation, setSearchedLicitation] = useState("");
     const [inputLicitationsValue, setInputLicitationsValue] = useState("");
     const [year, setYear] = useState();
+    const [licitationDivision, setLicitationDivision] = useState("");
 
     const months = [
       'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
     ];
+
 
     // Generador de toda la data de la aplicacion
     useEffect(() => {
@@ -69,7 +71,7 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     
     //Generador de informacion para la nueva orden agregada.
      useEffect(() => {    
-      pdfInfoExtractor(tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber)
+      pdfInfoExtractor(tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber, licitationDivision )
      }, [newOrder])
      
      const onSearchInput = ({ target }) => {
@@ -115,12 +117,6 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     const onSubmitHandler = async (event) => {
     onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, archivo, newOrderData, es, parse, format, orderUpdate, cargarImagen, createProducto, orders, createLicitation, licitation, licitations);
     };
-
-    useEffect(() => {
-      console.log(newOrder)
-      console.log(newOrderData)
-    }, [newOrderData])
-    
 
     const [contrato, setContrato] = useState("")
     
@@ -198,7 +194,7 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
  
      
      const statsGenerator = () => {     
-       orders.forEach(order => {
+       tableOrders.forEach(order => {
   
          let monto = Number(order.precio);
          if(!order.completada){
@@ -220,7 +216,7 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
          }
        });
 
-       licitations.forEach(licitation =>{
+       tableLicitations.forEach(licitation =>{
         let monto = licitation.precio
           totalLicitations ++
           totalLicitationsMoney += monto;
@@ -284,7 +280,6 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
       }
     }, [year]);
     
-    
  
     const globalState = {
         paidOrdersLastYear,
@@ -343,7 +338,8 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
         totalLicitations,
         totalCompletadas,
         year,
-        setYear
+        setYear,
+        setLicitationDivision
       }
         return (
             <OrdenesContext.Provider

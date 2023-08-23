@@ -41,7 +41,7 @@ export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, ar
         newOrderData[6],
         newOrderData[7],
         newOrderData[8],
-        newOrderData[9]
+        newOrderData[9],
       );
       if (createLicitationFetch) {
         await cargarImagen(archivo, null, licitationNumber);

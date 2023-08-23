@@ -26,7 +26,7 @@ export const YearSelector = () => {
   const periodOptions = filteredYears.map((year) => {
     const startYear = year;
     const endYear = year + 1;
-    const periodLabel = `${startYear}-Septiembre ${endYear}`;
+    const periodLabel = `Septiembre ${startYear}-${endYear}`;
     return (
       <option key={startYear} value={startYear}>
         {periodLabel}

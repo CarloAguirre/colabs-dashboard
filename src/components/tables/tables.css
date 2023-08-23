@@ -1,6 +1,8 @@
 .table-container {
     overflow: auto;
     max-height: 850px;
+
+    /* background-color: #e6e6e6; */
   }
   
   .table-container thead {

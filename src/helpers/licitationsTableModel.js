@@ -29,6 +29,7 @@ export const licitationsTableModel = (estado, orders, licitationsAscendente, set
             <th scope="col">FECHA<button onClick={handleClick}><span class="material-icons-outlined">
             restart_alt
             </span></button></th>
+            <th scope="col">DIVISIÓN</th>
             <th scope="col">MATERIAL</th>
             <th scope="col">CANTIDAD</th>
             <th scope="col">PRECIO/U</th>
@@ -68,6 +69,7 @@ export const licitationsTableModel = (estado, orders, licitationsAscendente, set
                     <td><a href={matchingOrder.img} target='_blank' rel="noreferrer">{matchingOrder.numero}</a></td>
                     <td>{licitacion.descripcion}</td>
                     <td>{licitacion.fecha}</td>
+                    <td>{licitacion.division}</td>
                     <td>{licitacion.material}</td>
                     <td>{licitacion.cantidad}</td>
                     {licitacion.material.includes("/") ? (
@@ -89,6 +91,7 @@ export const licitationsTableModel = (estado, orders, licitationsAscendente, set
                     </td>
                     <td>{licitacion.descripcion}</td>
                     <td>{licitacion.fecha}</td>
+                    <td>{licitacion.division}</td>
                     <td>{licitacion.material}</td>
                     <td>{licitacion.cantidad}</td>
                     {licitacion.material.includes("/") ? (

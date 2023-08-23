@@ -33,17 +33,24 @@ export const registrationFetch = async(name, password, email)=>{
         cookies.set('name', data.nombre, {"path": "/"});
         cookies.set('email', data.correo, {"path": "/"});
         cookies.set('uid', data.uid, {"path": "/"});
-        alert(`${data.nombre} haz creado tu cuenta correctamente, ahora puede iniciar sesión.`)
+        alert(`${data.nombre} haz creado tu cuenta correctamente, por favor verifica tu cuenta accediendo al link enviado a tu email.`)
         window.location.href = "./"
           
       })
       .catch(({response}) =>{
-        console.log(response.data.errors[0])
-        const{msg} = response.data.errors[0]
-
+        if(response.data.errors){
+          const{msg} = response.data.errors[0]
+  
+          document.getElementById('errorMsg').innerHTML = `
+          <p>
+              ${msg}
+          </p>`
+          return;               
+        }
+        const {msg} = response.data;
         document.getElementById('errorMsg').innerHTML = `
         <p>
             ${msg}
-        </p>`  
+        </p>`
       });   
 }

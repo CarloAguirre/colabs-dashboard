@@ -1,6 +1,6 @@
-import { format, parse } from 'date-fns';
+import { format } from 'date-fns';
 
-export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber)=>{
+export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber, licitationDivision)=>{
     const orderArray =[]
     let mayorNumero = 0;
     let indiceMayorNumero = -1;
@@ -8,11 +8,8 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
     let LicitationNumber = ""
      if(cliente === "codelco"){
        const orderData = ()=>{
-         let fecha = null;
          const indiceSAP = newOrder.indexOf('Material');
-         const indiceUnidades = newOrder.indexOf('Unidades');
-         const indiceDesc = newOrder.indexOf('Descripción del ítem:');
-         const indiceValorNeto = newOrder.indexOf("Valor total neto USD");         
+         const indiceDesc = newOrder.indexOf('Descripción del ítem:');    
          const regexSAP = /(?:^|\D)(\d{7})(?!\d|\w|\D)/g;
         
 
@@ -527,7 +524,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
           orderArray[1] = fechaFormateada;
 
           //Division
-          orderArray[2] = "Por definir"
+          orderArray[2] = licitationDivision
           
           //Nombre de contacto
           orderArray[3] = "Por definir"
@@ -549,21 +546,44 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
         })
          //Cantidad
+         let cantidad = 0;
+         let sumaUnidades = 0; // Variable para calcular la suma de las unidades
+         let sumaUnidadesUN = 0
          const contadorUnidades = newOrder.reduce((contador, texto, index) => {
           if (texto === 'Quantity' || texto === 'Quantity') {
             return contador + 1;
           }
           return contador;
         }, 0);
+        const contadorUN = newOrder.reduce((contador, texto, index) => {
+          if (texto === 'UN') {
+            return contador + 1;
+          }
+          return contador;
+        }, 0);
 
         // Cantidad
-        if (contadorUnidades === 1) {
+        if (contadorUN >= 1) {
+          for (let i = 0; i < newOrder.length; i++) {
+            if (newOrder[i] === 'UN') {
+              const indiceDosAntes = i - 2;
+              if (indiceDosAntes >= 0) {
+                const valorDosAntes = Number(newOrder[indiceDosAntes]);
+                if (!isNaN(valorDosAntes)) {
+                  sumaUnidadesUN += valorDosAntes; // Sumamos las unidades a la variable sumaUnidades
+                }
+              }
+            }
+          }
+        } else if (contadorUnidades === 1 && contadorUN < 2) {
         const indiceUnidades = newOrder.indexOf('Quantity') !== -1 ? newOrder.indexOf('Quantity') : newOrder.indexOf('Quantity');
+  
         const material = resultados[0]; // Primer material encontrado
-        let cantidad = Number(newOrder[indiceUnidades + 14]);  
+         cantidad = Number(newOrder[indiceUnidades + 14]);  
         if(cantidad != Number && cantidad == NaN){
            cantidad = Number(newOrder[indiceUnidades + 18]);       
         }
+
         if(cantidad < 1 || cantidad === " "){
           cantidad = Number(newOrder[indiceUnidades + 15]);
           if(cantidad = " "){
@@ -587,7 +607,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         orderArray[5] = cantidad; // Guardar cantidad en orderArray[8]
         } else if (contadorUnidades > 1) {
         let cantidadIndex = 0; // Índice para recorrer las cantidades
-        let sumaUnidades = 0; // Variable para calcular la suma de las unidades
+        
         newOrder.forEach((texto, index) => {
           if (texto === 'Quantity') {
             function esNumeroEntero(valor) {
@@ -646,6 +666,10 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         });
         orderArray[5] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
         } 
+        if(sumaUnidadesUN > 1){
+          orderArray[5] = sumaUnidadesUN; 
+        }
+
         orderArray[6] = totalPrecios
         orderArray[8] = materialCantidad
 
@@ -659,7 +683,8 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         orderArray[7] = newOrder[descIndex + 2]
 
         //Rfx Number
-        orderArray[9] = rfxNumber      
+        orderArray[9] = rfxNumber   
+
         }
       setNewOrderData(orderArray)
 }
