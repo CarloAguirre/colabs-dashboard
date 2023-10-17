@@ -1,4 +1,4 @@
-import { format } from 'date-fns';
+import { format, parse } from 'date-fns';
 
 export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber, licitationDivision)=>{
     const orderArray =[]
@@ -14,10 +14,45 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         
 
         let resultados = [];
-       
+
+        //  NUEVO FORMATO SAP ARIBA.COM
           newOrder.map((texto, index)=>{
+            if(texto.includes('ariba.com')){
+              newOrder.map((texto, index)=>{
+                //N° de orden
+                if (texto.includes('Purchase Order:')) {  
+                  orderArray[0] = Number(texto.match(/\d+/g));                
+                }
+                //Fecha de emisión
+                if (texto.includes('Order submitted on')) {
+                  const regex = /\b(\d{1,2}\s\w{3}\s\d{4})/;  
+                  const match = texto.match(regex);       
+                  if (match && match[1]) {
+                    // Parseando la fecha encontrada
+                    const fechaEncontrada = parse(match[1], 'dd MMM yyyy', new Date());
+                    // Formateando la fecha en el formato 'dd/MM/yyyy'
+                    const fechaFormateada = format(fechaEncontrada, 'dd/MM/yyyy');       
+                    orderArray[1] = fechaFormateada
+                }  
+              }
+              //N° de contrato
+              if (texto.includes('Contract Number')) {  
+                if(typeof((newOrder[index + 2])) === 'number'){
+                  orderArray[2] = newOrder[index + 2]                
+                }else{
+                  orderArray[2] = newOrder[index + 1]                
+                }
+              }
+
+
+              })
+              setNewOrderData(orderArray)
+              console.log(orderArray)
+              return
+            }
               //Numero de Orden
               if (texto.includes('ORDEN DE COMPRA')) {  
+                console.log(texto)
                   orderArray[0] = Number(texto.match(/\d+/g));
               }
 
@@ -515,6 +550,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         if (match) {
           const precioNumerico = parseFloat(match[1].replace(/\./g, "").replace(",", "."));
           totalPrecios += precioNumerico;
+        } else if (texto === "USD") {
+          const precioAnterior = parseFloat(newOrder[index - 1].replace(/\./g, "").replace(",", "."));
+          totalPrecios += precioAnterior;
         }
 
           //fecha
@@ -687,4 +725,5 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
         }
       setNewOrderData(orderArray)
+      console.log(orderArray)
 }

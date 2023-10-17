@@ -39,7 +39,7 @@ export const Header = () => {
 
   return (
     <>
-      {mail !== "carlo_aguirre@hotmail.com" ? (
+      {mail === "carlo_aguirre@hotmail.com" || "caguirre@agiindustries.com" ? (
         <header className="header">
             <div
             className="menu-icon">

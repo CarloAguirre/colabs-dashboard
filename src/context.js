@@ -94,7 +94,6 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
         setSearchedLicitation(value);
       }
     }
-    
 
     //Configuración de "Filtrar orden"
     useEffect(() => {
@@ -238,7 +237,8 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     let ventasConvertidas = [];
     let proyeccionesConvertidas = [];
     
-    if (ventas !== [] && ventas.length > 0 && proyecciones !== [] && proyecciones.length > 0) {
+    // if (ventas !== [] && ventas.length > 0 && proyecciones !== [] && proyecciones.length > 0) {
+      if (ventas.length > 0 && proyecciones.length > 0) {
       ventasConvertidas = ventas.map((venta) => {
         const ventaLimpia = parseFloat(venta.replace("$", "").replace(",", ""));
         return ventaLimpia;
