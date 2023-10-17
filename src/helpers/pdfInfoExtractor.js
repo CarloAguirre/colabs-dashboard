@@ -6,19 +6,22 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
     let indiceMayorNumero = -1;
     let materialCantidad = {};
     let LicitationNumber = ""
-     if(cliente === "codelco"){
-       const orderData = ()=>{
-         const indiceSAP = newOrder.indexOf('Material');
-         const indiceDesc = newOrder.indexOf('Descripción del ítem:');    
-         const regexSAP = /(?:^|\D)(\d{7})(?!\d|\w|\D)/g;
+    let regexSAPNuevoFormato = /^0{6,}(\d+)$/;
+    let cantidadesNuevoFormato = 0
+    var descNuevoFormato = ''
+    if(cliente === "codelco"){
+      const orderData = ()=>{
+        const indiceSAP = newOrder.indexOf('Material');
+        const indiceDesc = newOrder.indexOf('Descripción del ítem:');    
+        const regexSAP = /(?:^|\D)(\d{7})(?!\d|\w|\D)/g;
         
-
+        
         let resultados = [];
-
+        
         //  NUEVO FORMATO SAP ARIBA.COM
-          newOrder.map((texto, index)=>{
-            if(texto.includes('ariba.com')){
-              newOrder.map((texto, index)=>{
+        newOrder.map((texto, index)=>{
+          if(texto.includes('ariba.com')){
+            newOrder.map((texto, index)=>{
                 //N° de orden
                 if (texto.includes('Purchase Order:')) {  
                   orderArray[0] = Number(texto.match(/\d+/g));                
@@ -43,16 +46,56 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                   orderArray[2] = newOrder[index + 1]                
                 }
               }
-
-
-              })
-              setNewOrderData(orderArray)
-              console.log(orderArray)
-              return
+              // División
+              if (texto.includes('Centro')) {  
+                var resultado = texto.match(/Centro (.+)/);
+                // Verificando si se encontró una coincidencia y extrayendo el texto después de "Centro"
+                if (resultado && resultado[1]) {
+                    let textoDespuesDeCentro = resultado[1];
+                    orderArray[3] = textoDespuesDeCentro;                
+                }
+              }
+              // Fecha de entrega
+              if (texto.includes('Delivery Date')) {  
+                const regex = /\b(\d{1,2}\s\w{3}\s\d{4}\s\d{1,2}:\d{2})/;
+                const match = newOrder[index + 4].match(regex);
+            
+                if (match && match[1]) {
+                    // Parseando la fecha encontrada
+                    const fechaEncontrada = parse(match[1], 'dd MMM yyyy H:mm', new Date());
+                    // Formateando la fecha en el formato 'dd/MM/yyyy'
+                    const fechaFormateada = format(fechaEncontrada, 'dd/MM/yyyy');
+                    orderArray[4] = fechaFormateada;
+                }
+              }
+              //Materiales parte I
+              if(regexSAPNuevoFormato.test(texto)){
+                var resultado = texto.match(regexSAPNuevoFormato);
+                resultados.push(resultado[1]);
+              }
+              //Cantidad / Cantidades parte I
+              if(texto.includes('(EA)')){
+                cantidadesNuevoFormato += Number(~~(newOrder[index-1]))
+              }
+              //Descripción parte 
+              if(texto.includes("Description:")){
+                descNuevoFormato = newOrder[index + 2]
+                orderArray[10] = newOrder[index + 2]
             }
+          })
+          //Materiales parte II
+          const numerosAgrupados = resultados.join('/');
+          orderArray[7] = numerosAgrupados
+          
+          //Cantidad / Cantidades parte II
+          orderArray[8] = Number(cantidadesNuevoFormato)
+
+          setNewOrderData(orderArray)
+        }else{
+
+            //FORMATO ANTIGUO DE CODELCO
               //Numero de Orden
               if (texto.includes('ORDEN DE COMPRA')) {  
-                console.log(texto)
                   orderArray[0] = Number(texto.match(/\d+/g));
               }
 
@@ -240,11 +283,12 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                 orderArray[9] = Number(precio);
               }
               //Descripcion
-              if (indiceDesc !== -1) {
+              if (indiceDesc !== -1 && descNuevoFormato === '') {
+                
                 const description = newOrder[indiceDesc + 2];
                 const descriptionArray = description.split(" ");
               
-                if (descriptionArray.length < 2) {
+                if (descriptionArray.length < 2 ) {
                   orderArray[10] = `${descriptionArray[0]}`;
                 } else if (descriptionArray.length < 3) {
                   orderArray[10] = `${descriptionArray[0]} ${descriptionArray[1]}`;
@@ -254,14 +298,17 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                   orderArray[10] = `${descriptionArray[0]} ${descriptionArray[1]} ${descriptionArray[2]} ${descriptionArray[3]} `;
                 }
               } else {
-                const sapIndex = indiceSAP + 15
-                if(!isNaN(parseFloat(newOrder[sapIndex])) && isFinite(newOrder[sapIndex])){
-                  orderArray[10] = newOrder[indiceSAP + 14];
-                }else if(newOrder[sapIndex] === " "){
-                  orderArray[10] = newOrder[indiceSAP + 16];                    
-                }else{
-                  orderArray[10] = newOrder[indiceSAP + 15];                    
-
+                if(descNuevoFormato === ''){
+                  
+                  const sapIndex = indiceSAP + 15
+                  if(!isNaN(parseFloat(newOrder[sapIndex])) && isFinite(newOrder[sapIndex])){
+                    orderArray[10] = newOrder[indiceSAP + 14];
+                  }else if(newOrder[sapIndex] === " "){
+                    orderArray[10] = newOrder[indiceSAP + 16];                    
+                  }else{
+                    orderArray[10] = newOrder[indiceSAP + 15];                    
+                    
+                  }
                 }
               }
               
@@ -332,7 +379,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
           
 
 
-          })
+          }})
 
           //SAP parte II
           const numerosAgrupados = resultados.join('/');
@@ -354,7 +401,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
           const precioString = newOrder[indiceUnidades + 2].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
           const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
           materialCantidad[material] = [cantidad, precioNumber];
-          orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
+          if(cantidadesNuevoFormato === 0){
+            orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
+          }
           } else if (contadorUnidades > 1) {
           let cantidadIndex = 0; // Índice para recorrer las cantidades
           let sumaUnidades = 0; // Variable para calcular la suma de las unidades
@@ -375,14 +424,18 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               }
             }
           });
-          orderArray[8] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
+          if(cantidadesNuevoFormato === 0){
+            orderArray[8] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
+          }
           } else {
           const material = resultados[0]; // Primer material encontrado
           const cantidad = Number(newOrder[indiceSAP + 15]) - resultados.length + 1;
           const precioString = newOrder[indiceSAP + 19].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
           const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
           materialCantidad[material] = [cantidad, precioNumber];
-          orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
+          if(cantidadesNuevoFormato === 0){
+            orderArray[8] = cantidad; // Guardar cantidad en orderArray[8]
+          }
           }
           orderArray[11] = materialCantidad;
 
@@ -496,13 +549,17 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               const amountNumeric = parseFloat(matchDolares[0].replace(',', ''));
               orderArray[9] = amountNumeric;
             }
-            orderArray[10] = newOrder[statusIndex - 1];
+            if(descNuevoFormato === ''){
+              orderArray[10] = newOrder[statusIndex - 1];
+            }
           } else {
             orderArray[8] = newOrder[indiceDescripcion + 17];
             const amount = newOrder[indiceDescripcion + 27];
             const amountNumeric = parseFloat(amount.replace(',', ''));
             orderArray[9] = amountNumeric;
-            orderArray[10] = newOrder[indiceDescripcion + 23];
+            if(descNuevoFormato === ''){
+              orderArray[10] = newOrder[indiceDescripcion + 23];
+            }
           }
         })
         const numerosAgrupados = resultados.join('/');
