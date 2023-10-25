@@ -14,7 +14,7 @@ import { calculateProjectionPrice } from "../../helpers/calculateProjectionPrice
 
 export const ReportsTable = () => {
   const { selectReportsForm, contratosArray, tableOrders, months, orders } = useOrdenes();
-
+  const page = 'ReportsTable'
 
   useEffect(() => {
     tokenValidatior();
@@ -35,7 +35,10 @@ export const ReportsTable = () => {
   };
 
   const sixMonthsAhead = new Date();
-  sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 6);
+  sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 5);
+
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6 );
 
   return (
     <>
@@ -98,7 +101,7 @@ export const ReportsTable = () => {
                     minimumFractionDigits: 2,
                   });
 
-                  if (deliveryDate <= sixMonthsAhead) {
+                  if (deliveryDate <= sixMonthsAhead && deliveryDate >= sixMonthsAgo) {
                     return (
                       <tr key={index}>
                         <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
@@ -124,7 +127,7 @@ export const ReportsTable = () => {
                   <td>PROYECCIÓNES</td>
                   <td></td>
                   {monthHeaders.map((month, index) => {
-                   return <td key={index}>{calculateProjectionPrice(month, orders, months)}</td>
+                   return <td key={index}>{calculateProjectionPrice(month, orders, months, page)}</td>
                 })}
                 </tr>
                 <tr style={{ background: 'rgb(249, 200, 53)', color: 'black' }}>
@@ -132,7 +135,7 @@ export const ReportsTable = () => {
                   <td></td>
                   {monthHeaders.map((month, index) => {
                     
-                     return <td key={index}>{calculateTotalPrice(month, tableOrders, months)}</td>
+                     return <td key={index}>{calculateTotalPrice(month, tableOrders, months, page)}</td>
                 })}
                 </tr>
               </tbody>

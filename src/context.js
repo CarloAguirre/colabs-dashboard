@@ -229,11 +229,10 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
         const ventasArray = months.map((month) => calculateTotalPrice(month, tableOrders, months));
         setVentas(ventasArray);
     
-        const proyeccionesArray = months.map((month) => calculateProjectionPrice(month, orders, months));
+        const proyeccionesArray = months.map((month) => calculateProjectionPrice(month, tableOrders, months));
         setProyecciones(proyeccionesArray);
       }
-      //si quisiera vover dinamica las graficas aca deberia renderizar cuando cambia tambien "orderTables"
-    }, [orders]);
+    }, [orders, tableOrders]);
 
     let ventasConvertidas = [];
     let proyeccionesConvertidas = [];
