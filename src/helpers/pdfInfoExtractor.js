@@ -7,8 +7,10 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
     let materialCantidad = {};
     let LicitationNumber = ""
     let regexSAPNuevoFormato = /^0{6,}(\d+)$/;
-    let cantidadesNuevoFormato = 0
-    var descNuevoFormato = ''
+    let cantidadesNuevoFormato = 0;
+    var descNuevoFormato = '';
+    var fechaNuevoFormato = '';
+    var fechaEntregaNuevoFormato = '';
     if(cliente === "codelco"){
       const orderData = ()=>{
         const indiceSAP = newOrder.indexOf('Material');
@@ -34,8 +36,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                     // Parseando la fecha encontrada
                     const fechaEncontrada = parse(match[1], 'dd MMM yyyy', new Date());
                     // Formateando la fecha en el formato 'dd/MM/yyyy'
-                    const fechaFormateada = format(fechaEncontrada, 'dd/MM/yyyy');       
-                    orderArray[1] = fechaFormateada
+                    fechaNuevoFormato = format(fechaEncontrada, 'dd/MM/yyyy');   
                 }  
               }
               //N° de contrato
@@ -57,24 +58,25 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               }
               // Fecha de entrega
               if (texto.includes('Delivery Date')) {  
-                const regex = /\b(\d{1,2}\s\w{3}\s\d{4}\s\d{1,2}:\d{2})/;
+                // Expresión regular para capturar la fecha con o sin hora
+                const regex = /\b(\d{1,2}\s\w{3}\s\d{4})/;
                 const match = newOrder[index + 4].match(regex);
-            
+                
                 if (match && match[1]) {
-                    // Parseando la fecha encontrada
-                    const fechaEncontrada = parse(match[1], 'dd MMM yyyy H:mm', new Date());
+                    // Parseando la fecha encontrada sin la hora
+                    const fechaEncontrada = parse(match[1], 'dd MMM yyyy', new Date());
                     // Formateando la fecha en el formato 'dd/MM/yyyy'
-                    const fechaFormateada = format(fechaEncontrada, 'dd/MM/yyyy');
-                    orderArray[4] = fechaFormateada;
+                   fechaEntregaNuevoFormato = format(fechaEncontrada, 'dd/MM/yyyy');
                 }
-              }
+            }
+                        
               //Materiales parte I
               if(regexSAPNuevoFormato.test(texto)){
                 var resultado = texto.match(regexSAPNuevoFormato);
                 resultados.push(resultado[1]);
               }
               //Cantidad / Cantidades parte I
-              if(texto.includes('(EA)')){
+              if(texto === 'Confirmed' || texto === 'Unconfirmed'){
                 cantidadesNuevoFormato += Number(~~(newOrder[index-1]))
               }
               //Descripción parte 
@@ -83,6 +85,10 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                 orderArray[10] = newOrder[index + 2]
             }
           })
+          //Fecha parte II
+          orderArray[1] = fechaNuevoFormato
+          //Fecha entrega II
+          orderArray[4] = fechaEntregaNuevoFormato;
           //Materiales parte II
           const numerosAgrupados = resultados.join('/');
           orderArray[7] = numerosAgrupados
@@ -106,7 +112,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               };
               
               const fechaMatch = texto.match(/Fecha de Emisión: (\d{1,2})\.(\w+)\.(\d{4})/);
-              if (fechaMatch) {
+              if (fechaMatch && fechaNuevoFormato === '') {
                 const dia = parseInt(fechaMatch[1], 10);
                 const mesTexto = fechaMatch[2].toLowerCase();
                 const mes = mesNumerico[mesTexto];
@@ -136,7 +142,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                   Dic: 'Dec'
                 };
                 
-                if (fechaMatch) {
+                if (fechaMatch && fechaNuevoFormato === '') {
                   const fechaTexto = fechaMatch[1].trim();
                 
                   // Obtener el mes de la fechaTexto
@@ -191,7 +197,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                   Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
                   Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dic: 11
                 };
-                if (meses.hasOwnProperty(mesAbreviatura)) {
+                if (meses.hasOwnProperty(mesAbreviatura) && fechaEntregaNuevoFormato === '') {
                   const mes = meses[mesAbreviatura];
                   fechaEntrega = format(new Date(anio, mes, dia), 'dd/MM/yyyy');
                   orderArray[4] = fechaEntrega;
@@ -210,7 +216,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                 Ene: 0, Feb: 1, Mar: 2, Abr: 3, May: 4, Jun: 5,
                 Jul: 6, Ago: 7, Sep: 8, Oct: 9, Nov: 10, Dic: 11
               };
-              if (meses.hasOwnProperty(mesAbreviatura)) {
+              if (meses.hasOwnProperty(mesAbreviatura) && fechaEntregaNuevoFormato === '') {
                 const mes = meses[mesAbreviatura];
                 fechaEntrega = format(new Date(anio, mes, dia), 'dd/MM/yyyy');
                 orderArray[4] = fechaEntrega;
@@ -468,7 +474,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
             const [, day, month, year] = matchFecha;
             let fechaConvertida; 
 
-            if (month.length > 2) {
+            if (month.length > 2 && fechaNuevoFormato === '') {
               // Formato '8 May, 2018'
               const date = new Date(`${month} ${day}, ${year}`);
               const dayFormatted = ('0' + date.getDate()).slice(-2);
@@ -481,8 +487,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
               fechaConvertida = date.toLocaleDateString('en-GB', options).replace(/\//g, '-');
             }
-          
-            orderArray[1] = fechaConvertida;
+            if(fechaNuevoFormato === ''){
+              orderArray[1] = fechaConvertida;
+            }
           }
 
           //telefono
@@ -493,7 +500,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
             //Fecha de entrega
             const word = newOrder[indiceDescripcion + 33].replace('.', '/')
-            orderArray[4] = word.replace('.', '/')
+            if(fechaEntregaNuevoFormato === ''){
+              orderArray[4] = word.replace('.', '/')
+            }
           }else{
             let telefono = newOrder[contactIndex + 4]
             const telefonoMatch = telefono.match(/\+[\d\s()]+/);
@@ -506,7 +515,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                 const day = date.getDate();
                 const month = date.getMonth() + 1; // Los meses en JavaScript comienzan desde 0
                 const year = date.getFullYear();
-                orderArray[4] = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+                if(fechaEntregaNuevoFormato === ''){
+                  orderArray[4] = `${day.toString().padStart(2, '0')}/${month.toString().padStart(2, '0')}/${year}`;
+                }
             }      
           }
 
@@ -616,7 +627,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
           const fecha = new Date;
           
           const fechaFormateada = format(fecha, 'dd/MM/yyyy');
-          orderArray[1] = fechaFormateada;
+          if(fechaNuevoFormato === ''){
+            orderArray[1] = fechaFormateada;
+          }
 
           //Division
           orderArray[2] = licitationDivision
@@ -634,7 +647,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
             }
           }
           const numerosAgrupados = resultados.join('/');
-          orderArray[4] = numerosAgrupados
+          if(fechaEntregaNuevoFormato === ''){
+            orderArray[4] = numerosAgrupados
+          }
 
 
           

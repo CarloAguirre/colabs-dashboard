@@ -1,22 +1,35 @@
-export const counterOrdersTotalprice = (orders)=>{
-    let counter = 0;
-    
-      orders.map(order => {
-        if (order.completada === true) {
-          const orderDateParts = order.fecha.split('/');
-          const orderDay = parseInt(orderDateParts[0]);
-          const orderMonth = parseInt(orderDateParts[1]) - 1; // Restamos 1 ya que los meses en JavaScript son indexados desde 0 (enero = 0)
-          const orderYear = parseInt(orderDateParts[2]);
-    
-          const orderDate = new Date(orderYear, orderMonth, orderDay);
-          const currentDate = new Date();
-          const oneMonthAgo = new Date();
-          oneMonthAgo.setMonth(currentDate.getMonth() - 12);
-    
-          if (orderDate <= currentDate && orderDate >= oneMonthAgo) {
-            counter += order.precio;
-          }
-        }
+export const counterOrdersTotalprice = (orders, year) => {
+  let counter = 0;
+  if (!year || year === "all") {
+    // Si year no está presente o es "all", sumar todos los precios de las órdenes
+    orders.forEach((order) => {
+      if (order.completada === true) {
+        counter += order.precio;
+      }
     });
-    return counter;
-}
+  } else {
+    // Filtrar las órdenes basándose en el año seleccionado (septiembre a septiembre)
+    const selectedYear = parseInt(year);
+    const startYear = selectedYear;
+    const endYear = selectedYear + 1;
+    const startDate = new Date(`${startYear}-09-01`);
+    const endDate = new Date(`${endYear}-09-01`);
+
+    orders.forEach((order) => {
+      if (order.completada === true) {
+        const orderDateParts = order.fecha.split('/');
+        const orderDay = parseInt(orderDateParts[0]);
+        const orderMonth = parseInt(orderDateParts[1]) - 1;
+        const orderYear = parseInt(orderDateParts[2]);
+
+        const orderDate = new Date(orderYear, orderMonth, orderDay);
+
+        if (orderDate >= startDate && orderDate < endDate) {
+          counter += order.precio;
+        }
+      }
+    });
+  }
+
+  return counter;
+};

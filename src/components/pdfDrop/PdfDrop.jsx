@@ -28,7 +28,7 @@ export const PdfDrop =({cliente})=> {
     reader.onload = () => {
       const typedArray = new Uint8Array(reader.result);
       pdfjs.getDocument(typedArray).promise.then((pdf) => {
-        const numPages = Math.min(pdf.numPages, 7); // Leer solo las 5 primeras páginas
+        const numPages = Math.min(pdf.numPages, 8); // Leer solo las 5 primeras páginas
 
         const getPageText = async (pageNum) => {
           const page = await pdf.getPage(pageNum);

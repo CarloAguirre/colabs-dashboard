@@ -5,7 +5,7 @@ import { cargarImagen } from "./helpers/cargarImagen";
 import { createProducto } from "./helpers/newOrderFetch";
 import { orderUpdate } from "./helpers/orderUpdate";
 import { serverPath } from "./config/serverPath";
-import { format, parse, isBefore } from 'date-fns';
+import { format, parse, isBefore, isAfter } from 'date-fns';
 import { counterOrdersTotalprice } from "./helpers/counter";
 import { pdfInfoExtractor } from "./helpers/pdfInfoExtractor";
 import { onSubmit } from "./helpers/newOrderSubmit";
@@ -63,10 +63,10 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
 
     //Generador de lo facturado en los ultimos 12 meses
     useEffect(() => {
-      let counter = counterOrdersTotalprice(orders)
+      let counter = counterOrdersTotalprice(orders, year)
         setPaidOrdersLastYear(counter);
         setTableOrders(orders)
-    }, [orders]);    
+    }, [orders, year]);    
     
     
     //Generador de informacion para la nueva orden agregada.
@@ -269,16 +269,18 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
         setTableLicitations(licitations);
       } else {
         // Filtrar las orders y licitations según el año seleccionado (septiembre a septiembre)
-        const startYear = parseInt(year);
-        const endYear = startYear + 1;
+        const selectedYear = parseInt(year);
+        const startYear = selectedYear; // Año anterior al seleccionado
+        const endYear = selectedYear + 1;
         const startDate = new Date(`${startYear}-09-01`);
         const endDate = new Date(`${endYear}-09-01`);
-        const filteredOrders = orders.filter((order) => isBefore(parse(order.fecha, 'dd/MM/yyyy', new Date()), endDate));
-        const filteredLicitations = licitations.filter((licitation) => isBefore(parse(licitation.fecha, 'dd/MM/yyyy', new Date()), endDate));
+        const filteredOrders = orders.filter((order) => isAfter(parse(order.fecha, 'dd/MM/yyyy', new Date()), startDate) && isBefore(parse(order.fecha, 'dd/MM/yyyy', new Date()), endDate));
+        const filteredLicitations = licitations.filter((licitation) => isAfter(parse(licitation.fecha, 'dd/MM/yyyy', new Date()), startDate) && isBefore(parse(licitation.fecha, 'dd/MM/yyyy', new Date()), endDate));
         setTableOrders(filteredOrders);
         setTableLicitations(filteredLicitations);
       }
     }, [year]);
+    
     
  
     const globalState = {
