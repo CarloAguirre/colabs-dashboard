@@ -1,14 +1,46 @@
 import React, { useEffect, useRef } from "react";
 import ApexCharts from "apexcharts";
 import { useOrdenes } from "../context";
+import { calculateTotalPrice } from "../helpers/calculateTotalPrice";
+import { calculateProjectionPrice } from "../helpers/calculateProjectionPrice";
 
 export const DoubleChartMonthly = () => {
   const chartRef = useRef(null);
-  const { months, ventas, proyecciones, ventasConvertidas, proyeccionesConvertidas} = useOrdenes();
+  const { months, ventas, proyecciones, ventasConvertidas, proyeccionesConvertidas, orders, tableOrders} = useOrdenes();
   
+  const currentMonthIndex = new Date().getMonth();
+  const startIndex = currentMonthIndex - 6 >= 0 ? currentMonthIndex - 6 : 12 + (currentMonthIndex - 6);
+
+  let monthHeaders = months.slice(startIndex).concat(months.slice(0, startIndex));
+
+  let monthHeadersShort = months
+    .slice(startIndex)
+    .concat(months.slice(0, startIndex))
+    .map((month) => {
+      // Obtén la abreviatura del mes
+      return month.slice(0, 3); // Esto devuelve las primeras tres letras del mes
+    });
+
+  
+
+  let totalVentas = [];
+  let totalProyecciones = [];
+  useEffect(() => {
+    monthHeaders.map((month) => {
+      let proyeccion = calculateProjectionPrice(month, orders, months);
+      let precio = calculateTotalPrice(month, tableOrders, months);
+      // Eliminar símbolo de dólar y comas y convertir a número
+      proyeccion = parseFloat(proyeccion.replace(/[^\d.]/g, ''));
+      precio = parseFloat(precio.replace(/[^\d.]/g, ''));
+      totalVentas.push(proyeccion);
+      totalProyecciones.push(precio);
+    });
+  }, [monthHeaders]);
+
+
   
   useEffect(() => {
-    if (chartRef.current && ventasConvertidas !== [] && proyeccionesConvertidas !== []) {
+    if (chartRef.current && totalVentas !== [] && totalProyecciones !== []) {
     if (chartRef.current) {
       const options = {
         chart: {
@@ -22,11 +54,11 @@ export const DoubleChartMonthly = () => {
         series: [
           {
             name: "Proyeccion",
-            data: proyeccionesConvertidas,
+            data: totalProyecciones,
           },
           {
             name: "Ventas",
-            data: ventasConvertidas,
+            data: totalVentas,
           },
         ],
         fill: {
@@ -39,8 +71,8 @@ export const DoubleChartMonthly = () => {
           },
         },
         xaxis: {
-          categories: months,
-        },
+          categories: monthHeadersShort && monthHeadersShort,
+        }
       };
 
       const chart = new ApexCharts(chartRef.current, options);

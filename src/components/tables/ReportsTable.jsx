@@ -38,7 +38,7 @@ export const ReportsTable = () => {
   sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 5);
 
   const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6 );
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 7 );
 
   return (
     <>
@@ -126,6 +126,7 @@ export const ReportsTable = () => {
                 <tr style={{ background: 'green', color: 'white' }}>
                   <td>PROYECCIÓNES</td>
                   <td></td>
+                  
                   {monthHeaders.map((month, index) => {
                    return <td key={index}>{calculateProjectionPrice(month, orders, months, page)}</td>
                 })}
