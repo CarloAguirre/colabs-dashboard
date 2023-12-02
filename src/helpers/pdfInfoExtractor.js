@@ -23,6 +23,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         //  NUEVO FORMATO SAP ARIBA.COM
         newOrder.map((texto, index)=>{
           if(texto.includes('ariba.com')){
+            console.log("aqui estoy")
             newOrder.map((texto, index)=>{
                 //N° de orden
                 if (texto.includes('Purchase Order:')) {  
@@ -98,7 +99,6 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
           setNewOrderData(orderArray)
         }else{
-
             //FORMATO ANTIGUO DE CODELCO
               //Numero de Orden
               if (texto.includes('ORDEN DE COMPRA')) {  
@@ -382,9 +382,6 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               orderArray[12] = rfxNumber.split(" ")[1];
             }
           }
-          
-
-
           }})
 
           //SAP parte II
@@ -667,6 +664,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         }, 0);
         const contadorUN = newOrder.reduce((contador, texto, index) => {
           if (texto === 'UN') {
+            console.log(texto)
             return contador + 1;
           }
           return contador;
@@ -776,9 +774,9 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         });
         orderArray[5] = sumaUnidades; // Guardar suma de unidades en orderArray[8]
         } 
-        if(sumaUnidadesUN > 1){
-          orderArray[5] = sumaUnidadesUN; 
-        }
+
+        orderArray[5] = sumaUnidadesUN;
+        
 
         orderArray[6] = totalPrecios
         orderArray[8] = materialCantidad

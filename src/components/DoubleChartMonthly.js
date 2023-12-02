@@ -25,22 +25,22 @@ export const DoubleChartMonthly = () => {
 
   let totalVentas = [];
   let totalProyecciones = [];
-  useEffect(() => {
-    monthHeaders.map((month) => {
-      let proyeccion = calculateProjectionPrice(month, orders, months);
-      let precio = calculateTotalPrice(month, tableOrders, months);
-      // Eliminar símbolo de dólar y comas y convertir a número
-      proyeccion = parseFloat(proyeccion.replace(/[^\d.]/g, ''));
-      precio = parseFloat(precio.replace(/[^\d.]/g, ''));
-      totalVentas.push(proyeccion);
-      totalProyecciones.push(precio);
-    });
-  }, [monthHeaders]);
+  monthHeaders.map((month) => {
+    let proyeccion = calculateProjectionPrice(month, orders, months);
+    let precio = calculateTotalPrice(month, tableOrders, months);
+    // Eliminar símbolo de dólar y comas y convertir a número
+    proyeccion = parseFloat(proyeccion.replace(/[^\d.]/g, ''));
+    precio = parseFloat(precio.replace(/[^\d.]/g, ''));
+    totalVentas.push(precio);
+    totalProyecciones.push(proyeccion);
+  });
+  // useEffect(() => {
+  // }, [monthHeaders]);
 
 
   
   useEffect(() => {
-    if (chartRef.current && totalVentas !== [] && totalProyecciones !== []) {
+    if (chartRef.current && totalVentas !== [] && totalProyecciones !== [] && monthHeadersShort) {
     if (chartRef.current) {
       const options = {
         chart: {

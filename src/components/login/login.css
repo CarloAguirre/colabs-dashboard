@@ -127,6 +127,7 @@
 }
 .form-container {
     position: relative;
+    overflow: auto;
     padding-top: 15vh;
   }
   

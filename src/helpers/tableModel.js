@@ -2,6 +2,7 @@ import Form from 'react-bootstrap/Form';
 import { DatePickerComponent } from '../components/DatePickerComponent';
 import { handleDateChange } from './handleDateChange';
 import { compararFechas } from './compararFechas';
+import { EditOrderModal } from '../components/modal/EditOrderModal';
 
 
 
@@ -13,11 +14,6 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
     setOrdenAscendente(!ordenAscendente);
   }
 
-  // Función para manejar el evento onClick
-  function handleClick() {
-    // Invertir el orden actual
-    setOrdenAscendente(!ordenAscendente);
-  }
 
   function handleClickDatePicker() {
     const tableHeight = document.querySelector('.table-container');
@@ -48,28 +44,6 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
     
   
 
-    //TODO: boton o modalidad para eliminar ordenes y licitaciones//////////////////////////////////////////////////////////////////////
-
-  //   const onClickHandleDelete = async()=>{
-
-  //     var opcion = confirm(`¿Estas segura que deseas eliminar el tour ${title}?`);
-  //     if (opcion == true) {
-  //         const cookies = new Cookies;
-      
-  //         const token = cookies.get('token')
-
-  //         await deleteFetch(id, token)
-  //         .then(response => console.log(response))
-  //         .then(()=>{
-
-  //             // alert(`Haz eliminado correctamente el tour ${title}`)
-  //             window.location.href = './'
-  //         })
-  //     } else {
-  //         return;
-  //     }
-  // }
-
   return <div className="mt-4 shadow-lg p3 mb-5 bg-body rounded">
       {(ordenNumber === 45) &&
        <Form.Select aria-label="Default select example" onChange={selectContratoForm} >
@@ -98,6 +72,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
     :
     <thead>
       <tr>
+      { (ordenNumber === "todos" && status !== 'paids' ) && <th scope="col">EDITAR</th>   }   
       <th scope="col">NUMERO</th>
       { (status === 'paids' ) && <th scope="col">INVOICE</th>   }   
       { (ordenNumber === 45 ) && <th scope="col">CONTRATO</th>   }   
@@ -254,6 +229,11 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
 
     return (
       <tr key={order.numero}>
+        <td>
+          <EditOrderModal
+            order = {order}
+          />
+        </td>
         <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
         <td className='text-left'>{order.descripcion}</td>
         <td>{order.fecha}</td>
