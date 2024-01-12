@@ -17,19 +17,18 @@ export const counterOrdersTotalprice = (orders, year) => {
 
     orders.forEach((order) => {
       if (order.completada === true) {
-        const orderDateParts = order.fecha.split('/');
+        const orderDateParts = order.invoice_date.split('/');
         const orderDay = parseInt(orderDateParts[0]);
         const orderMonth = parseInt(orderDateParts[1]) - 1;
         const orderYear = parseInt(orderDateParts[2]);
 
         const orderDate = new Date(orderYear, orderMonth, orderDay);
-
         if (orderDate >= startDate && orderDate < endDate) {
+          console.log(order)
           counter += order.precio;
         }
       }
     });
   }
-
   return counter;
 };

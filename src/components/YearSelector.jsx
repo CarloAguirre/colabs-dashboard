@@ -36,6 +36,7 @@ export const YearSelector = () => {
 
   const handleYearChange = (e) => {
     const selectedYear = e.target.value;
+    console.log(selectedYear)
     setYear(selectedYear);
   };
 

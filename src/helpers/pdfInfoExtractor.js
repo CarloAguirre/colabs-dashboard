@@ -390,7 +390,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
           //Cantidad
           const contadorUnidades = newOrder.reduce((contador, texto, index) => {
-            if (texto === 'Unidades' || texto === 'Juego') {
+            if (texto === 'Unidades' || texto === 'Juego' || texto === 'PIE') {
               return contador + 1;
             }
             return contador;
@@ -398,9 +398,10 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
           // Cantidad
           if (contadorUnidades === 1) {
-          const indiceUnidades = newOrder.indexOf('Unidades') !== -1 ? newOrder.indexOf('Unidades') : newOrder.indexOf('Juego');
+          const indiceUnidades = newOrder.indexOf('Unidades') !== -1 ? newOrder.indexOf('Unidades') : newOrder.indexOf('Juego') !== -1 ? newOrder.indexOf('Juego') : newOrder.indexOf('PIE');
           const material = resultados[0]; // Primer material encontrado
-          const cantidad = Number(newOrder[indiceUnidades - 2]);
+          const soloDigitos = newOrder[indiceUnidades - 2].replace(/[^\d.]/g, '');
+          const cantidad = Number(soloDigitos);
           const precioString = newOrder[indiceUnidades + 2].replace(/[,\.]/g, ''); // Reemplazar comas y puntos
           const precioNumber = parseFloat(precioString.slice(0, -2) + '.' + precioString.slice(-2)); // Convertir a punto flotante
           materialCantidad[material] = [cantidad, precioNumber];
@@ -664,7 +665,6 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         }, 0);
         const contadorUN = newOrder.reduce((contador, texto, index) => {
           if (texto === 'UN') {
-            console.log(texto)
             return contador + 1;
           }
           return contador;
@@ -795,5 +795,5 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
         }
       setNewOrderData(orderArray)
-      console.log(orderArray)
+      // console.log(orderArray)
 }

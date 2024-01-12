@@ -190,7 +190,7 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
 
      let totalLicitations = 0;
      let totalLicitationsMoney = 0;
- 
+
      
      const statsGenerator = () => {     
        tableOrders.forEach(order => {
