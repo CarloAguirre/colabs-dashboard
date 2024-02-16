@@ -43,6 +43,7 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     const [inputLicitationsValue, setInputLicitationsValue] = useState("");
     const [year, setYear] = useState();
     const [licitationDivision, setLicitationDivision] = useState("");
+    const [facturadoYear, setFacturadoYear] = useState()
 
     const months = [
       'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -63,11 +64,15 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
 
     //Generador de lo facturado en los ultimos 12 meses
     useEffect(() => {
-      let counter = counterOrdersTotalprice(orders, year)
-        setPaidOrdersLastYear(counter);
-        setTableOrders(orders)
-    }, [orders, year]);    
+      let fetch = counterOrdersTotalprice(orders, facturadoYear)
+      let {ordersTotal, counter} = fetch
+        setPaidOrdersLastYear(ordersTotal);
+        setCompletadasSuma(counter)
+    }, [orders, facturadoYear]);    
     
+    useEffect(() => {
+      setFacturadoYear(year)
+    }, [year])
     
     //Generador de informacion para la nueva orden agregada.
      useEffect(() => {    
@@ -223,6 +228,13 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
      };
      
      statsGenerator();
+
+     const [completadasSuma, setCompletadasSuma] = useState(0)
+     useEffect(() => {
+      setCompletadasSuma(totalCompletadas)
+     }, [totalCompletadas])
+     
+     
      
      useEffect(() => {
       if (orders && orders.length > 0) {
@@ -265,8 +277,8 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
     useEffect(() => {
       if (year === "all") {
         // Si se selecciona "Todos los periodos", mostrar todas las orders y licitations
-        setTableOrders(orders);
-        setTableLicitations(licitations);
+        // setTableOrders(orders);
+        // setTableLicitations(licitations);
       } else {
         // Filtrar las orders y licitations según el año seleccionado (septiembre a septiembre)
         const selectedYear = parseInt(year);
@@ -276,8 +288,8 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
         const endDate = new Date(`${endYear}-09-01`);
         const filteredOrders = orders.filter((order) => isAfter(parse(order.fecha, 'dd/MM/yyyy', new Date()), startDate) && isBefore(parse(order.fecha, 'dd/MM/yyyy', new Date()), endDate));
         const filteredLicitations = licitations.filter((licitation) => isAfter(parse(licitation.fecha, 'dd/MM/yyyy', new Date()), startDate) && isBefore(parse(licitation.fecha, 'dd/MM/yyyy', new Date()), endDate));
-        setTableOrders(filteredOrders);
-        setTableLicitations(filteredLicitations);
+        // setTableOrders(filteredOrders);
+        // setTableLicitations(filteredLicitations);
       }
     }, [year]);
     
@@ -341,7 +353,10 @@ import { calculateProjectionPrice } from "./helpers/calculateProjectionPrice";
         totalCompletadas,
         year,
         setYear,
-        setLicitationDivision
+        setLicitationDivision,
+        facturadoYear,
+        setFacturadoYear,
+        completadasSuma
       }
         return (
             <OrdenesContext.Provider

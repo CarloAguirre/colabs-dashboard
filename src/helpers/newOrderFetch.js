@@ -3,7 +3,7 @@ import Cookies from 'universal-cookie'
 import { serverPath } from '../config/serverPath';
 
 
-export const createProducto = async (numero = null, fecha = null, contrato = null, division = null, entrega = null, nombre = null, mail = null, material = null, cantidad = null, precio = null, descripcion = null, categoria = null, sapinfo = {}, rfx = null, srm = null) => {
+export const createProducto = async (numero = null, fecha = null, contrato = null, division = null, entrega = null, nombre = null, mail = null, material = null, cantidad = null, precio = null, descripcion = null, categoria = null, sapinfo = {}, rfx = null, srm = null, completada = false, invoice_date = null, img = null) => {
     const cookies = new Cookies();
     const token = cookies.get("token");
   
@@ -22,7 +22,10 @@ export const createProducto = async (numero = null, fecha = null, contrato = nul
       "categoria": categoria,
       "sap_info": sapinfo,
       "rfx": rfx,
-      "srm": srm
+      "srm": srm,
+      "completada": completada,
+      "invoice_date": invoice_date,
+      "img": img
     });
   
     var config = {
@@ -44,7 +47,6 @@ export const createProducto = async (numero = null, fecha = null, contrato = nul
       return true; // Devuelve true si la solicitud se completa sin errores
     } catch (error) {
       const {msg} = error.response.data;
-
       alert(msg)
       window.location.href = "./"
       return false; // Devuelve false si ocurre algún error

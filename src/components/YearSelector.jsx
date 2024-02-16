@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { format, parse, isBefore } from 'date-fns';
 
 export const YearSelector = () => {
-  const { orders, licitations, year, setYear } = useOrdenes();
+  const { orders, licitations, year, setFacturadoYear, setYear } = useOrdenes();
 
   // Combinar las fechas de orders y licitations
   const allDates = [...orders, ...licitations].map(item => item.fecha);
@@ -36,14 +36,12 @@ export const YearSelector = () => {
 
   const handleYearChange = (e) => {
     const selectedYear = e.target.value;
-    console.log(selectedYear)
-    setYear(selectedYear);
+    setFacturadoYear(selectedYear);
   };
 
   return (
     <Form.Select
       aria-label="Default select example"
-      style={{ width: "250px" }}
       value={year}
       onChange={handleYearChange}
     >

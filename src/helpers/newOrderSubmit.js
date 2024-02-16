@@ -14,10 +14,10 @@ export async function onSubmit(event, setSpinnerSwitch, invoiceDate, invoice, ar
     return;
   }
 
-
   const categoria = event.target.name;
 
   if (categoria === 'invoice') {
+    console.log("soy invoice")
     try {
       const invoiceDateString = parse(invoiceDate, 'dd/MM/yyyy', new Date(), { locale: es });
       const formattedInvoiceDate = format(invoiceDateString, 'dd/MM/yyyy');

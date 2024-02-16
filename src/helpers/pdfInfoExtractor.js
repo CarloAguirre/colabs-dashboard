@@ -1,4 +1,5 @@
 import { format, parse } from 'date-fns';
+import { createProducto } from './newOrderFetch';
 
 export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvoiceDate, setInvoice, setNewOrderData, setLicitation, rfxNumber, licitationDivision)=>{
     const orderArray =[]
@@ -23,7 +24,6 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         //  NUEVO FORMATO SAP ARIBA.COM
         newOrder.map((texto, index)=>{
           if(texto.includes('ariba.com')){
-            console.log("aqui estoy")
             newOrder.map((texto, index)=>{
                 //N° de orden
                 if (texto.includes('Purchase Order:')) {  
@@ -363,16 +363,18 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
           const coincidenciasDos = texto.match(patronDos);
 
           if (rfxInlineIndex) {
+
             if(texto === "RFX:" || texto === "Rfx:"){
               orderArray[12] = newOrder[index + 2]
-
+              console.log(texto)
             }else if(coincidencias || coincidenciasDos){
-              orderArray[12] = coincidencias[1] || coincidenciasDos[1]
+              orderArray[12] = texto.split(":")[1].trim()
 
             }else{
               orderArray[12] = texto.split(" ")[1];
             }
           } else if (texto === "RFX" || texto === "Rfx") {
+
             const rfxNumber = newOrder[index + 2];
             const soloDigitos = rfxNumber.replace(/\D/g, "");
             
@@ -595,7 +597,24 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
               setInvoiceDate(fechaFormatted)      
               setInvoice(paidOrderId) 
             }else{
-              alert(`No existe la orden N°${paidOrderNumber} en la base de datos.`)
+                let fechaFormatted = null;
+                const patronFecha = /\d{2}\/\d{2}\/\d{4}/;
+                const coincidencias = newOrder[0].match(patronFecha);
+                const fecha = coincidencias[0];
+                if(fecha){
+                  const fechaDate = new Date(fecha)
+                  fechaFormatted = format(fechaDate, 'dd/MM/yyyy');
+
+                }
+                let montoIndex = newOrder.indexOf("AMOUNT DUE:")
+                let monto = newOrder[montoIndex - 1]
+                if(monto){
+                  setInvoiceDate(fechaFormatted)      
+                  let poNumber = 11111111
+                  let montoedited = "48,234.34"
+                  createProducto(poNumber, fechaFormatted, "SIN DATOS", "SIN DATOS", fechaFormatted, "SIN DATOS", "SIN DATOS", "SIN DATOS", 1, monto, "SIN DATOS", "65ba6ac5a2bf2cceffdebe02", {}, "SIN DATOS", "SIN DATOS", true, fechaFormatted, "https://res.cloudinary.com/dubwhwd1w/image/upload/v1669237187/no-image_nkv8ft.jpg")
+                }
+       
             }
         }
 
@@ -795,5 +814,5 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
 
         }
       setNewOrderData(orderArray)
-      // console.log(orderArray)
+      console.log(orderArray)
 }

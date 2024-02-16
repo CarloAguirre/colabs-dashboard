@@ -34,9 +34,9 @@ export const cargarImagen = async(archivo, invoice = null, licitationNumber = nu
    if(licitationNumber != null){
     await fetch(`${serverPath}api/uploads/licitaciones/${id}`, requestOptions)
     .then(response => {
-        console.log("soy una licitacion")
+
         response.text()
-        console.log(response)
+
      
              alert('Licitación añadida con exito')
              window.location.href = "./licitations"
@@ -48,8 +48,6 @@ export const cargarImagen = async(archivo, invoice = null, licitationNumber = nu
        await fetch(`${serverPath}api/uploads/productos/${id}`, requestOptions)
        .then(response => {
            response.text()
-           console.log(response)
-           console.log("soy una order")
            if(invoice){
                 window.location.href = "./orders" 
                 return true;

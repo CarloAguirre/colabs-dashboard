@@ -38,7 +38,7 @@ export const ReportsTable = () => {
   sixMonthsAhead.setMonth(sixMonthsAhead.getMonth() + 5);
 
   const sixMonthsAgo = new Date();
-  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 7 );
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 6 );
 
   return (
     <>
@@ -70,7 +70,7 @@ export const ReportsTable = () => {
                 </tr>
               </thead>
               <tbody>
-                {tableOrders.map((order, index) => {
+              {tableOrders.map((order, index) => {
                   let formattedDeliveryDate = "";
 
                   if (order.completada) {
@@ -82,6 +82,7 @@ export const ReportsTable = () => {
                   const deliveryDate = new Date(formattedDeliveryDate);
                   const isPastDue = deliveryDate < new Date();
                   const deliveryMonth = deliveryDate.getMonth();
+        
                   const deliveryColumn = calculateDeliveryColumn(deliveryMonth);
 
                   let dateClassName = '';
@@ -102,6 +103,7 @@ export const ReportsTable = () => {
                   });
 
                   if (deliveryDate <= sixMonthsAhead && deliveryDate >= sixMonthsAgo) {
+                  
                     return (
                       <tr key={index}>
                         <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>

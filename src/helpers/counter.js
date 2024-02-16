@@ -1,10 +1,13 @@
 export const counterOrdersTotalprice = (orders, year) => {
   let counter = 0;
+  let ordersTotal = 0
+
   if (!year || year === "all") {
     // Si year no está presente o es "all", sumar todos los precios de las órdenes
     orders.forEach((order) => {
       if (order.completada === true) {
-        counter += order.precio;
+        counter ++;
+        ordersTotal += order.precio;
       }
     });
   } else {
@@ -24,11 +27,11 @@ export const counterOrdersTotalprice = (orders, year) => {
 
         const orderDate = new Date(orderYear, orderMonth, orderDay);
         if (orderDate >= startDate && orderDate < endDate) {
-          console.log(order)
-          counter += order.precio;
+          counter ++
+          ordersTotal += order.precio;
         }
       }
     });
   }
-  return counter;
+  return {ordersTotal, counter};
 };

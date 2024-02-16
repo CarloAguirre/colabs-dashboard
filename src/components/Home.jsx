@@ -17,8 +17,8 @@ export const Home = () => {
         tokenValidatior();
     }, [])
     
-    const {totalDebt, totalMoney, totalNoCompletadas, paidOrdersLastYear, totalAtrasos, setInputValue, totalLicitationsMoney, totalLicitations, totalCompletadas} = useOrdenes()
-    
+    const {totalDebt, totalMoney, totalNoCompletadas, paidOrdersLastYear, totalAtrasos, setInputValue, totalLicitationsMoney, totalLicitations, totalCompletadas, completadasSuma} = useOrdenes()
+
     const navigate = useNavigate()
     const onAtrasosHandler = ()=>{
         setInputValue("atrasos")
@@ -46,7 +46,6 @@ export const Home = () => {
     <div className="main-container">
     <div className="main-title" style={{justifyContent:'space-between'}}>
         <p className="font-weight-bold">DASHBOARD</p>
-        <YearSelector />
     </div>
 
     <div className="main-cards">
@@ -74,15 +73,19 @@ export const Home = () => {
             <span className="text-primary font-weight-bold">${totalMoney.toLocaleString()}</span>
         </div>
 
-        <div className="card" onClick={()=> onFacturadoHandler()}>
-            <div className="card-inner">
-                <p className="text-primary">FACTURADO ULTIMO AÑO</p>
+        {/* <div className="card" onClick={()=> onFacturadoHandler()}> */}
+        <div className="card">
+            <div className="card-inner" onClick={()=> onFacturadoHandler()}>
+                <p className="text-primary">FACTURADO</p>
                 <span className="material-icons-outlined text-green">
                     attach_money
                 </span>
             </div>
-            <p className="text-primary font-weight-bold"># {totalCompletadas}</p>
-            <span className="text-primary font-weight-bold">${paidOrdersLastYear.toLocaleString()}</span>
+            <p className="text-primary font-weight-bold" onClick={()=> onFacturadoHandler()}># {completadasSuma}</p>
+            <div className='d-flex align-items-center'>
+                <span className="text-primary font-weight-bold me-2" onClick={()=> onFacturadoHandler()}>${paidOrdersLastYear.toLocaleString()}</span>
+              <YearSelector />
+            </div>
         </div>
 
 
