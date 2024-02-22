@@ -142,7 +142,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
         minimumFractionDigits: 2,
       });  
       return (
-        <tr key={order.numero}>
+        <tr key={order._id}>
           <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
           <td><a href={order.invoice} target='_blank' rel="noreferrer">VER FACTURA</a></td>
           <td className='text-left'>{order.descripcion}</td>

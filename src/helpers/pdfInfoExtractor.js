@@ -73,7 +73,7 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                         
               //Materiales parte I
               if(regexSAPNuevoFormato.test(texto)){
-                var resultado = texto.match(regexSAPNuevoFormato);
+                let resultado = texto.match(regexSAPNuevoFormato);
                 resultados.push(resultado[1]);
               }
               //Cantidad / Cantidades parte I
