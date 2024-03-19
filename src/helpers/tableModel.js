@@ -110,7 +110,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
     const regex = new RegExp(`^${ordenNumber}`);
     if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
       return (
-        <tr key={order.numero}>
+        <tr key={order._id}>
           <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
           <td><a href={order.invoice} target='_blank' rel="noreferrer">VER FACTURA</a></td>
           {(ordenNumber === 45) && <td>{order.contrato}</td>}
@@ -168,7 +168,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
         });
       if (order.categoria === '646e2f1943ba97fc705a0276') {
         return (
-          <tr key={order.numero}>
+          <tr key={order._id}>
             <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
             <td><a href={order.invoice} target='_blank' rel="noreferrer">VER FACTURA</a></td>
             <td className='text-left'>{order.descripcion}</td>
@@ -204,7 +204,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
   const regex = new RegExp(`^${ordenNumber}`);
   if (regex.test(order.numero) && (order.categoria === "646d30f6df85d0a4c4958449")) {                      
     return (
-      <tr key={order.numero}>
+      <tr key={order._id}>
         <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
         {(ordenNumber === 45) && <td>{order.contrato}</td>}
         <td className='text-left'>{order.descripcion}</td>
@@ -228,7 +228,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
   else if (ordenNumber === 'todos') {
 
     return (
-      <tr key={order.numero}>
+      <tr key={order._id}>
         <td>
           <EditOrderModal
             order = {order}
@@ -256,7 +256,7 @@ export const tableModel = (ordenNumber, selectContratoForm, contratosArray, mont
   else if (ordenNumber === 'bhp') {
     if (order.categoria === '646e2f1943ba97fc705a0276') {
       return (
-        <tr key={order.numero}>
+        <tr key={order._id}>
           <td><a href={order.img} target='_blank' rel="noreferrer">{order.numero}</a></td>
           <td className='text-left'>{order.descripcion}</td>
           <td>{order.contrato}</td>

@@ -59,7 +59,7 @@ export const licitationsTableModel = (estado, orders, licitationsAscendente, set
 
               if (estado === "complete" && matchingOrder) {
                 return (
-                  <tr key={licitacion.numero}>
+                  <tr key={licitacion._id}>
                     <td>{licitacion.rfx}</td>
                     <td>
                       <a href={licitacion.img} target="_blank" rel="noreferrer">
@@ -82,7 +82,7 @@ export const licitationsTableModel = (estado, orders, licitationsAscendente, set
                 );
               } else if (estado === "incomplete" && !matchingOrder) {
                 return (
-                  <tr key={licitacion.numero}>
+                  <tr key={licitacion._id}>
                     <td>{licitacion.rfx}</td>
                     <td>
                       <a href={licitacion.img} target="_blank" rel="noreferrer">
