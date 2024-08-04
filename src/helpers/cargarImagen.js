@@ -32,12 +32,11 @@ export const cargarImagen = async(archivo, invoice = null, licitationNumber = nu
     redirect: 'follow',
    };
    if(licitationNumber != null){
+    console.log('estoy aca')
     await fetch(`${serverPath}api/uploads/licitaciones/${id}`, requestOptions)
     .then(response => {
 
-        response.text()
-
-     
+        response.text()   
              alert('Licitación añadida con exito')
              window.location.href = "./licitations"
          

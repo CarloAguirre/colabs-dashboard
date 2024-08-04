@@ -581,7 +581,6 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
         
         if(poNumberIndex){
           const paidOrderNumber = Number(newOrder[poNumberIndex + 2])
-
      
           const paidOrderId = orders.find(order => order.numero === paidOrderNumber)?._id;
             if(paidOrderId){
@@ -608,11 +607,22 @@ export const pdfInfoExtractor = (tableOrders, orders, newOrder, cliente, setInvo
                 }
                 let montoIndex = newOrder.indexOf("AMOUNT DUE:")
                 let monto = newOrder[montoIndex - 1]
+                // let monto = 739.90
+                console.log(monto)
                 if(monto){
+                  console.log(monto)
+                   // Eliminar comas del formato de miles
+                  let montoSinComas = monto.replace(/,/g, '');
+                  // Convertir la cadena a un número de punto flotante
+                  let montoNumerico = parseFloat(montoSinComas);
                   setInvoiceDate(fechaFormatted)      
                   let poNumber = 11111111
-                  let montoedited = "48,234.34"
-                  createProducto(poNumber, fechaFormatted, "SIN DATOS", "SIN DATOS", fechaFormatted, "SIN DATOS", "SIN DATOS", "SIN DATOS", 1, monto, "SIN DATOS", "65ba6ac5a2bf2cceffdebe02", {}, "SIN DATOS", "SIN DATOS", true, fechaFormatted, "https://res.cloudinary.com/dubwhwd1w/image/upload/v1669237187/no-image_nkv8ft.jpg")
+                  try {
+                    createProducto(poNumber, fechaFormatted, "SIN DATOS", "SIN DATOS", fechaFormatted, "SIN DATOS", "SIN DATOS", "SIN DATOS", 1, montoNumerico, "SIN DATOS", "65ba6ac5a2bf2cceffdebe02", {}, "SIN DATOS", "SIN DATOS", true, fechaFormatted, "https://res.cloudinary.com/dubwhwd1w/image/upload/v1669237187/no-image_nkv8ft.jpg")
+                    
+                  } catch (error) {
+                    console.log(error)
+                  }
                 }
        
             }

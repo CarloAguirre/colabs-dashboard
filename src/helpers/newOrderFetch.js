@@ -38,12 +38,13 @@ export const createProducto = async (numero = null, fecha = null, contrato = nul
       data: data
     };
 
+    console.log(data)
 
   
     try {
-      const response = await axios(config); // Agregar esta línea para obtener la respuesta de la solicitud
+      const response = await axios(config);
+      console.log(response) 
       cookies.set('id', response.data._id, { "path": "/" });
-  
       return true; // Devuelve true si la solicitud se completa sin errores
     } catch (error) {
       const {msg} = error.response.data;
